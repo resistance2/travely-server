@@ -21,6 +21,9 @@ jobs:
         bun run type-check
         bun run lint
     
+    - name: Build the code
+      run: bun run build
+
     - name: Create .env file
       run: |
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
@@ -36,7 +39,7 @@ jobs:
         host: ${{ secrets.REMOTE_HOST }}
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "./*"
+        source: "dist/, ecosystem.config.js, package.json, .env"
         target: "/var/www/travely"
         strip_components: 1
 
@@ -48,6 +51,5 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           cd /var/www/travely
-          bun install
-          bun run build
-          pm2 start ecosystem.config.js --env production
+          bun install --production
+          pm2 reload ecosystem.config.js --env production

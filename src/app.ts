@@ -3,26 +3,22 @@ import express, { json, Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
-import { connectDatabase } from './db/connect';
+import { connectDatabase, disconnectDatabase } from './db/connect';
 import imageRoutes from './api/routes/image.routes';
 
 dotenv.config();
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-const startServer = async () => {
-  const app = express();
-  const PORT = process.env.PORT || 3000;
+let server: ReturnType<typeof app.listen>;
 
+async function startServer() {
   await connectDatabase();
 
-  app.listen(PORT, () => {
+  server = app.listen(PORT, () => {
     console.log(`서버가 포트 ${PORT}에서 실행 중입니다`);
+    process.send?.('ready');
   });
-
-  return app;
-};
-
-async function bootstrap() {
-  const app = await startServer();
 
   // middlewares
   app.use(json());
@@ -54,7 +50,32 @@ async function bootstrap() {
   return app;
 }
 
-bootstrap().catch((err) => {
+async function stopServer() {
+  await disconnectDatabase();
+  server.close(async (err) => {
+    if (err) console.error(err);
+  });
+}
+
+startServer().catch((err) => {
   console.error(err);
   process.exit(1);
+});
+
+process.on('SIGINT', () => {
+  console.log('서버 종료');
+  stopServer().then(() => process.exit(0));
+  setTimeout(() => {
+    console.error('프로세스 강제 종료');
+    process.exit(1);
+  }, 30000);
+});
+
+process.on('SIGTERM', () => {
+  console.log('서버 종료');
+  stopServer().then(() => process.exit(0));
+  setTimeout(() => {
+    console.error('프로세스 강제 종료');
+    process.exit(1);
+  }, 30000);
 });
