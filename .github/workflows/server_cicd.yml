@@ -32,6 +32,12 @@ jobs:
           echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env
           echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> .env
           echo "CLOUDFRONT_URL=${{ secrets.CLOUDFRONT_URL }}" >> .env
+    
+    - name: move files
+      run: |
+        mv .env dist/
+        mv ecosystem.config.js dist/
+        mv package.json dist/
 
     - name: Deploy to AWS EC2
       uses: appleboy/scp-action@master
@@ -39,7 +45,7 @@ jobs:
         host: ${{ secrets.REMOTE_HOST }}
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "dist/,ecosystem.config.js,package.json"
+        source: "dist/**"
         target: "/var/www/travely"
         strip_components: 1
 
