@@ -19,6 +19,7 @@ jobs:
       run: |
         bun install
         bun run type-check
+        bun run lint
     
     - name: Create .env file
       run: |
@@ -29,10 +30,7 @@ jobs:
           echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> .env
           echo "CLOUDFRONT_URL=${{ secrets.CLOUDFRONT_URL }}" >> .env
 
-    - name: List files
-      run: ls -R
-    
-      - name: Deploy to AWS EC2
+    - name: Deploy to AWS EC2
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.REMOTE_HOST }}
