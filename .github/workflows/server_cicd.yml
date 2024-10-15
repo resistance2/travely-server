@@ -39,7 +39,7 @@ jobs:
         host: ${{ secrets.REMOTE_HOST }}
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
-        source: "dist/, ecosystem.config.js, package.json, .env"
+        source: "dist/,ecosystem.config.js,package.json"
         target: "/var/www/travely"
         strip_components: 1
 
