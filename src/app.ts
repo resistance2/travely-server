@@ -68,7 +68,7 @@ process.on('SIGINT', () => {
   setTimeout(() => {
     console.error('프로세스 강제 종료');
     process.exit(1);
-  }, 30000);
+  }, 20000);
 });
 
 process.on('SIGTERM', () => {
@@ -77,5 +77,5 @@ process.on('SIGTERM', () => {
   setTimeout(() => {
     console.error('프로세스 강제 종료');
     process.exit(1);
-  }, 30000);
+  }, 20000);
 });
