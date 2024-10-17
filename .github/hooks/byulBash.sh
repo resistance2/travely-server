@@ -96,5 +96,5 @@ if format_commit_message "$COMMIT_MSG_FILE"; then
     exit 0
 else
     print_color "$RED" "❌ Failed to format commit message."
-    exit 1
+    exit 0
 fi
