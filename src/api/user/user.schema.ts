@@ -6,10 +6,10 @@ export interface IUser extends Document {
   userEmail: string;
   phoneNumber: string;
   mbti: string;
-  myCreatedTravel: mongoose.Types.ObjectId[];
-  myPassedTravel: mongoose.Types.ObjectId[];
-  myReviews: mongoose.Types.ObjectId[];
-  myBookmark: mongoose.Types.ObjectId[];
+  myCreatedTravel: string[];
+  myPassedTravel: string[];
+  myReviews: string[];
+  myBookmark: string[];
 }
 
 const UserSchema: Schema = new Schema(
@@ -20,10 +20,10 @@ const UserSchema: Schema = new Schema(
     userEmail: { type: String, required: true, unique: true },
     phoneNumber: { type: String },
     mbti: { type: String },
-    myCreatedTravel: [{ type: Schema.Types.ObjectId, ref: 'Travel', default: [] }],
-    myPassedTravel: [{ type: Schema.Types.ObjectId, ref: 'Travel', default: [] }],
-    myReviews: [{ type: Schema.Types.ObjectId, ref: 'Review', default: [] }],
-    myBookmark: [{ type: Schema.Types.ObjectId, ref: 'Travel', default: [] }],
+    myCreatedTravel: [{ type: [String], ref: 'Travel', default: [] }],
+    myPassedTravel: [{ type: [String], ref: 'Travel', default: [] }],
+    myReviews: [{ type: [String], ref: 'Review', default: [] }],
+    myBookmark: [{ type: [String], ref: 'Travel', default: [] }],
   },
   { timestamps: true },
 );
