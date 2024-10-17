@@ -14,18 +14,18 @@ export interface ITravel extends Document {
   meetingLocation?: object;
   travelPrice: number;
   travelFAQ?: object[];
-  reviews?: mongoose.Types.ObjectId[];
-  bookmark?: mongoose.Types.ObjectId[];
+  reviews?: string[];
+  bookmark?: string[];
   createAt: Date;
   updateAt: Date;
-  teamId?: mongoose.Types.ObjectId[];
+  teamId?: string[];
   travelTotalScore?: number;
 }
 
 const TravelSchema: Schema = new Schema(
   {
     id: { type: String, required: true, unique: true },
-    userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    userId: { type: [String], required: true, ref: 'User' },
     thumbnail: { type: String, required: true },
     travelTitle: { type: String, required: true },
     travelContent: { type: Object, required: true },
@@ -37,11 +37,11 @@ const TravelSchema: Schema = new Schema(
     meetingLocation: { type: Object },
     travelPrice: { type: Number, required: true },
     travelFAQ: { type: [Object], default: [] },
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'Review', default: [] }],
-    bookmark: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+    reviews: [{ type: [String], ref: 'Review', default: [] }],
+    bookmark: [{ type: [String], ref: 'User', default: [] }],
     createAt: { type: Date, default: Date.now, required: true },
     updateAt: { type: Date, default: Date.now, required: true },
-    teamId: [{ type: Schema.Types.ObjectId, ref: 'Team', default: [] }],
+    teamId: [{ type: [String], ref: 'Team', default: [] }],
     travelTotalScore: { type: Number },
   },
   { timestamps: true },
