@@ -24,4 +24,5 @@ export const uploadImage = async (file: Express.Multer.File): Promise<string> =>
     throw new Error('이미지 업로드 실패');
   }
 };
-// curl -X POST -H "Content-Type: multipart/form-data" -F "image=@server/src/1.jpeg" http://localhost:3000/api/images/upload
+// curl -X POST -H "Content-Type: multipart/form-data" -F "image=@server/src/1.jpeg" http://3.37.101.147:3000/api/images/upload
+// curl -X POST -H "Content-Type: multipart/form-data" -F "image=@src/1.jpeg" http://3.37.101.147:3000/api/images/upload
