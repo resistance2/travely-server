@@ -20,6 +20,7 @@ export interface ITravel extends Document {
   updateAt: Date;
   teamId?: string[];
   travelTotalScore?: number;
+  travelActive: boolean;
 }
 
 const TravelSchema: Schema = new Schema(
@@ -43,6 +44,7 @@ const TravelSchema: Schema = new Schema(
     updateAt: { type: Date, default: Date.now, required: true },
     teamId: [{ type: [String], ref: 'Team', default: [] }],
     travelTotalScore: { type: Number },
+    travelActive: { type: Boolean, default: true },
   },
   { timestamps: true },
 );
