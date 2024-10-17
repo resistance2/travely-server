@@ -1,11 +1,11 @@
 import { Request, Response, Router } from 'express';
 import multer, { memoryStorage } from 'multer';
-import { uploadImage } from '../../utils/imageUpload';
+import { uploadImage } from './imageUpload';
 
-const router = Router();
+const imageRouter = Router();
 const upload = multer({ storage: memoryStorage() });
 
-router.post(
+imageRouter.post(
   '/upload',
   upload.single('image'),
   async (req: Request, res: Response): Promise<void> => {
@@ -24,4 +24,4 @@ router.post(
   },
 );
 
-export default router;
+export { imageRouter };

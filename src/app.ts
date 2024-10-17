@@ -4,11 +4,13 @@ import morgan from 'morgan';
 import cors from 'cors';
 import helmet from 'helmet';
 import { connectDatabase, disconnectDatabase } from './db/connect';
-import imageRoutes from './api/routes/image.routes';
+import { imageRouter } from './api/imageUpload/image.routes';
+import { userRouter } from './api/user/user.routes';
 
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
+const VERSION = process.env.VERSION || 'v1';
 
 let server: ReturnType<typeof app.listen>;
 
@@ -29,22 +31,20 @@ async function startServer() {
       origin: '*',
     }),
   );
-
-  // 라우터 추가
-  app.use('/api/images', imageRoutes);
-
-  //! 배포 테스트용 라우트
-  app.get('/', (_req, res) => {
-    res.send('Hello World');
-  });
-
-  // global Error handler
   app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
     console.error(`Error ${err.message} | URL: ${req.url} | Method: ${req.method}`);
     res.status(500).json({
       message: err.message,
       stack: err.stack,
     });
+  });
+
+  // routes
+  app.use('/api/images', imageRouter);
+  app.use(`/api/${VERSION}/images`, imageRouter);
+  app.use(`/api/${VERSION}/users`, userRouter);
+  app.get('/', (_req, res) => {
+    res.send('Hello World');
   });
 
   return app;
