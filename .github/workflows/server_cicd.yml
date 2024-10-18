@@ -46,7 +46,7 @@ jobs:
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         source: "dist/**"
-        target: "/var/www/travely"
+        target: "/var/www/travely-new"
         strip_components: 1
 
     - name: Setup environment and start PM2
@@ -56,6 +56,12 @@ jobs:
         username: ${{ secrets.REMOTE_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
+          timestamp=$(date +%Y%m%d%H%M%S)
+          mv /var/www/travely/ /var/www/travely_backup_.$timestamp
+
+          mv /var/www/travely-new /var/www/travely
           cd /var/www/travely
           bun install --production
           pm2 reload ecosystem.config.js --env production
+
+          find /var/www -maxdepth 1 -name "travely_backup_*" -type d -mtime +7 -exec rm -rf {} +
