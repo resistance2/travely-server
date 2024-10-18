@@ -128,7 +128,6 @@ export interface IUser extends Document {
   id: string;
   userProfileImage: string;
   userName: string;
-  userId: string;
   userEmail: string;
   phoneNumber: string;
   mbti: string;
