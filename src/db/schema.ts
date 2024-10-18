@@ -16,9 +16,9 @@ export interface ITravel extends Document {
   travelFAQ?: object[];
   reviews?: string[];
   bookmark?: string[];
-  createAt: Date;
-  updateAt: Date;
-  teamId?: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  teamId: string[];
   travelTotalScore?: number;
   travelActive: boolean;
   reviewWrite: boolean;
@@ -43,8 +43,8 @@ const TravelSchema: Schema = new Schema(
     travelFAQ: { type: [Object], default: [] },
     reviews: [{ type: String, ref: 'Review', default: [] }],
     bookmark: [{ type: String }],
-    createAt: { type: Date, default: Date.now, required: true },
-    updateAt: { type: Date, default: Date.now, required: true },
+    createdAt: { type: Date, default: Date.now, required: true },
+    updatedAt: { type: Date, default: Date.now, required: true },
     teamId: [{ type: [String], ref: 'Team', default: [] }],
     travelTotalScore: { type: Number },
     travelActive: { type: Boolean, default: true },
@@ -144,7 +144,7 @@ const UserSchema: Schema = new Schema(
     userProfileImage: { type: String },
     userName: { type: String, required: true },
     userEmail: { type: String, required: true, unique: true },
-    phoneNumber: { type: String },
+    phoneNumber: { type: String, required: true },
     mbti: { type: String },
     myCreatedTravel: [{ type: [String], ref: 'Travel', default: [] }],
     myPassedTravel: [{ type: [String], ref: 'Travel', default: [] }],

@@ -5,6 +5,11 @@ import { ResponseDTO } from '../../ResponseDTO';
 
 const loginRouter = Router();
 
+const isEmail = (email: string) => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return emailRegex.test(email);
+};
+
 /**
  * 로그인
  * POST /api/v1/users/login
@@ -15,8 +20,13 @@ loginRouter.post(
   async (req, res) => {
     const { userName, email, phoneNumber, profileImageUrl = null } = req.body;
 
+    if (!isEmail(email)) {
+      res.status(400).json(ResponseDTO.fail('이메일 형식이 아닙니다'));
+      return;
+    }
+
     const user = await User.findOne({
-      $or: [{ userEmail: email }, { phoneNumber }],
+      $or: [{ userEmail: email }, { phoneNumber }, { userName }],
     });
 
     if (user) {

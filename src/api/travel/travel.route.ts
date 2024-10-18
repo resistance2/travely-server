@@ -1,4 +1,3 @@
-// import { Router } from 'express';
 import { Team, Travel } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFields } from '../../checkRequiredFields';
@@ -12,7 +11,14 @@ const travelRouter = Router();
  */
 travelRouter.post(
   '/add-travel',
-  checkRequiredFields(['team', 'title', 'content']),
+  checkRequiredFields([
+    'team',
+    'travelTitle',
+    'travelContent',
+    'tag',
+    'travelCourse',
+    'travelPrice',
+  ]),
   async (req, res) => {
     try {
       const travelId = crypto.randomUUID();
@@ -26,9 +32,9 @@ travelRouter.post(
         ...req.body,
         _id: travelId,
         id: travelId,
-        teamId: [teamId],
-        createAt: new Date(),
-        updateAt: new Date(),
+        teamId: teamId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
       const newTravel = await Travel.find({ id: travel.insertedId.toString() });
       res.json(
@@ -89,7 +95,6 @@ travelRouter.post('/bookmark-list', checkRequiredFields(['userId']), async (req,
   const { userId } = req.body;
   try {
     const travels = await Travel.find({ bookmark: { $in: [userId] } });
-    console.log();
     res.json(
       ResponseDTO.success({
         bookmarks: travels,
@@ -135,12 +140,15 @@ travelRouter.post(
         res.status(404).json(ResponseDTO.fail('Travel not found'));
         return;
       }
+      if (!Array.isArray(travel.bookmark)) {
+        travel.bookmark = [];
+      }
       if (travel?.bookmark?.includes(userId)) {
         res.status(400).json(ResponseDTO.fail('Already bookmarked'));
         return;
       }
       travel?.bookmark?.push(userId);
-      await travel?.save();
+      await travel.save();
       res.json(ResponseDTO.success(travel));
     } catch (error) {
       console.error(error);
