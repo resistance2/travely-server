@@ -40,7 +40,7 @@ async function startServer() {
   });
 
   // routes
-  app.use(`/api/${VERSION}/images`, imageRouter);
+  app.use('/api/images', imageRouter);
   app.use(`/api/${VERSION}/users`, userRouter);
   app.get('/', (_req, res) => {
     res.send('Hello World');
