@@ -41,7 +41,7 @@ async function startServer() {
   });
 
   // routes
-  app.use(`/api/${VERSION}/images`, imageRouter);
+  app.use('/api/images', imageRouter);
   app.use(`/api/${VERSION}/users`, userRouter);
   app.use(`/api/${VERSION}/travels`, travelRouter);
   app.get('/', (_req, res) => {
