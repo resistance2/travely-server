@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { connectDatabase, disconnectDatabase } from './db/connect';
 import { imageRouter } from './api/imageUpload/image.routes';
 import { userRouter } from './api/user/user.routes';
+import { travelRouter } from './api/travel/travel.route';
 
 dotenv.config();
 const app = express();
@@ -42,6 +43,7 @@ async function startServer() {
   // routes
   app.use(`/api/${VERSION}/images`, imageRouter);
   app.use(`/api/${VERSION}/users`, userRouter);
+  app.use(`/api/${VERSION}/travels`, travelRouter);
   app.get('/', (_req, res) => {
     res.send('Hello World');
   });

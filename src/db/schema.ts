@@ -83,7 +83,7 @@ export interface IAppliedUser {
 }
 
 export const AppliedUserSchema = new Schema({
-  userId: { type: [String], ref: 'User', required: true },
+  userId: { type: String, ref: 'User', required: true },
   appliedAt: { type: Date, default: Date.now, required: true },
   status: {
     type: String,
@@ -97,7 +97,7 @@ export interface ITeam extends Document {
   id: string;
   travelId: string;
   personLimit: number;
-  appliedUsers: IAppliedUser[];
+  appliedUsers?: IAppliedUser[];
   travelStartDate: Date;
   travelEndDate: Date;
 }
@@ -105,7 +105,7 @@ export interface ITeam extends Document {
 const TeamSchema: Schema = new Schema(
   {
     id: { type: String, required: true, unique: true },
-    travelId: { type: [String], required: true, ref: 'Travel' },
+    travelId: { type: String, required: true, ref: 'Travel' },
     personLimit: { type: Number, required: true },
     appliedUsers: [AppliedUserSchema],
     travelStartDate: { type: Date, required: true },
