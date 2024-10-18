@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-import '../api/user/user.schema';
 
 export const connectDatabase = async (): Promise<void> => {
   try {
