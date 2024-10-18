@@ -16,15 +16,18 @@ export interface ITravel extends Document {
   travelFAQ?: object[];
   reviews?: string[];
   bookmark?: string[];
-  createAt: Date;
-  updateAt: Date;
-  teamId?: string[];
+  createdAt: Date;
+  updatedAt: Date;
+  teamId: string[];
   travelTotalScore?: number;
   travelActive: boolean;
+  reviewWrite: boolean;
+  isDeleted: boolean;
 }
 
 const TravelSchema: Schema = new Schema(
   {
+    _id: { type: String, required: true },
     id: { type: String, required: true, unique: true },
     userId: { type: [String], required: true, ref: 'User' },
     thumbnail: { type: String, required: true },
@@ -39,12 +42,14 @@ const TravelSchema: Schema = new Schema(
     travelPrice: { type: Number, required: true },
     travelFAQ: { type: [Object], default: [] },
     reviews: [{ type: String, ref: 'Review', default: [] }],
-    bookmark: [{ type: String, ref: 'User', default: [] }],
-    createAt: { type: Date, default: Date.now, required: true },
-    updateAt: { type: Date, default: Date.now, required: true },
+    bookmark: [{ type: String }],
+    createdAt: { type: Date, default: Date.now, required: true },
+    updatedAt: { type: Date, default: Date.now, required: true },
     teamId: [{ type: [String], ref: 'Team', default: [] }],
     travelTotalScore: { type: Number },
     travelActive: { type: Boolean, default: true },
+    reviewWrite: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true },
 );
@@ -94,6 +99,7 @@ export const AppliedUserSchema = new Schema({
 });
 
 export interface ITeam extends Document {
+  _id: string;
   id: string;
   travelId: string;
   personLimit: number;
@@ -104,6 +110,7 @@ export interface ITeam extends Document {
 
 const TeamSchema: Schema = new Schema(
   {
+    _id: { type: String, required: true },
     id: { type: String, required: true, unique: true },
     travelId: { type: String, required: true, ref: 'Travel' },
     personLimit: { type: Number, required: true },
@@ -117,10 +124,10 @@ const TeamSchema: Schema = new Schema(
 export const Team = mongoose.model<ITeam>('Team', TeamSchema);
 
 export interface IUser extends Document {
+  _id: string;
   id: string;
   userProfileImage: string;
   userName: string;
-  userId: string;
   userEmail: string;
   phoneNumber: string;
   mbti: string;
@@ -132,11 +139,12 @@ export interface IUser extends Document {
 
 const UserSchema: Schema = new Schema(
   {
+    _id: { type: String, required: true },
     id: { type: String, required: true, unique: true },
     userProfileImage: { type: String },
     userName: { type: String, required: true },
     userEmail: { type: String, required: true, unique: true },
-    phoneNumber: { type: String },
+    phoneNumber: { type: String, required: true },
     mbti: { type: String },
     myCreatedTravel: [{ type: [String], ref: 'Travel', default: [] }],
     myPassedTravel: [{ type: [String], ref: 'Travel', default: [] }],
