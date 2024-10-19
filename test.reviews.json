@@ -1,0 +1,101 @@
+[
+  {
+    "id": "review001",
+    "userId": "user001",
+    "travelId": "travel001",
+    "reviewImg": [
+      "https://example.com/image1.jpg",
+      "https://example.com/image2.jpg"
+    ],
+    "createdDate": { "$date": "2024-10-19T14:10:25Z" },
+    "content": "정말 멋진 여행이었어요! 풍경이 최고였어요.",
+    "travelScore": 5
+  },
+  {
+    "id": "review002",
+    "userId": "user002",
+    "travelId": "travel002",
+    "reviewImg": ["https://example.com/image3.jpg"],
+    "createdDate": { "$date": "2024-10-19T13:45:12Z" },
+    "content": "편안한 휴식이 가능해서 좋았어요.",
+    "travelScore": 4
+  },
+  {
+    "id": "review003",
+    "userId": "user003",
+    "travelId": "travel003",
+    "reviewImg": [],
+    "createdDate": { "$date": "2024-10-18T11:05:30Z" },
+    "content": "날씨가 조금 아쉬웠지만 좋았어요.",
+    "travelScore": 3
+  },
+  {
+    "id": "review004",
+    "userId": "user004",
+    "travelId": "travel004",
+    "reviewImg": [
+      "https://example.com/image4.jpg",
+      "https://example.com/image5.jpg"
+    ],
+    "createdDate": { "$date": "2024-10-17T09:15:45Z" },
+    "content": "이런 멋진 장소를 발견하게 되다니!",
+    "travelScore": 5
+  },
+  {
+    "id": "review005",
+    "userId": "user005",
+    "travelId": "travel005",
+    "reviewImg": ["https://example.com/image6.jpg"],
+    "createdDate": { "$date": "2024-10-16T18:22:14Z" },
+    "content": "다음에는 친구들과 함께 가보고 싶어요.",
+    "travelScore": 4
+  },
+  {
+    "id": "review006",
+    "userId": "user006",
+    "travelId": "travel006",
+    "reviewImg": [],
+    "createdDate": { "$date": "2024-10-15T15:37:55Z" },
+    "content": "조금 아쉬운 부분도 있었지만 나름 괜찮았어요.",
+    "travelScore": 3
+  },
+  {
+    "id": "review007",
+    "userId": "user007",
+    "travelId": "travel007",
+    "reviewImg": ["https://example.com/image7.jpg"],
+    "createdDate": { "$date": "2024-10-14T20:10:45Z" },
+    "content": "특히 음식이 맛있어서 좋았어요.",
+    "travelScore": 5
+  },
+  {
+    "id": "review008",
+    "userId": "user008",
+    "travelId": "travel008",
+    "reviewImg": [
+      "https://example.com/image8.jpg",
+      "https://example.com/image9.jpg"
+    ],
+    "createdDate": { "$date": "2024-10-13T10:22:32Z" },
+    "content": "가족들과 함께 좋은 시간을 보냈어요.",
+    "travelScore": 4
+  },
+  {
+    "id": "review009",
+    "userId": "user009",
+    "travelId": "travel009",
+    "reviewImg": [],
+    "createdDate": { "$date": "2024-10-12T14:45:19Z" },
+    "content": "숙소가 조금 불편했지만, 여행 자체는 좋았어요.",
+    "travelScore": 3
+  },
+  {
+    "id": "review010",
+    "userId": "user010",
+    "travelId": "travel010",
+    "reviewImg": ["https://example.com/image10.jpg"],
+    "createdDate": { "$date": "2024-10-11T09:12:55Z" },
+    "content": "이렇게 멋진 장소는 처음이었어요!",
+    "travelScore": 5
+  }
+]
