@@ -51,16 +51,12 @@ reviewRouter.post('/review-list', checkRequiredFields(['userId', 'page']), async
   }
 });
 
-export { reviewRouter };
-
 // 테스트용 curl 명령어:
 // curl -X POST http://localhost:3000/api/v1/reviews/review-list -H "Content-Type: application/json" -d '{"userId": "user001", "page": 1, "pageSize": 10}'
 
 // 리뷰 만들기
 
-const reviewCreateRouter = Router();
-
-reviewCreateRouter.post(
+reviewRouter.post(
   '/review-create',
   checkRequiredFields(['userId', 'travelId', 'reviewImg', 'content', 'travelScore', 'createdDate']),
   async (req, res) => {
@@ -98,7 +94,7 @@ reviewCreateRouter.post(
   },
 );
 
-export { reviewCreateRouter };
+export { reviewRouter };
 
 // 테스트용 curl 명령어:
 // curl -X POST http://localhost:3000/api/v1/reviews/review-create -H "Content-Type: application/json" -d '{"userId": "user001", "travelId": "travel001", "reviewImg": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"], "content": "정말 멋진 여행이었어요!", "travelScore": 5, "createdDate": "2024-10-19T14:10:25Z"}'

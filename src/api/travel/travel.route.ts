@@ -129,6 +129,9 @@ travelRouter.post('/my-travel-list', checkRequiredFields(['userId']), async (req
  * 여행 북마크 추가
  * POST/api/v1/travels/bookmark-check
  */
+
+// 북마크 추가 /travels/bookmark-add
+// 북마크 삭제 /travels/bookmark-delete
 travelRouter.post(
   '/bookmark-check',
   checkRequiredFields(['userId', 'travelId']),
