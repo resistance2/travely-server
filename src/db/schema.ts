@@ -42,7 +42,7 @@ const TravelSchema: Schema = new Schema(
     travelPrice: { type: Number, required: true },
     travelFAQ: { type: [Object], default: [] },
     reviews: [{ type: String, ref: 'Review', default: [] }],
-    bookmark: [{ type: String }],
+    bookmark: [{ type: String, default: [] }],
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
     teamId: [{ type: [String], ref: 'Team', default: [] }],
@@ -135,7 +135,7 @@ export interface IUser extends Document {
   myCreatedTravel: string[];
   myPassedTravel: string[];
   myReviews: string[];
-  myBookmark: mongoose.Types.ObjectId[];
+  myBookmark: string[];
   isVerifiedUser: boolean;
 }
 
