@@ -69,8 +69,8 @@ export interface IReview extends Document {
 const ReviewSchema: Schema = new Schema(
   {
     id: { type: String, required: true, unique: true },
-    userId: { type: [String], required: true, ref: 'User' },
-    travelId: { type: [String], required: true, ref: 'Travel' },
+    userId: { type: String, required: true, ref: 'User' },
+    travelId: { type: String, required: true, ref: 'Travel' },
     reviewImg: { type: [String], default: [] },
     createdDate: { type: Date, default: Date.now },
     content: { type: String, required: true },
