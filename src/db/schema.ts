@@ -42,7 +42,7 @@ const TravelSchema: Schema = new Schema(
     travelPrice: { type: Number, required: true },
     travelFAQ: { type: [Object], default: [] },
     reviews: [{ type: String, ref: 'Review', default: [] }],
-    bookmark: [{ type: String }],
+    bookmark: [{ type: String, default: [] }],
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
     teamId: [{ type: [String], ref: 'Team', default: [] }],
@@ -129,12 +129,14 @@ export interface IUser extends Document {
   userProfileImage: string;
   userName: string;
   userEmail: string;
+  socialName: string;
   phoneNumber: string;
   mbti: string;
   myCreatedTravel: string[];
   myPassedTravel: string[];
   myReviews: string[];
-  myBookmark: mongoose.Types.ObjectId[];
+  myBookmark: string[];
+  isVerifiedUser: boolean;
 }
 
 const UserSchema: Schema = new Schema(
@@ -142,14 +144,16 @@ const UserSchema: Schema = new Schema(
     _id: { type: String, required: true },
     id: { type: String, required: true, unique: true },
     userProfileImage: { type: String },
-    userName: { type: String, required: true },
-    userEmail: { type: String, required: true, unique: true },
-    phoneNumber: { type: String, required: true },
+    socialName: { type: String, required: true, unique: true },
+    userName: { type: String },
+    userEmail: { type: String, unique: true },
+    phoneNumber: { type: String },
     mbti: { type: String },
     myCreatedTravel: [{ type: [String], ref: 'Travel', default: [] }],
     myPassedTravel: [{ type: [String], ref: 'Travel', default: [] }],
     myReviews: [{ type: [String], ref: 'Review', default: [] }],
     myBookmark: [{ type: [String], ref: 'Travel', default: [] }],
+    isVerifiedUser: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

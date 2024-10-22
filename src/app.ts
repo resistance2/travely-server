@@ -7,8 +7,7 @@ import { connectDatabase, disconnectDatabase } from './db/connect';
 import { imageRouter } from './api/imageUpload/image.routes';
 import { userRouter } from './api/user/user.routes';
 import { travelRouter } from './api/travel/travel.route';
-import { loginRouter } from './api/auth/auth.route';
-import { reviewRouter, reviewCreateRouter } from './api/review/review.routes';
+import { reviewRouter } from './api/review/review.routes';
 
 dotenv.config();
 const app = express();
@@ -46,9 +45,7 @@ async function startServer() {
   app.use('/api/images', imageRouter);
   app.use(`/api/${VERSION}/users`, userRouter);
   app.use(`/api/${VERSION}/travels`, travelRouter);
-  app.use(`/api/${VERSION}/users`, loginRouter);
-  app.use('/api/v1/reviews', reviewRouter);
-  app.use('/api/v1/reviews', reviewCreateRouter);
+  app.use(`/api/${VERSION}/reviews`, reviewRouter);
 
   app.get('/', (_req, res) => {
     res.send('Hello World');
