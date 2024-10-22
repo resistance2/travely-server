@@ -125,15 +125,9 @@ travelRouter.post('/my-travel-list', checkRequiredFields(['userId']), async (req
   }
 });
 
-/**
- * 여행 북마크 추가
- * POST/api/v1/travels/bookmark-check
- */
-
 // 북마크 추가 /travels/bookmark-add
-// 북마크 삭제 /travels/bookmark-delete
 travelRouter.post(
-  '/bookmark-check',
+  '/bookmark-add',
   checkRequiredFields(['userId', 'travelId']),
   async (req, res) => {
     const { userId, travelId } = req.body;
@@ -152,7 +146,46 @@ travelRouter.post(
       }
       travel?.bookmark?.push(userId);
       await travel.save();
-      res.json(ResponseDTO.success(travel));
+      res.json(
+        ResponseDTO.success({
+          id: travel.id,
+          userId: travel.userId,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
+
+// 북마크 삭제 /travels/bookmark-delete
+travelRouter.post(
+  '/bookmark-delete',
+  checkRequiredFields(['userId', 'travelId']),
+  async (req, res) => {
+    const { userId, travelId } = req.body;
+    try {
+      const travel = await Travel.findOne({ id: travelId });
+      if (!travel) {
+        res.status(404).json(ResponseDTO.fail('Travel not found'));
+        return;
+      }
+      if (!Array.isArray(travel.bookmark)) {
+        travel.bookmark = [];
+      }
+      if (!travel?.bookmark?.includes(userId)) {
+        res.status(400).json(ResponseDTO.fail('it is not bookmarked'));
+        return;
+      }
+      travel.bookmark = travel.bookmark.filter((user) => user !== userId);
+      await travel.save();
+      res.json(
+        ResponseDTO.success({
+          id: travel.id,
+          userId: travel.userId,
+        }),
+      );
     } catch (error) {
       console.error(error);
       res.status(500).json(ResponseDTO.fail((error as Error).message));
