@@ -2,7 +2,6 @@ import { Router } from 'express';
 import { Review, Travel } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFields } from '../../checkRequiredFields';
-import crypto from 'crypto';
 
 const reviewRouter = Router();
 
@@ -23,12 +22,12 @@ reviewRouter.post('/review-list', checkRequiredFields(['userId', 'page']), async
       reviews.map(async (review) => {
         const travel = await Travel.findOne({ id: review.travelId }).lean();
         return {
-          id: review.id,
+          id: review._id,
           travelId: review.travelId,
           reviewImg: review.reviewImg,
           content: review.content,
           travelScore: review.travelScore,
-          createdDate: review.createdDate.toISOString(),
+          createdDate: review.createdDate,
           travelTitle: travel?.travelTitle || '',
         };
       }),
@@ -63,7 +62,6 @@ reviewRouter.post(
     const { userId, travelId, reviewImg, content, travelScore, createdDate } = req.body;
     try {
       const newReview = new Review({
-        id: crypto.randomUUID(),
         userId: userId,
         travelId: travelId,
         reviewImg,
@@ -83,7 +81,7 @@ reviewRouter.post(
             reviewImg: savedReview.reviewImg,
             content: savedReview.content,
             travelScore: savedReview.travelScore,
-            createdDate: savedReview.createdDate.toISOString(),
+            createdDate: savedReview.createdDate,
           },
         }),
       );

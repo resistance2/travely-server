@@ -1,6 +1,7 @@
 name: 문서 변경
 description: 문서 업데이트가 있나요?
 title: '[docs] '
+projects: ["FC-DEV-FinalProject/2"]
 labels: ['docs']
 body:
   - type: textarea

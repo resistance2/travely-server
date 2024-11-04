@@ -12,3 +12,15 @@ export const checkRequiredFields = (fields: string[]) => {
     next();
   };
 };
+
+export const checkRequiredFieldsQuery = (fields: string[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    for (const field of fields) {
+      if (!req.query[field]) {
+        res.status(400).json(ResponseDTO.fail(`${field} is required`));
+        return;
+      }
+    }
+    next();
+  };
+};

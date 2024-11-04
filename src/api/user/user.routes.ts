@@ -1,23 +1,20 @@
 import { Router } from 'express';
-import { IUser, User } from '../../db/schema';
+import { User } from '../../db/schema';
 import { checkRequiredFields } from '../../checkRequiredFields';
 import { ResponseDTO } from '../../ResponseDTO';
+import { isEmail } from '../../isEmail';
 
 const userRouter = Router();
 
-// export interface IUser extends Document {
-//     username: string;
-//     email: string;
-//     profileImageUrl: string;
-//     createdAt: Date;
-//   }
-const isEmail = (email: string) => {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  return emailRegex.test(email);
-};
-
-//!TODO: socialName, email 필수
-//!TODO: socialName: 구글 닉네임, 카카오 닉네임
+/**
+ * 사용자 로그인 및 회원가입
+curl -X POST http://localhost:3000/api/v1/users/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "socialName": "nakyeonko3",
+    "userEmail": "badaclock@gmail.com"
+  }'
+*/
 userRouter.post('/login', checkRequiredFields(['socialName', 'userEmail']), async (req, res) => {
   const { socialName, userEmail, userProfileImage = null } = req.body;
 
@@ -28,23 +25,20 @@ userRouter.post('/login', checkRequiredFields(['socialName', 'userEmail']), asyn
 
   const user = await User.findOne({
     $or: [{ userEmail }, { socialName }],
-  });
+  }).lean();
 
   if (user) {
-    res.status(200).json(ResponseDTO.success(user));
+    res.status(200).json(ResponseDTO.success({ ...user, isCreated: false }));
     return;
   }
 
   try {
-    const id = crypto.randomUUID();
     const newUser = await User.create({
-      id: id,
-      _id: id,
       socialName,
       userEmail: userEmail,
       userProfileImage: userProfileImage || null,
-    } as IUser);
-    res.json(ResponseDTO.success(newUser));
+    });
+    res.json(ResponseDTO.success({ ...newUser.toJSON(), isCreated: true }));
   } catch (error) {
     console.error(error);
     res.status(500).json(ResponseDTO.fail((error as Error).message));
