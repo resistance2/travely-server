@@ -1,7 +1,9 @@
-import { Team, Travel } from '../../db/schema';
+import { Team, Travel, User } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
-import { checkRequiredFields } from '../../checkRequiredFields';
+import { checkRequiredFields, checkRequiredFieldsQuery } from '../../checkRequiredFields';
 import { Router } from 'express';
+import mongoose from 'mongoose';
+import { validObjectId } from '../../validObjectId';
 
 const travelRouter = Router();
 
@@ -20,31 +22,50 @@ travelRouter.post(
     'travelPrice',
   ]),
   async (req, res) => {
+    const session = await mongoose.startSession();
     try {
-      const travelId = crypto.randomUUID();
-      const teamId = crypto.randomUUID();
-      await Team.collection.insertOne({
-        ...req.body.team,
-        _id: teamId,
-        id: teamId,
-      });
-      const travel = await Travel.collection.insertOne({
-        ...req.body,
-        _id: travelId,
-        id: travelId,
-        teamId: teamId,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-      const newTravel = await Travel.find({ id: travel.insertedId.toString() });
-      res.json(
-        ResponseDTO.success({
-          newTravel,
-        }),
+      session.startTransaction();
+      const userId = await User.findById(req.body.userId).lean();
+      if (!userId) {
+        res.status(404).json(ResponseDTO.fail('User not found'));
+        return;
+      }
+      const travel = await Travel.create(
+        [
+          {
+            ...req.body,
+            userId: userId?._id,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ],
+        { session },
       );
+
+      const travelId = travel[0]._id;
+
+      const team = await Team.create(
+        [
+          {
+            ...req.body.team[0],
+            travelEndDate: req.body.team[0].travelEndDate,
+            travelStartDate: req.body.team[0].travelStartDate,
+            personLimit: req.body.team[0].personLimit,
+            travelId: travelId,
+          },
+        ],
+        { session },
+      );
+      await Travel.findByIdAndUpdate(travelId, { $push: { teamId: team[0]._id } }, { session });
+      await session.commitTransaction();
+      const newTrvael = await Travel.findById(travelId).populate('teamId').lean();
+      res.json(ResponseDTO.success(newTrvael));
     } catch (error) {
       console.error(error);
+      await session.abortTransaction();
       res.status(500).json(ResponseDTO.fail((error as Error).message));
+    } finally {
+      session.endSession();
     }
   },
 );
@@ -55,7 +76,7 @@ travelRouter.post(
  curl -X GET http://localhost:3000/api/v1/travels
  */
 travelRouter.get('/', async (_req, res) => {
-  const travels = await Travel.find();
+  const travels = await Travel.find().populate('teamId').limit(100).lean();
   res.json(ResponseDTO.success(travels));
 });
 
@@ -66,14 +87,25 @@ curl -X POST http://localhost:3000/api/v1/travels/home-travel-list -H "Content-T
   "userId": "user123"
 }'
  */
-travelRouter.post('/home-travel-list', checkRequiredFields(['userId']), async (req, res) => {
-  const { userId } = req.body;
+travelRouter.get('/home-travel-list', checkRequiredFieldsQuery(['userId']), async (req, res) => {
+  const { userId } = req.query;
   try {
     const travels = await Travel.find().sort({ createAt: -1 }).limit(20);
+    if (!validObjectId(userId as string)) {
+      res.status(400).json(ResponseDTO.fail('Invalid userId'));
+      return;
+    }
+
+    const user = await User.findById(userId).lean();
+
+    if (!user) {
+      res.status(404).json(ResponseDTO.fail('User not found'));
+      return;
+    }
     const userBookmarkTravels = travels.map((travel) => {
       return {
         ...travel.toObject(),
-        bookmark: travel.bookmark?.includes(userId) || false,
+        bookmark: travel.bookmark.includes(user._id as mongoose.Types.ObjectId),
       };
     });
     res.json(
@@ -89,12 +121,22 @@ travelRouter.post('/home-travel-list', checkRequiredFields(['userId']), async (r
 
 /**
  * 북마크 리스트 조회
- * POST /api/v1/travels/bookmark-list
+ * GET /api/v1/travels/bookmark-list
  */
-travelRouter.post('/bookmark-list', checkRequiredFields(['userId']), async (req, res) => {
-  const { userId } = req.body;
+travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (req, res) => {
+  const { userId } = req.query;
   try {
-    const travels = await Travel.find({ bookmark: { $in: [userId] } });
+    if (!validObjectId(userId as string)) {
+      res.status(400).json(ResponseDTO.fail('Invalid userId'));
+      return;
+    }
+
+    const user = await User.findById(userId).lean();
+    if (!user) {
+      res.status(404).json(ResponseDTO.fail('User not found'));
+      return;
+    }
+    const travels = await Travel.find({ bookmark: { $in: [user?._id] } });
     res.json(
       ResponseDTO.success({
         bookmarks: travels,
@@ -107,16 +149,39 @@ travelRouter.post('/bookmark-list', checkRequiredFields(['userId']), async (req,
 });
 
 /**
- * 내여행-참여한 여행 목록 조회
- * /api/v1/travels/my-travel-list
+ * 내여행- 내가 참여한 여행 목록 조회
+ * /api/v1/travels/my-travels
  */
-travelRouter.post('/my-travel-list', checkRequiredFields(['userId']), async (req, res) => {
-  const { userId } = req.body;
+travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req, res) => {
+  const { userId } = req.query;
   try {
-    const travels = await Travel.find({ team: { $elemMatch: { userId: userId } } });
+    const user = await User.findById(userId).lean();
+    if (!user) {
+      res.status(404).json(ResponseDTO.fail('User not found'));
+      return;
+    }
+
+    // const travels = await Travel.find({ bookmark: { $in: [user?._id] } });
+
+    const teams = await Team.find({
+      appliedUsers: {
+        $elemMatch: {
+          userId: user._id,
+        },
+      },
+    });
+
+    const travelIds = teams.map((team) => team.travelId);
+
+    const travels = await Promise.all(
+      travelIds.map(async (travelId) => {
+        return await Travel.findById(travelId).populate('userId').lean();
+      }),
+    );
+
     res.json(
       ResponseDTO.success({
-        travels: travels,
+        travels,
       }),
     );
   } catch (error) {
@@ -124,32 +189,29 @@ travelRouter.post('/my-travel-list', checkRequiredFields(['userId']), async (req
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
-
 // 북마크 추가 /travels/bookmark-add
-travelRouter.post(
+travelRouter.patch(
   '/bookmark-add',
   checkRequiredFields(['userId', 'travelId']),
   async (req, res) => {
     const { userId, travelId } = req.body;
     try {
-      const travel = await Travel.findOne({ id: travelId });
+      const travel = await Travel.findById(travelId);
       if (!travel) {
         res.status(404).json(ResponseDTO.fail('Travel not found'));
         return;
       }
-      if (!Array.isArray(travel.bookmark)) {
-        travel.bookmark = [];
-      }
-      if (travel?.bookmark?.includes(userId)) {
+      if (travel.bookmark.includes(userId)) {
         res.status(400).json(ResponseDTO.fail('Already bookmarked'));
         return;
       }
-      travel?.bookmark?.push(userId);
-      await travel.save();
+      const updatedTravel = await Travel.findByIdAndUpdate(travelId, {
+        $push: { bookmark: userId },
+      });
       res.json(
         ResponseDTO.success({
-          id: travel.id,
-          userId: travel.userId,
+          id: updatedTravel?.id,
+          userId: updatedTravel?.userId,
         }),
       );
     } catch (error) {
@@ -160,30 +222,28 @@ travelRouter.post(
 );
 
 // 북마크 삭제 /travels/bookmark-delete
-travelRouter.post(
+travelRouter.patch(
   '/bookmark-delete',
   checkRequiredFields(['userId', 'travelId']),
   async (req, res) => {
     const { userId, travelId } = req.body;
     try {
-      const travel = await Travel.findOne({ id: travelId });
+      const travel = await Travel.findById(travelId);
       if (!travel) {
         res.status(404).json(ResponseDTO.fail('Travel not found'));
         return;
       }
-      if (!Array.isArray(travel.bookmark)) {
-        travel.bookmark = [];
-      }
-      if (!travel?.bookmark?.includes(userId)) {
+      if (!travel?.bookmark.includes(userId)) {
         res.status(400).json(ResponseDTO.fail('it is not bookmarked'));
         return;
       }
-      travel.bookmark = travel.bookmark.filter((user) => user !== userId);
-      await travel.save();
+      const updatedTravel = await Travel.findByIdAndUpdate(travelId, {
+        $pull: { bookmark: userId },
+      }).lean();
       res.json(
         ResponseDTO.success({
-          id: travel.id,
-          userId: travel.userId,
+          id: updatedTravel?._id,
+          userId: updatedTravel?.userId,
         }),
       );
     } catch (error) {

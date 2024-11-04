@@ -1,6 +1,7 @@
 name: 테스트
 description: 테스트(E2E테스트, 통합테스트, 테스트 관련 세팅)
 title: '[test] '
+projects: ["FC-DEV-FinalProject/2"]
 labels: ['test']
 body:
   - type: textarea
