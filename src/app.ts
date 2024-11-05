@@ -2,7 +2,6 @@ import * as dotenv from 'dotenv';
 import express, { json, Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
-import helmet from 'helmet';
 import { connectDatabase, disconnectDatabase } from './db/connect';
 import { imageRouter } from './api/imageUpload/image.routes';
 import { userRouter } from './api/user/user.routes';
@@ -26,13 +25,12 @@ async function startServer() {
 
   // middlewares
   app.use(json());
-  app.use(morgan('dev'));
-  app.use(helmet());
   app.use(
     cors({
       origin: '*',
     }),
   );
+  app.use(morgan('combined'));
   app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
     console.error(`Error ${err.message} | URL: ${req.url} | Method: ${req.method}`);
     res.status(500).json({
@@ -55,9 +53,15 @@ async function startServer() {
 }
 
 async function stopServer() {
+  console.log('서버 종료중');
   await disconnectDatabase();
   server.close(async (err) => {
-    if (err) console.error(err);
+    if (err) {
+      console.error(err);
+      process.exit(1);
+    } else {
+      console.log('서버 종료');
+    }
   });
 }
 
@@ -67,19 +71,11 @@ startServer().catch((err) => {
 });
 
 process.on('SIGINT', () => {
-  console.log('서버 종료');
-  stopServer().then(() => process.exit(0));
-  setTimeout(() => {
-    console.error('프로세스 강제 종료');
-    process.exit(1);
-  }, 20000);
+  console.log('SIGINT 신호 수신');
+  stopServer();
 });
 
 process.on('SIGTERM', () => {
-  console.log('서버 종료');
-  stopServer().then(() => process.exit(0));
-  setTimeout(() => {
-    console.error('프로세스 강제 종료');
-    process.exit(1);
-  }, 20000);
+  console.log('SIGTERM 신호 수신');
+  stopServer();
 });
