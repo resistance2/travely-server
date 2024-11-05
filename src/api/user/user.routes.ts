@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { User } from '../../db/schema';
+import { Team, User } from '../../db/schema';
 import { checkRequiredFields } from '../../checkRequiredFields';
 import { ResponseDTO } from '../../ResponseDTO';
 import { isEmail } from '../../isEmail';
@@ -44,6 +44,58 @@ userRouter.post('/login', checkRequiredFields(['socialName', 'userEmail']), asyn
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
+
+// 내 여행 관리 페이지
+// 해당 유저 대기중인 상태에서 approverd, rejected로 변경
+userRouter.patch(
+  '/update-user-status',
+  checkRequiredFields(['teamId', 'userId', 'status']),
+  async (req, res) => {
+    const { userId, status, teamId } = req.body;
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        res.status(404).json(ResponseDTO.fail('User not found'));
+        return;
+      }
+      const team = await Team.findById(teamId);
+      if (!team) {
+        res.status(404).json(ResponseDTO.fail('Team not found'));
+        return;
+      }
+
+      if (status !== 'approved' && status !== 'rejected') {
+        res.status(400).json(ResponseDTO.fail('status is invalid'));
+        return;
+      }
+
+      const updatedTeam = await Team.findByIdAndUpdate(
+        teamId,
+        {
+          $set: {
+            'appliedUsers.$[elem].status': status,
+          },
+        },
+        {
+          arrayFilters: [{ 'elem.userId': userId }],
+          new: true,
+        },
+      );
+
+      console.log(updatedTeam);
+
+      res.json(
+        ResponseDTO.success({
+          teamId: updatedTeam?.id,
+          userId: updatedTeam?.appliedUsers,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
 
 // curl -X GET http://localhost:3000/api/v1/users
 userRouter.get('/', async (_req, res) => {

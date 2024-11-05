@@ -85,8 +85,20 @@ const TravelSchema: Schema<ITravel> = new Schema(
     reviewWrite: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    query: {
+      isDeleted: false,
+    },
+  },
 );
+
+TravelSchema.pre(['find', 'findOne'], function (next) {
+  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), 'isDeleted')) {
+    this?.where({ isDeleted: false });
+  }
+  next();
+});
 
 export const Travel = mongoose.model<ITravel>('Travel', TravelSchema);
 

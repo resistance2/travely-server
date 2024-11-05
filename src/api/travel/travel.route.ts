@@ -77,7 +77,8 @@ travelRouter.post(
  */
 travelRouter.get('/', async (_req, res) => {
   const travels = await Travel.find().populate('teamId').limit(100).lean();
-  res.json(ResponseDTO.success(travels));
+  console.log(travels);
+  res.status(200).json(ResponseDTO.success(travels));
 });
 
 /**
@@ -252,5 +253,63 @@ travelRouter.patch(
     }
   },
 );
+
+// 여행 활성화 비활성화
+travelRouter.patch(
+  '/update-active',
+  checkRequiredFields(['travelId', 'isActive']),
+  async (req, res) => {
+    const { travelId, travelActive } = req.body;
+    try {
+      const travel = await Travel.findByIdAndUpdate(travelId, { travelActive });
+      res.json(
+        ResponseDTO.success({
+          id: travel?.id,
+          travelActive: travel?.travelActive,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
+
+// 내 여행 관리 페이지
+// 여행 삭제, isDeleted: true
+// 팀안에 approved 상태인 유저가 없을 경우 삭제 가능
+travelRouter.patch('/delete-travel', checkRequiredFields(['travelId']), async (req, res) => {
+  const { travelId } = req.body;
+  try {
+    const travel = await Travel.findById(travelId);
+    if (!travel) {
+      res.status(404).json(ResponseDTO.fail('Travel not found'));
+      return;
+    }
+
+    const teams = await Team.find({
+      travelId,
+      'appliedUsers.status': 'approved',
+    });
+
+    if (teams.length > 0) {
+      res.status(400).json(ResponseDTO.fail('Approved user exists'));
+      return;
+    }
+
+    const updatedTravel = await Travel.findByIdAndUpdate(travelId, {
+      isDeleted: true,
+    });
+
+    res.json(
+      ResponseDTO.success({
+        travelId: updatedTravel?.id,
+      }),
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseDTO.fail((error as Error).message));
+  }
+});
 
 export { travelRouter };
