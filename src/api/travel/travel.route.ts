@@ -1,6 +1,10 @@
 import { Team, Travel, User } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
-import { checkRequiredFields, checkRequiredFieldsQuery } from '../../checkRequiredFields';
+import {
+  checkRequiredFields,
+  checkRequiredFieldsParams,
+  checkRequiredFieldsQuery,
+} from '../../checkRequiredFields';
 import { Router } from 'express';
 import mongoose from 'mongoose';
 import { validObjectId } from '../../validObjectId';
@@ -311,5 +315,54 @@ travelRouter.patch('/delete-travel', checkRequiredFields(['travelId']), async (r
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
+
+// 내 여행
+// 내가 만든 여행 목록 조회
+travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const user = await User.findById(userId).lean();
+    if (!user) {
+      res.status(404).json(ResponseDTO.fail('User not found'));
+      return;
+    }
+
+    const travels = await Travel.find({ userId: user._id }).populate('teamId').lean();
+    res.json(
+      ResponseDTO.success({
+        travels,
+      }),
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseDTO.fail((error as Error).message));
+  }
+});
+
+// 여행 관리 페이지
+// /api/v1/travels/manage-my-travel/travelId
+// 해당 여행의 팀과 팀에 있는 유저 목록 조회
+travelRouter.get(
+  '/manage-my-travel/:travelId',
+  checkRequiredFieldsParams(['travelId']),
+  async (req, res) => {
+    const { travelId } = req.params;
+    try {
+      const travel = await Travel.findById(travelId).populate('teamId').lean();
+      if (!travel) {
+        res.status(404).json(ResponseDTO.fail('Travel not found'));
+        return;
+      }
+      res.json(
+        ResponseDTO.success({
+          travel,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
 
 export { travelRouter };
