@@ -347,15 +347,55 @@ travelRouter.get(
   checkRequiredFieldsParams(['travelId']),
   async (req, res) => {
     const { travelId } = req.params;
+    const { teamId, page = 0, size = 7 } = req.query;
+    const page_ = parseInt(page as string, 10);
+    const size_ = parseInt(size as string, 10);
+
+    if (isNaN(page_) || isNaN(size_)) {
+      console.log(page_, size_);
+      res.status(400).json(ResponseDTO.fail('Invalid page or size'));
+      return;
+    }
+
     try {
       const travel = await Travel.findById(travelId).populate('teamId').lean();
       if (!travel) {
         res.status(404).json(ResponseDTO.fail('Travel not found'));
         return;
       }
+
+      const teams = teamId
+        ? await Team.find({ travelId, _id: teamId }).populate('appliedUsers.userId').lean()
+        : await Team.find({ travelId }).populate('appliedUsers.userId').lean();
+
+      const paginatedTeams = teams.slice(page_ * size_, (page_ + 1) * size_);
+      const totalElements = teams.length;
+      const totalPages = Math.ceil(totalElements / size_);
+
+      const travelTeams = paginatedTeams.map((team) => ({
+        travelStartDate: team.travelStartDate,
+        travelEndDate: team.travelEndDate,
+        personLimit: team.personLimit,
+        appliedUsers: team.appliedUsers.map((appliedUser) => ({
+          ...appliedUser.userId,
+          status: appliedUser.status,
+          appliedAt: appliedUser.appliedAt,
+        })),
+      }));
+
       res.json(
         ResponseDTO.success({
-          travel,
+          travelTitle: travel.travelTitle,
+          createAt: travel.createdAt,
+          updateAt: travel.updatedAt,
+          travelActive: travel.travelActive,
+          travelTeams,
+          pagination: {
+            page: Number(page),
+            size: Number(size),
+            totalElements,
+            totalPages,
+          },
         }),
       );
     } catch (error) {
