@@ -345,6 +345,7 @@ travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), as
 travelRouter.get(
   '/manage-my-travel/:travelId',
   checkRequiredFieldsParams(['travelId']),
+  checkRequiredFieldsQuery(['teamId']),
   async (req, res) => {
     const { travelId } = req.params;
     const { teamId, page = 0, size = 7 } = req.query;
@@ -365,37 +366,76 @@ travelRouter.get(
       }
 
       const teams = teamId
-        ? await Team.find({ travelId, _id: teamId }).populate('appliedUsers.userId').lean()
-        : await Team.find({ travelId }).populate('appliedUsers.userId').lean();
+        ? await Team.findOne({ travelId, _id: teamId })
+            .populate({
+              path: 'appliedUsers.userId',
+              select: '_id userProfileImage socialName userName userEmail phoneNumber mbti',
+            })
+            .lean()
+        : await Team.findOne({ travelId })
+            .populate({
+              path: 'appliedUsers.userId',
+              select: '_id userProfileImage socialName userName userEmail phoneNumber mbti',
+            })
+            .lean();
 
-      const paginatedTeams = teams.slice(page_ * size_, (page_ + 1) * size_);
-      const totalElements = teams.length;
+      const appliedUsers = teams?.appliedUsers || [];
+
+      const paginatedAppliedUsers = appliedUsers
+        .slice(page_ * size_, (page_ + 1) * size_)
+        .map((user) => {
+          return {
+            ...user.userId,
+            appliedAt: user.appliedAt,
+            status: user.status,
+          };
+        });
+      const totalElements = appliedUsers.length;
       const totalPages = Math.ceil(totalElements / size_);
-
-      const travelTeams = paginatedTeams.map((team) => ({
-        travelStartDate: team.travelStartDate,
-        travelEndDate: team.travelEndDate,
-        personLimit: team.personLimit,
-        appliedUsers: team.appliedUsers.map((appliedUser) => ({
-          ...appliedUser.userId,
-          status: appliedUser.status,
-          appliedAt: appliedUser.appliedAt,
-        })),
-      }));
 
       res.json(
         ResponseDTO.success({
           travelTitle: travel.travelTitle,
-          createAt: travel.createdAt,
-          updateAt: travel.updatedAt,
+          travelStartDate: teams?.travelStartDate,
+          travelEndDate: teams?.travelEndDate,
+          personLimit: teams?.personLimit,
           travelActive: travel.travelActive,
-          travelTeams,
+          appliedUsers: paginatedAppliedUsers,
           pagination: {
             page: Number(page),
             size: Number(size),
             totalElements,
             totalPages,
           },
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
+
+// 여행 팀 조회
+// /api/v1/travels/manage-my-travel-teams/:travelId
+// 해당 여행의 팀 목록 조회
+// 팀 아이디만 조회
+travelRouter.get(
+  '/manage-my-travel-teams/:travelId',
+  checkRequiredFieldsParams(['travelId']),
+  async (req, res) => {
+    const { travelId } = req.params;
+    try {
+      const travel = await Travel.findById(travelId).lean();
+      if (!travel) {
+        res.status(404).json(ResponseDTO.fail('Travel not found'));
+        return;
+      }
+
+      const teams = (await Team.find({ travelId }).select('_id')).map((team) => team._id);
+      res.json(
+        ResponseDTO.success({
+          teamIds: teams,
         }),
       );
     } catch (error) {
