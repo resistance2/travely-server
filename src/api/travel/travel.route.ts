@@ -345,6 +345,7 @@ travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), as
 travelRouter.get(
   '/manage-my-travel/:travelId',
   checkRequiredFieldsParams(['travelId']),
+  checkRequiredFieldsQuery(['teamId']),
   async (req, res) => {
     const { travelId } = req.params;
     const { teamId, page = 0, size = 7 } = req.query;
