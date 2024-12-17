@@ -369,15 +369,26 @@ travelRouter.get(
         ? await Team.findOne({ travelId, _id: teamId })
             .populate({
               path: 'appliedUsers.userId',
-              select: '_id userProfileImage socialName userName userEmail phoneNumber mbti',
+              select: 'userProfileImage socialName userName userEmail phoneNumber mbti',
             })
             .lean()
         : await Team.findOne({ travelId })
             .populate({
               path: 'appliedUsers.userId',
-              select: '_id userProfileImage socialName userName userEmail phoneNumber mbti',
+              select: 'userProfileImage socialName userName userEmail phoneNumber mbti',
             })
             .lean();
+
+      if (teams && teams.appliedUsers) {
+        teams.appliedUsers = teams.appliedUsers.map((user) => ({
+          ...user,
+          userId: user.userId,
+          _id: undefined,
+        }));
+      } else {
+        res.status(404).json(ResponseDTO.fail('Team not found'));
+        return;
+      }
 
       const appliedUsers = teams?.appliedUsers || [];
 
@@ -386,6 +397,7 @@ travelRouter.get(
         .map((user) => {
           return {
             ...user.userId,
+            userId: user.userId._id,
             appliedAt: user.appliedAt,
             status: user.status,
           };
@@ -395,6 +407,8 @@ travelRouter.get(
 
       res.json(
         ResponseDTO.success({
+          travelId: travel._id,
+          teamId: teams._id,
           travelTitle: travel.travelTitle,
           travelStartDate: teams?.travelStartDate,
           travelEndDate: teams?.travelEndDate,
