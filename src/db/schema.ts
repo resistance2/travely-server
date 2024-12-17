@@ -13,12 +13,10 @@ export interface ITravel {
   meetingLocation: object;
   travelPrice: number;
   travelFAQ: object[];
-  reviews: Types.ObjectId[];
   bookmark: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
   teamId: Types.ObjectId[];
-  travelTotalScore?: number;
   travelActive: boolean;
   reviewWrite: boolean;
   isDeleted: boolean;
@@ -75,12 +73,10 @@ const TravelSchema: Schema<ITravel> = new Schema(
     meetingLocation: { type: Object },
     travelPrice: { type: Number, required: true },
     travelFAQ: { type: [Object], default: [] },
-    reviews: [{ type: Schema.Types.ObjectId, ref: 'Review', default: [] }],
     bookmark: [{ type: Schema.Types.ObjectId, default: [] }],
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
     teamId: [{ type: Schema.Types.ObjectId, ref: 'Team', default: [] }],
-    travelTotalScore: { type: Number },
     travelActive: { type: Boolean, default: true },
     reviewWrite: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },

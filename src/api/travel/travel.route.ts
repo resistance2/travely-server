@@ -1,4 +1,4 @@
-import { Team, Travel, User } from '../../db/schema';
+import { Review, Team, Travel, User } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
 import {
   checkRequiredFields,
@@ -194,6 +194,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
+
 // 북마크 추가 /travels/bookmark-add
 travelRouter.patch(
   '/bookmark-add',
@@ -316,6 +317,19 @@ travelRouter.patch('/delete-travel', checkRequiredFields(['travelId']), async (r
   }
 });
 
+const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
+  const reviews = await Review.find({ travelId }).lean();
+  const totalScore = reviews.reduce((acc, review) => {
+    return acc + review.travelScore;
+  }, 0);
+  return totalScore / reviews.length;
+};
+
+const getReviewCount = async (travelId: mongoose.Types.ObjectId) => {
+  const reviews = await Review.find({ travelId }).lean();
+  return reviews.length;
+};
+
 // 내 여행
 // 내가 만든 여행 목록 조회
 travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), async (req, res) => {
@@ -328,9 +342,35 @@ travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), as
     }
 
     const travels = await Travel.find({ userId: user._id }).populate('teamId').lean();
+    // 여기 가격, 제목, 별점, 리뷰수 ,업데이트 날짜, 활성화비활성화 여부,해당 여행에 미승인 상태인수
+    const userTravelDetails = await Promise.all(
+      travels.map(async (travel) => {
+        const populatedTravel = await Travel.findById(travel._id).populate('teamId').lean();
+
+        return {
+          travelId: populatedTravel?._id,
+          travelTitle: populatedTravel?.travelTitle,
+          travelPrice: populatedTravel?.travelPrice,
+          travelReviewCount: populatedTravel?._id ? await getReviewCount(populatedTravel._id) : 0,
+          travelActive: populatedTravel?.travelActive,
+          updatedAt: populatedTravel?.updatedAt,
+          reviewAverage: populatedTravel?._id ? await getReviewAverage(populatedTravel._id) : 0,
+          approveWatingCount: (Array.isArray(populatedTravel?.teamId)
+            ? (populatedTravel.teamId as unknown as { appliedUsers: { status: string }[] }[])
+            : []
+          ).reduce((acc, team) => {
+            return (
+              acc +
+              team.appliedUsers.filter((user: { status: string }) => user.status === 'waiting')
+                .length
+            );
+          }, 0),
+        };
+      }),
+    );
     res.json(
       ResponseDTO.success({
-        travels,
+        travels: userTravelDetails,
       }),
     );
   } catch (error) {
@@ -433,7 +473,7 @@ travelRouter.get(
 // 여행 팀 조회
 // /api/v1/travels/manage-my-travel-teams/:travelId
 // 해당 여행의 팀 목록 조회
-// 팀 아이디만 조회
+// 팀 아이디, 팀 시작날짜, 팀 종료날짜, 팀 인원제한, 팀에 신청한 유저 수, 팀에 승인된 유저 수 조회
 travelRouter.get(
   '/manage-my-travel-teams/:travelId',
   checkRequiredFieldsParams(['travelId']),
@@ -449,7 +489,12 @@ travelRouter.get(
       const teams = (await Team.find({ travelId }).select('_id')).map((team) => team._id);
       res.json(
         ResponseDTO.success({
-          teamIds: teams,
+          travelId: travel._id,
+          travelTitle: travel.travelTitle,
+          createdAt: travel.createdAt,
+          updateAt: travel.updatedAt,
+          travelActive: travel.travelActive,
+          teamTeams: teams,
         }),
       );
     } catch (error) {
