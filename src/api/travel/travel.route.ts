@@ -13,6 +13,7 @@ const travelRouter = Router();
 
 /**
  * 새로운 여행 계획하기
+ * 여행자 모집 글
  * POST /api/v1/travels/add-travel
  */
 travelRouter.post(
@@ -85,11 +86,7 @@ travelRouter.get('/', async (_req, res) => {
 });
 
 /**
- * 홈 (함께 떠나요 NEW), 홈 화면에 여행 목록 조회
- * GET /api/v1/travels/:userId
-curl -X POST http://localhost:3000/api/v1/travels/home-travel-list -H "Content-Type: application/json" -d '{
-  "userId": "user123"
-}'
+ * 여행 목록 조회, 여행자 구해요.
  */
 travelRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), async (req, res) => {
   const { userId, page = 1, size = 10 } = req.query;
@@ -116,7 +113,8 @@ travelRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), async (re
           bookmark: travel.bookmark.includes(user._id as mongoose.Types.ObjectId),
         };
       })
-      .slice(page_ * size_, (page_ + 1) * size_);
+      .slice(page_ * size_, (page_ + 1) * size_)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
     const totalElements = travels.length;
     const totalPages = Math.ceil(totalElements / size_);

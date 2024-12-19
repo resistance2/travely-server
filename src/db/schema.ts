@@ -2,9 +2,9 @@ import mongoose, { Schema, Types } from 'mongoose';
 
 export interface ITravel {
   userId: Types.ObjectId;
-  thumbnail: string;
+  thumbnail: string | null;
   travelTitle: string;
-  travelContent: object;
+  travelContent: string;
   tag: string[];
   travelCourse: string[];
   includedItems: string[];
@@ -22,6 +22,26 @@ export interface ITravel {
   isDeleted: boolean;
 }
 
+export interface ITravelGuide {
+  userId: Types.ObjectId; // 글 작성자의 고유 ID (MongoDB ObjectId)
+  thumbnail: string | null; // 게시글 썸네일 이미지 URL
+  travelTitle: string; // 여행 게시글 제목
+  travelContent: string; // 여행 게시글 본문 내용 (rich text 등 다양한 형식 지원)
+  bookmark: Types.ObjectId[]; // 북마크한 사용자들의 ID 배열
+  createdAt: Date; // 게시글 생성 일시
+  updatedAt: Date; // 게시글 수정 일시
+  teamId: Types.ObjectId[]; // 연관된 팀 정보들의 ID 배열 (1:N 관계)
+  isDeleted: boolean; // 게시글 삭제 여부 플래그
+}
+
+export interface ITeam {
+  travelId: Types.ObjectId; // 여행 일정 ID (MongoDB ObjectId)
+  personLimit: number; // 모집 인원 제한
+  appliedUsers: IAppliedUser[]; // 신청한 사용자들의 정보 배열
+  travelStartDate: Date; // 여행 시작 날짜
+  travelEndDate: Date; // 여행 종료 날짜
+}
+
 export interface IReview {
   userId: Types.ObjectId;
   travelId: Types.ObjectId;
@@ -35,14 +55,6 @@ export interface IAppliedUser {
   userId: Types.ObjectId;
   appliedAt: Date;
   status: 'waiting' | 'approved' | 'rejected';
-}
-
-export interface ITeam {
-  travelId: Types.ObjectId;
-  personLimit: number;
-  appliedUsers: IAppliedUser[];
-  travelStartDate: Date;
-  travelEndDate: Date;
 }
 
 export interface IUser {
@@ -64,7 +76,7 @@ const TravelSchema: Schema<ITravel> = new Schema(
     userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     thumbnail: { type: String, required: true },
     travelTitle: { type: String, required: true },
-    travelContent: { type: Object, required: true },
+    travelContent: { type: String, required: true },
     tag: { type: [String], required: true, default: [] },
     travelCourse: { type: [String], required: true, default: [] },
     includedItems: { type: [String], default: [] },
@@ -97,6 +109,35 @@ TravelSchema.pre(['find', 'findOne'], function (next) {
 });
 
 export const Travel = mongoose.model<ITravel>('Travel', TravelSchema);
+
+const TravelGuideSchema: Schema<ITravelGuide> = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    thumbnail: { type: String, required: true },
+    travelTitle: { type: String, required: true },
+    travelContent: { type: String, required: true },
+    bookmark: [{ type: Schema.Types.ObjectId, default: [] }],
+    createdAt: { type: Date, default: Date.now, required: true },
+    updatedAt: { type: Date, default: Date.now, required: true },
+    teamId: [{ type: Schema.Types.ObjectId, ref: 'Team', default: [] }],
+    isDeleted: { type: Boolean, default: false },
+  },
+  {
+    timestamps: true,
+    query: {
+      isDeleted: false,
+    },
+  },
+);
+
+TravelGuideSchema.pre(['find', 'findOne'], function (next) {
+  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), 'isDeleted')) {
+    this?.where({ isDeleted: false });
+  }
+  next();
+});
+
+export const TravelGuide = mongoose.model<ITravelGuide>('TravelGuide', TravelGuideSchema);
 
 const ReviewSchema: Schema<IReview> = new Schema(
   {

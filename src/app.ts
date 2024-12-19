@@ -7,6 +7,7 @@ import { imageRouter } from './api/imageUpload/image.routes';
 import { userRouter } from './api/user/user.routes';
 import { travelRouter } from './api/travel/travel.route';
 import { reviewRouter } from './api/review/review.routes';
+import { travelGuideRouter } from './api/travelGuide/travelGuide.route';
 
 dotenv.config();
 const app = express();
@@ -44,6 +45,7 @@ async function startServer() {
   app.use(`/api/${VERSION}/users`, userRouter);
   app.use(`/api/${VERSION}/travels`, travelRouter);
   app.use(`/api/${VERSION}/reviews`, reviewRouter);
+  app.use(`/api/${VERSION}/travels-guide`, travelGuideRouter);
 
   app.get('/', (_req, res) => {
     res.send('Hello World');
