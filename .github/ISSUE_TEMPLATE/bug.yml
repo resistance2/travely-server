@@ -11,8 +11,6 @@ body:
       description: 아래 가이드라인에 권장 가이드라인에 따라 버그 리포트를 작성해 주세요.
       placeholder: |
         `버그에 대한 설명`과 `버그가 발생한 상황&환경`은 꼭 적어주세요️
-    validations:
-      required: true
   - type: markdown
     attributes:
       value: |

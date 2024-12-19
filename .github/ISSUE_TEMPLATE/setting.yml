@@ -16,8 +16,6 @@ body:
             - package-lock.json 변경
             - .env 환경 변수 관련 세팅 변경
             - 그외
-    validations:
-      required: true
   - type: markdown
     attributes:
       value: |

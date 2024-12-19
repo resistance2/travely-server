@@ -10,8 +10,6 @@ body:
       label: 📄 설명
       description: 리팩터링 변경 사항을 설명해주세요.
       placeholder: 자세한 설명을 제공해주세요!
-    validations:
-      required: true
   - type: markdown
     attributes:
       value: |
