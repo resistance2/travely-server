@@ -1,4 +1,4 @@
-import { Review, Team, Travel, User } from '../../db/schema';
+import { IAppliedUser, Review, Team, Travel, User } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
 import {
   checkRequiredFields,
@@ -378,6 +378,22 @@ travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), as
   }
 });
 
+const statusPriority = {
+  waiting: 1,
+  approved: 2,
+  rejected: 3,
+};
+const sortUsersByStatus = (users: IAppliedUser[]) => {
+  return users.sort((a, b) => {
+    const userPiorityA = statusPriority[a.status];
+    const userPiorityB = statusPriority[b.status];
+    if (userPiorityA !== userPiorityB) {
+      return userPiorityA - userPiorityB;
+    } else {
+      return a.appliedAt.getTime() - b.appliedAt.getTime();
+    }
+  });
+};
 // 여행 관리 페이지
 // /api/v1/travels/manage-my-travel/travelId
 // 해당 여행의 팀과 팀에 있는 유저 목록 조회
@@ -410,20 +426,30 @@ travelRouter.get(
         })
         .lean();
 
-      if (teams && teams.appliedUsers) {
-        teams.appliedUsers = teams.appliedUsers.map((user) => ({
-          ...user,
-          userId: user.userId,
-          _id: undefined,
-        }));
-      } else {
+      if (!teams) {
         res.status(404).json(ResponseDTO.fail('Team not found'));
         return;
       }
 
-      const appliedUsers = teams?.appliedUsers || [];
+      const appliedUsers =
+        teams.appliedUsers.map((user) => ({
+          ...user,
+          userId: user.userId,
+          _id: undefined,
+        })) || [];
 
-      const paginatedAppliedUsers = appliedUsers
+      const approvedUsers = appliedUsers
+        .filter((user) => user.status === 'approved')
+        .map((user) => {
+          return {
+            ...user.userId,
+            userId: user.userId._id,
+            appliedAt: user.appliedAt,
+            status: user.status,
+          };
+        });
+
+      const paginatedAppliedUsers = sortUsersByStatus(appliedUsers)
         .slice(page_ * size_, (page_ + 1) * size_)
         .map((user) => {
           return {
@@ -446,6 +472,7 @@ travelRouter.get(
           personLimit: teams?.personLimit,
           travelActive: travel.travelActive,
           appliedUsers: paginatedAppliedUsers,
+          approvedUsers,
           pagination: {
             page: Number(page),
             size: Number(size),
