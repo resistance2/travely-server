@@ -81,7 +81,6 @@ travelRouter.post(
  */
 travelRouter.get('/', async (_req, res) => {
   const travels = await Travel.find().populate('teamId').limit(100).lean();
-  console.log(travels);
   res.status(200).json(ResponseDTO.success(travels));
 });
 
@@ -393,7 +392,6 @@ travelRouter.get(
     const size_ = parseInt(size as string, 10);
 
     if (isNaN(page_) || isNaN(size_)) {
-      console.log(page_, size_);
       res.status(400).json(ResponseDTO.fail('Invalid page or size'));
       return;
     }
@@ -405,19 +403,12 @@ travelRouter.get(
         return;
       }
 
-      const teams = teamId
-        ? await Team.findOne({ travelId, _id: teamId })
-            .populate({
-              path: 'appliedUsers.userId',
-              select: 'userProfileImage socialName userName userEmail phoneNumber mbti',
-            })
-            .lean()
-        : await Team.findOne({ travelId })
-            .populate({
-              path: 'appliedUsers.userId',
-              select: 'userProfileImage socialName userName userEmail phoneNumber mbti',
-            })
-            .lean();
+      const teams = await Team.findOne({ travelId, _id: teamId })
+        .populate({
+          path: 'appliedUsers.userId',
+          select: 'userProfileImage socialName userName userEmail phoneNumber mbti',
+        })
+        .lean();
 
       if (teams && teams.appliedUsers) {
         teams.appliedUsers = teams.appliedUsers.map((user) => ({
