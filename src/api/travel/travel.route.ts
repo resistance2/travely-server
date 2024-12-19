@@ -130,6 +130,7 @@ travelRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), async (re
         pageInfo: {
           totalElements,
           totalPages,
+          currentPage,
           pageSize,
           hasNext,
         },
