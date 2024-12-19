@@ -91,10 +91,13 @@ curl -X POST http://localhost:3000/api/v1/travels/home-travel-list -H "Content-T
   "userId": "user123"
 }'
  */
-travelRouter.get('/home-travel-list', checkRequiredFieldsQuery(['userId']), async (req, res) => {
-  const { userId } = req.query;
+travelRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), async (req, res) => {
+  const { userId, page = 1, size = 10 } = req.query;
+  const page_ = parseInt(page as string, 10) - 1;
+  const size_ = parseInt(size as string, 10);
+
   try {
-    const travels = await Travel.find().sort({ createAt: -1 }).limit(20);
+    const travels = await Travel.find().sort({ createAt: -1 });
     if (!validObjectId(userId as string)) {
       res.status(400).json(ResponseDTO.fail('Invalid userId'));
       return;
@@ -106,15 +109,31 @@ travelRouter.get('/home-travel-list', checkRequiredFieldsQuery(['userId']), asyn
       res.status(404).json(ResponseDTO.fail('User not found'));
       return;
     }
-    const userBookmarkTravels = travels.map((travel) => {
-      return {
-        ...travel.toObject(),
-        bookmark: travel.bookmark.includes(user._id as mongoose.Types.ObjectId),
-      };
-    });
+    const userBookmarkTravels = travels
+      .map((travel) => {
+        return {
+          ...travel.toObject(),
+          bookmark: travel.bookmark.includes(user._id as mongoose.Types.ObjectId),
+        };
+      })
+      .slice(page_ * size_, (page_ + 1) * size_);
+
+    const totalElements = travels.length;
+    const totalPages = Math.ceil(totalElements / size_);
+    const currentPage = page_ + 1;
+    const pageSize = size_;
+    const hasNext = totalPages - currentPage > 0;
+
     res.json(
       ResponseDTO.success({
         travels: userBookmarkTravels,
+        pageInfo: {
+          totalElements,
+          totalPages,
+          currentPage,
+          pageSize,
+          hasNext,
+        },
       }),
     );
   } catch (error) {
@@ -403,7 +422,7 @@ travelRouter.get(
   checkRequiredFieldsQuery(['teamId']),
   async (req, res) => {
     const { travelId } = req.params;
-    const { teamId, page = 0, size = 7 } = req.query;
+    const { teamId, page = 1, size = 7 } = req.query;
     const page_ = parseInt(page as string, 10) - 1;
     const size_ = parseInt(size as string, 10);
 
