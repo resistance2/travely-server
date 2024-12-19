@@ -82,8 +82,6 @@ userRouter.patch(
         },
       );
 
-      console.log(updatedTeam);
-
       res.json(
         ResponseDTO.success({
           teamId: updatedTeam?.id,
