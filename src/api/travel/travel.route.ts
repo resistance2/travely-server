@@ -389,7 +389,7 @@ travelRouter.get(
   async (req, res) => {
     const { travelId } = req.params;
     const { teamId, page = 0, size = 7 } = req.query;
-    const page_ = parseInt(page as string, 10);
+    const page_ = parseInt(page as string, 10) - 1;
     const size_ = parseInt(size as string, 10);
 
     if (isNaN(page_) || isNaN(size_)) {
