@@ -11,8 +11,6 @@ body:
       description: 추가하거나 수정하는 테스트에 대해 설명해주세요.
       placeholder: |
         시간이 없다면 `테스트 대상`과 `테스트 유형`만이라도 적어주세요
-    validations:
-      required: true
   - type: markdown
     attributes:
       value: |
