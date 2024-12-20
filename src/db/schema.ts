@@ -12,7 +12,7 @@ export interface ITravel {
   meetingTime: string[];
   meetingLocation: object;
   travelPrice: number;
-  travelFAQ: object[];
+  travelFAQ: string[];
   bookmark: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
@@ -84,7 +84,7 @@ const TravelSchema: Schema<ITravel> = new Schema(
     meetingTime: { type: [String], default: [] },
     meetingLocation: { type: Object },
     travelPrice: { type: Number, required: true },
-    travelFAQ: { type: [Object], default: [] },
+    travelFAQ: { type: [String], default: [] },
     bookmark: [{ type: Schema.Types.ObjectId, default: [] }],
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
