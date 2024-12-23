@@ -142,7 +142,7 @@ travelRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), async (re
             userId: createdByUser?._id,
             userName: createdByUser?.userName || createdByUser?.socialName,
           },
-          tags: travel.tag,
+          tag: travel.tag,
           createdAt: travel.createdAt,
           bookmark: travel.bookmark.includes(user._id as mongoose.Types.ObjectId),
         };
