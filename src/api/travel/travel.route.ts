@@ -9,6 +9,19 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import { validObjectId } from '../../validObjectId';
 
+const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
+  const reviews = await Review.find({ travelId }).lean();
+  const totalScore = reviews.reduce((acc, review) => {
+    return acc + review.travelScore;
+  }, 0);
+  return totalScore / reviews.length;
+};
+
+const getReviewCount = async (travelId: mongoose.Types.ObjectId) => {
+  const reviews = await Review.find({ travelId }).lean();
+  return reviews.length;
+};
+
 const travelRouter = Router();
 
 /**
@@ -92,6 +105,12 @@ travelRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), async (re
   const { userId, page = 1, size = 10 } = req.query;
   const page_ = parseInt(page as string, 10) - 1;
   const size_ = parseInt(size as string, 10);
+  // const teams = await Team.findOne({ travelId, _id: teamId })
+  //   .populate({
+  //     path: 'appliedUsers.userId',
+  //     select: 'userProfileImage socialName userName userEmail phoneNumber mbti',
+  //   })
+  //   .lean();
 
   try {
     const travels = await Travel.find().sort({ createAt: -1 });
@@ -106,13 +125,30 @@ travelRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), async (re
       res.status(404).json(ResponseDTO.fail('User not found'));
       return;
     }
-    const userBookmarkTravels = travels
-      .map((travel) => {
+    const userBookmarkTravels = await Promise.all(
+      travels.map(async (travel) => {
+        const reviewCnt = await getReviewCount(travel._id);
+        const travelScore = await getReviewAverage(travel._id);
+        const createdByUser = await User.findById(travel.userId).lean();
         return {
-          ...travel.toObject(),
+          travelTitle: travel.travelTitle,
+          price: travel.travelPrice,
+          thumbnail: travel.thumbnail,
+          review: {
+            travelScore,
+            reviewCnt,
+          },
+          createdBy: {
+            userId: createdByUser?._id,
+            userName: createdByUser?.userName || createdByUser?.socialName,
+          },
+          createdAt: travel.createdAt,
           bookmark: travel.bookmark.includes(user._id as mongoose.Types.ObjectId),
         };
-      })
+      }),
+    );
+
+    const paginatedTravels = userBookmarkTravels
       .slice(page_ * size_, (page_ + 1) * size_)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
@@ -124,7 +160,7 @@ travelRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), async (re
 
     res.json(
       ResponseDTO.success({
-        travels: userBookmarkTravels,
+        travels: paginatedTravels,
         pageInfo: {
           totalElements,
           totalPages,
@@ -332,19 +368,6 @@ travelRouter.patch('/delete-travel', checkRequiredFields(['travelId']), async (r
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
-
-const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
-  const reviews = await Review.find({ travelId }).lean();
-  const totalScore = reviews.reduce((acc, review) => {
-    return acc + review.travelScore;
-  }, 0);
-  return totalScore / reviews.length;
-};
-
-const getReviewCount = async (travelId: mongoose.Types.ObjectId) => {
-  const reviews = await Review.find({ travelId }).lean();
-  return reviews.length;
-};
 
 // 내 여행
 // 내가 만든 여행 목록 조회
