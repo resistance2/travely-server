@@ -1,10 +1,9 @@
-import { ITravelGuide, Team, TravelGuide, User } from '../../db/schema';
+import { Team, TravelGuide, User } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFields, checkRequiredFieldsQuery } from '../../checkRequiredFields';
 import { Router } from 'express';
 import mongoose from 'mongoose';
 import { validObjectId } from '../../validObjectId';
-import { ObjectId } from 'mongodb';
 
 const travelGuideRouter = Router();
 
@@ -75,12 +74,12 @@ travelGuideRouter.post(
   },
 );
 
-const isBookmarked = (userId: ObjectId, travel: ITravelGuide) => {
-  console.log('userId', userId);
-  console.log('bookmarks', travel.bookmark);
-  console.log('isBookmarked', travel.bookmark.includes(userId as mongoose.Types.ObjectId));
-  return travel.bookmark.includes(userId as mongoose.Types.ObjectId);
-};
+// const isBookmarked = (userId: ObjectId, travel: ITravelGuide) => {
+//   console.log('userId', userId);
+//   console.log('bookmarks', travel.bookmark);
+//   console.log('isBookmarked', travel.bookmark.includes(userId as mongoose.Types.ObjectId));
+//   return travel.bookmark.includes(userId as mongoose.Types.ObjectId);
+// };
 
 /**
  * 여행 목록 조회, 가이드 구해요
@@ -103,13 +102,39 @@ travelGuideRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), asyn
       res.status(404).json(ResponseDTO.fail('User not found'));
       return;
     }
-    const userBookmarkTravels = travelsGuides
-      .map((travel) => {
+    const userBookmarkTravels = await Promise.all(
+      travelsGuides.map(async (travel) => {
+        const createdByUser = await User.findById(travel.userId).lean();
+        const teams = await Team.findOne({ travelId: travel._id, _id: travel.teamId[0] })
+          .populate({
+            path: 'appliedUsers.userId',
+            select: 'mbti',
+          })
+          .lean();
+
+        const appliedUsers =
+          teams?.appliedUsers.map((user) => ({
+            ...user,
+          })) || null;
+
         return {
-          ...travel.toObject(),
-          bookmark: isBookmarked(user._id, travel),
+          travelTitle: travel.travelTitle,
+          userId: travel.userId,
+          createdBy: {
+            userId: createdByUser?._id,
+            userName: createdByUser?.userName || createdByUser?.socialName,
+          },
+          team: {
+            personLimit: teams?.personLimit ?? null,
+            mbti: appliedUsers,
+          },
+          createdAt: travel.createdAt,
+          commentCnt: 20,
         };
-      })
+      }),
+    );
+
+    const paginatedTravels = userBookmarkTravels
       .slice(page_ * size_, (page_ + 1) * size_)
       .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
@@ -121,7 +146,7 @@ travelGuideRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), asyn
 
     res.json(
       ResponseDTO.success({
-        travels: userBookmarkTravels,
+        travels: paginatedTravels,
         pageInfo: {
           totalElements,
           totalPages,
