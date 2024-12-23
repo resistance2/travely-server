@@ -33,3 +33,11 @@ pre-commit:
 #       runner: node
 #     "any.go":
 #       runner: go run
+
+prepare-commit-msg:
+  commands:
+    commitlint:
+      runner: bash
+      skip:
+        - "[[ ! -f .env ]] || ! grep -q '^byulBash=true' .env"
+      run: 'bash "./.github/hooks/commitlint.sh" {1} {2}'
