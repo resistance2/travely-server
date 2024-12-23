@@ -9,8 +9,7 @@
     "build": "tsc",
     "lint": "eslint . --fix",
     "type-check": "tsc --noEmit",
-    "test": "jest",
-    "byulBash": " cp .github/hooks/byulBash.sh .git/hooks/prepare-commit-msg && chmod +x .git/hooks/prepare-commit-msg"
+    "test": "jest"
   },
   "keywords": [
     "express",

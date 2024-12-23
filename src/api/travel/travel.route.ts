@@ -24,6 +24,18 @@ const getReviewCount = async (travelId: mongoose.Types.ObjectId) => {
 
 const travelRouter = Router();
 
+travelRouter.get('/:travelId', checkRequiredFieldsParams(['travelId']), async (req, res) => {
+  const { travelId } = req.params;
+  const travels = await Travel.find({
+    _id: travelId,
+  })
+    .populate('teamId')
+    .limit(100)
+    .lean();
+
+  res.json(ResponseDTO.success(travels));
+});
+
 /**
  * 새로운 여행 계획하기
  * 여행자 모집 글
