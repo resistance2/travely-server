@@ -1,25 +1,26 @@
-import { Request, Response, Router } from 'express';
-import multer, { memoryStorage } from 'multer';
-import { uploadImages } from './imageUpload';
+import { Request, Response, Router } from "express";
+import multer, { memoryStorage } from "multer";
+import { uploadImages } from "./imageUpload";
+import { CLIENT_RENEG_LIMIT } from "tls";
 
 const imageRouter = Router();
 const upload = multer({ storage: memoryStorage() });
 
 imageRouter.post(
-  '/upload',
+  "/upload",
   upload.fields([
-    { name: 'thumbnail', maxCount: 1 },
-    { name: 'meetingSpace', maxCount: 5 },
-    { name: 'introSrcs', maxCount: 5 },
+    { name: "thumbnail", maxCount: 1 },
+    { name: "meetingSpace", maxCount: 5 },
+    { name: "introSrcs", maxCount: 5 },
   ]),
   async (req: Request, res: Response): Promise<void> => {
     try {
       if (!req.files) {
-        res.status(400).json({ message: '이미지 파일이 없습니다.' });
+        res.status(400).json({ message: "이미지 파일이 없습니다." });
         return;
       }
 
-      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      const files = req.files;
 
       const result: { [key: string]: string[] } = {
         thumbnail: [],
@@ -37,10 +38,10 @@ imageRouter.post(
 
       res.status(200).json(result);
     } catch (error) {
-      console.error('이미지 업로드 오류:', error);
-      res.status(500).json({ message: '이미지 업로드 실패' });
+      console.error("이미지 업로드 오류:", error);
+      res.status(500).json({ message: "이미지 업로드 실패" });
     }
-  },
+  }
 );
 
 export { imageRouter };

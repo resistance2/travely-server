@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import { ResponseDTO } from './ResponseDTO';
+import { Request, Response, NextFunction } from "express";
+import { ResponseDTO } from "./ResponseDTO";
 
 export const checkRequiredFields = (fields: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {

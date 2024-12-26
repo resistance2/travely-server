@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 export const validObjectId = (id: string): boolean => {
   // Check if the id is a valid ObjectId
