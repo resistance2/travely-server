@@ -111,16 +111,7 @@
         "useValidTypeof": "error"
       }
     },
-    "ignore": [
-      "**/node_modules/",
-      "**/dist/",
-      "**/.github",
-      "**/.tmp",
-      "**/server",
-      "../node_modules",
-      "../dist",
-      "../server"
-    ]
+    "ignore": ["**/node_modules/", "**/dist/", "**/.github", "**/.tmp"]
   },
   "javascript": {
     "formatter": {
@@ -130,9 +121,7 @@
       "semicolons": "always",
       "arrowParentheses": "always",
       "bracketSameLine": false,
-      "quoteStyle": "single",
-      "attributePosition": "auto",
-      "bracketSpacing": true
+      "quoteStyle": "single"
     }
   }
 }
