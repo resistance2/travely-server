@@ -15,8 +15,8 @@
 pre-commit:
   parallel: true
   commands:
-    eslint:
-      glob: '*.{js,ts,jsx,tsx}'
+    biome:
+      glob: "*.{js,ts,jsx,tsx}"
       run: bun lint {staged_files}
 #     rubocop:
 #       tags: backend style
