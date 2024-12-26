@@ -254,27 +254,55 @@ travelRouter.get(
         return;
       }
 
-      // const travels = await Travel.find({ bookmark: { $in: [user?._id] } });
-
       const teams = await Team.find({
         appliedUsers: {
           $elemMatch: {
             userId: user._id,
           },
         },
+      })
+        .populate({
+          path: "travelId",
+          select: "travelTitle userId",
+          populate: {
+            path: "userId",
+            select: "socialName userEmail userProfileImage",
+          },
+        })
+        .populate({
+          path: "appliedUsers.userId",
+          select: "mbti socialName",
+        })
+        .lean();
+
+      const travels = teams.map((team) => {
+        return {
+          guideInfo: {
+            socialName: (team.travelId as any).userId.socialName,
+            userProfileImg: (team.travelId as any).userId.userProfileImage,
+            userId: (team.travelId as any).userId._id,
+            userName: (team.travelId as any).userId.userName || null,
+          },
+          travelTeam: {
+            travelStartDate: team.travelStartDate,
+            travelEndDate: team.travelEndDate,
+            personLimit: team.personLimit,
+            approvedMembers: team.appliedUsers.map((user) => {
+              return {
+                userId: user.userId._id,
+                mbti: (user.userId as any).mbti || null,
+                status: user.status,
+              };
+            }),
+          },
+        };
       });
 
-      const travelIds = teams.map((team) => team.travelId);
-
-      const travels = await Promise.all(
-        travelIds.map(async (travelId) => {
-          return await Travel.findById(travelId).populate("userId").lean();
-        })
-      );
+      console.log(travels);
 
       res.json(
         ResponseDTO.success({
-          travels,
+          travels: travels,
         })
       );
     } catch (error) {
