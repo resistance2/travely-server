@@ -254,8 +254,6 @@ travelRouter.get(
         return;
       }
 
-      // const travels = await Travel.find({ bookmark: { $in: [user?._id] } });
-
       const teams = await Team.find({
         appliedUsers: {
           $elemMatch: {
@@ -292,7 +290,7 @@ travelRouter.get(
             approvedMembers: team.appliedUsers.map((user) => {
               return {
                 userId: user.userId._id,
-                mbti: (user.userId as any).mbti,
+                mbti: (user.userId as any).mbti || null,
                 status: user.status,
               };
             }),
