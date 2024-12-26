@@ -24,7 +24,7 @@ const getReviewCount = async (travelId: mongoose.Types.ObjectId) => {
 
 const travelRouter = Router();
 
-travelRouter.get('/:travelId', checkRequiredFieldsParams(['travelId']), async (req, res) => {
+travelRouter.get('/travel-detail/:travelId', checkRequiredFieldsParams(['travelId']), async (req, res) => {
   const { travelId } = req.params;
   const travels = await Travel.find({
     _id: travelId,
@@ -88,8 +88,8 @@ travelRouter.post(
       );
       await Travel.findByIdAndUpdate(travelId, { $push: { teamId: team[0]._id } }, { session });
       await session.commitTransaction();
-      const newTrvael = await Travel.findById(travelId).populate('teamId').lean();
-      res.json(ResponseDTO.success(newTrvael));
+      const newTravel = await Travel.findById(travelId).populate('teamId').lean();
+      res.json(ResponseDTO.success(newTravel));
     } catch (error) {
       console.error(error);
       await session.abortTransaction();
@@ -407,7 +407,7 @@ travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), as
           travelActive: populatedTravel?.travelActive,
           updatedAt: populatedTravel?.updatedAt,
           reviewAverage: populatedTravel?._id ? await getReviewAverage(populatedTravel._id) : 0,
-          approveWatingCount: (Array.isArray(populatedTravel?.teamId)
+          approveWaitngCount: (Array.isArray(populatedTravel?.teamId)
             ? (populatedTravel.teamId as unknown as { appliedUsers: { status: string }[] }[])
             : []
           ).reduce((acc, team) => {

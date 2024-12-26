@@ -46,7 +46,7 @@ userRouter.post('/login', checkRequiredFields(['socialName', 'userEmail']), asyn
 });
 
 // 내 여행 관리 페이지
-// 해당 유저 대기중인 상태에서 approverd, rejected로 변경
+// 해당 유저 대기중인 상태에서 approved, rejected로 변경
 userRouter.patch(
   '/update-user-status',
   checkRequiredFields(['teamId', 'userId', 'status']),

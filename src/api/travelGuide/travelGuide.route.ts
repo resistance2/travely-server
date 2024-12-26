@@ -62,8 +62,8 @@ travelGuideRouter.post(
         { session },
       );
       await session.commitTransaction();
-      const newTrvael = await TravelGuide.findById(travelId).populate('teamId').lean();
-      res.json(ResponseDTO.success(newTrvael));
+      const newTravel = await TravelGuide.findById(travelId).populate('teamId').lean();
+      res.json(ResponseDTO.success(newTravel));
     } catch (error) {
       console.error(error);
       await session.abortTransaction();
