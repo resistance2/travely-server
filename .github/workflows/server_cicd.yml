@@ -2,30 +2,30 @@ name: server CI/CD on EC2
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Setup Bun
-      uses: oven-sh/setup-bun@v2
-      with:
-        bun-version: latest
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
-    - name: Check out the code
-      run: |
-        bun install
-        bun run type-check
-        bun run lint
-    
-    - name: Build the code
-      run: bun run build
+      - name: Check out the code
+        run: |
+          bun install
+          bun run type-check
+          bun run lint
 
-    - name: Create .env file
-      run: |
+      - name: Build the code
+        run: bun run build
+
+      - name: Create .env file
+        run: |
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
           echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
@@ -33,44 +33,46 @@ jobs:
           echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME }}" >> .env
           echo "CLOUDFRONT_URL=${{ secrets.CLOUDFRONT_URL }}" >> .env
 
-    - name: move files
-      run: |
-        mv .env dist/
-        mv ecosystem.config.js dist/
-        mv package.json dist/
+      - name: move files
+        run: |
+          mv .env dist/
+          mv ecosystem.config.js dist/
+          mv package.json dist/
+          mv package-lock.json dist/
+          mv ./src/travely-server.openapi.json dist/
 
-    - name: EC2 backup
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.REMOTE_HOST }}
-        username: ${{ secrets.REMOTE_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          timestamp=$(date +%Y%m%d%H%M%S)
-          if [ -d "/var/www/travely"]; then
-            cp -r /var/www/travely/ /var/www/travely_backup_.$timestamp
-            find /var/www -maxdepth 1 -name "travely_backup_*" -type d -mtime +7 -exec rm -rf {} +
-          else
-            echo "No existing directory to backup"
-          fi
+      - name: EC2 backup
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            timestamp=$(date +%Y%m%d%H%M%S)
+            if [ -d "/var/www/travely"]; then
+              cp -r /var/www/travely/ /var/www/travely_backup_.$timestamp
+              find /var/www -maxdepth 1 -name "travely_backup_*" -type d -mtime +7 -exec rm -rf {} +
+            else
+              echo "No existing directory to backup"
+            fi
 
-    - name: Deploy to AWS EC2
-      uses: burnett01/rsync-deployments@5.2.1
-      with:
-         switches: -avzr --delete --exclude='node_modules'
-         path: dist/
-         remote_path: /var/www/travely/
-         remote_host: ${{ secrets.REMOTE_HOST }}
-         remote_user: ${{ secrets.REMOTE_USER }}
-         remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
-         
-    - name: Setup environment and start PM2
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.REMOTE_HOST }}
-        username: ${{ secrets.REMOTE_USER }}
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        script: |
-          cd /var/www/travely
-          bun install --production
-          pm2 reload ecosystem.config.js --env production
+      - name: Deploy to AWS EC2
+        uses: burnett01/rsync-deployments@5.2.1
+        with:
+          switches: -avzr --delete --exclude='node_modules'
+          path: dist/
+          remote_path: /var/www/travely/
+          remote_host: ${{ secrets.REMOTE_HOST }}
+          remote_user: ${{ secrets.REMOTE_USER }}
+          remote_key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Setup environment and start PM2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/travely
+            bun install --production
+            pm2 reload ecosystem.config.js --env production
