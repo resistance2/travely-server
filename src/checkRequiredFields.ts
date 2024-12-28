@@ -4,7 +4,7 @@ import { ResponseDTO } from "./ResponseDTO";
 export const checkRequiredFields = (fields: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     for (const field of fields) {
-      if (!req.body[field]) {
+      if (!(field in req.body)) {
         res.status(400).json(ResponseDTO.fail(`${field} is required`));
         return;
       }
@@ -16,7 +16,7 @@ export const checkRequiredFields = (fields: string[]) => {
 export const checkRequiredFieldsQuery = (fields: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     for (const field of fields) {
-      if (!req.query[field]) {
+      if (!(field in req.body)) {
         res.status(400).json(ResponseDTO.fail(`${field} is required`));
         return;
       }
@@ -28,7 +28,7 @@ export const checkRequiredFieldsQuery = (fields: string[]) => {
 export const checkRequiredFieldsParams = (fields: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     for (const field of fields) {
-      if (!req.params[field]) {
+      if (!(field in req.body)) {
         res.status(400).json(ResponseDTO.fail(`${field} is required`));
         return;
       }
