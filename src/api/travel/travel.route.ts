@@ -381,9 +381,19 @@ travelRouter.patch(
   "/update-active",
   checkRequiredFields(["travelId", "isActive"]),
   async (req, res) => {
-    const { travelId, travelActive } = req.body;
+    const { travelId, isActive } = req.body;
     try {
-      const travel = await Travel.findByIdAndUpdate(travelId, { travelActive });
+      const travel = await Travel.findByIdAndUpdate(
+        travelId,
+        { travelActive: isActive },
+        { new: true } // 업데이트된 문서를 반환
+      );
+
+      if (!travel) {
+        res.status(404).json(ResponseDTO.fail("Travel not found"));
+        return;
+      }
+
       res.json(
         ResponseDTO.success({
           id: travel?.id,
