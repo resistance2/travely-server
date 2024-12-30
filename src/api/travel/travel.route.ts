@@ -133,7 +133,6 @@ travelRouter.get("/", async (_req, res) => {
  */
 travelRouter.get(
   "/travel-list",
-  checkRequiredFieldsQuery(["userId"]),
   async (req, res) => {
     const { userId, page = 1, size = 10 } = req.query;
     const page_ = parseInt(page as string, 10) - 1;
@@ -147,17 +146,18 @@ travelRouter.get(
 
     try {
       const travels = await Travel.find().sort({ createAt: -1 });
-      if (!validObjectId(userId as string)) {
-        res.status(400).json(ResponseDTO.fail("Invalid userId"));
-        return;
-      }
+      
+      // if (!validObjectId(userId as string)) {
+      //   res.status(400).json(ResponseDTO.fail("Invalid userId"));
+      //   return;
+      // }
 
       const user = await User.findById(userId).lean();
 
-      if (!user) {
-        res.status(404).json(ResponseDTO.fail("User not found"));
-        return;
-      }
+      // if (!user) {
+      //   res.status(404).json(ResponseDTO.fail("User not found"));
+      //   return;
+      // }
       const userBookmarkTravels = await Promise.all(
         travels.map(async (travel) => {
           const reviewCnt = await getReviewCount(travel._id);
@@ -177,9 +177,9 @@ travelRouter.get(
             },
             tag: travel.tag,
             createdAt: travel.createdAt,
-            bookmark: travel.bookmark.includes(
-              user._id as mongoose.Types.ObjectId
-            ),
+            bookmark: user
+              ? travel.bookmark.includes(user._id as mongoose.Types.ObjectId)
+              : false,
           };
         })
       );
