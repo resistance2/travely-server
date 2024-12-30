@@ -2342,7 +2342,7 @@
               },
               "example": {
                 "userId": "672901f5f3339eca4777fc11",
-                "thumbnail": "https://example.com/busan-image.jpg",
+                "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                 "travelTitle": "부산 여행4",
                 "travelContent": "부산의 해변과 명소를 둘러보는 여행",
                 "travelCourse": [
@@ -2404,7 +2404,7 @@
                         {
                           "_id": "672905e83f52cfeef7356cc3",
                           "userId": "672901f5f3339eca4777fc11",
-                          "thumbnail": null,
+                          "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                           "travelTitle": "부산 여행",
                           "travelContent": "부산의 해변과 명소를 둘러보는 여행",
                           "tag": [
@@ -3588,6 +3588,69 @@
                         "__v": 0
                       }
                     }
+                  },
+                  "5": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "_id": "6771ff669b6dd398908b34f6",
+                        "userId": "672901f5f3339eca4777fc11",
+                        "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
+                        "travelTitle": "부산 여행2",
+                        "travelContent": "부산의 해변과 명소를 둘러보는 여행",
+                        "tag": [
+                          "부산",
+                          "바다",
+                          "문화"
+                        ],
+                        "travelCourse": [
+                          "해운대",
+                          "광안리",
+                          "감천문화마을"
+                        ],
+                        "includedItems": [
+                          "숙박",
+                          "가이드",
+                          "해변 액티비티"
+                        ],
+                        "excludedItems": [
+                          "식사",
+                          "교통비",
+                          "개인 경비"
+                        ],
+                        "meetingTime": [
+                          "10:00",
+                          "15:00"
+                        ],
+                        "travelPrice": 350000,
+                        "travelFAQ": [
+                          "질문적음",
+                          "피자"
+                        ],
+                        "bookmark": [],
+                        "createdAt": "2024-12-30T02:03:18.820Z",
+                        "updatedAt": "2024-12-30T02:03:18.856Z",
+                        "teamId": [
+                          {
+                            "_id": "6771ff669b6dd398908b34f8",
+                            "travelId": "6771ff669b6dd398908b34f6",
+                            "personLimit": 8,
+                            "travelStartDate": "2024-07-15T00:00:00.000Z",
+                            "travelEndDate": "2024-07-18T00:00:00.000Z",
+                            "appliedUsers": [],
+                            "createdAt": "2024-12-30T02:03:18.853Z",
+                            "updatedAt": "2024-12-30T02:03:18.853Z",
+                            "__v": 0
+                          }
+                        ],
+                        "travelActive": true,
+                        "reviewWrite": false,
+                        "isDeleted": false,
+                        "meetingPlace": "광화문 광장",
+                        "__v": 0
+                      }
+                    }
                   }
                 }
               }
@@ -3614,7 +3677,7 @@
               },
               "example": {
                 "userId": "672901f5f3339eca4777fc11",
-                "thumbnail": "https://example.com/busan-image.jpg",
+                "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                 "travelTitle": "부산 여행 가이드 개발 모집글",
                 "travelContent": "개발 부산의 개발 해변과 개발소를 둘러보는 개발 여행",
                 "team": [
@@ -3661,6 +3724,37 @@
                             "appliedUsers": [],
                             "createdAt": "2024-12-28T03:10:44.467Z",
                             "updatedAt": "2024-12-28T03:10:44.467Z",
+                            "__v": 0
+                          }
+                        ],
+                        "isDeleted": false,
+                        "__v": 0
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "_id": "6771ff879b6dd398908b34fe",
+                        "userId": "672901f5f3339eca4777fc11",
+                        "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
+                        "travelTitle": "부산 여행 가이드 개발 모집글",
+                        "travelContent": "개발 부산의 개발 해변과 개발소를 둘러보는 개발 여행",
+                        "bookmark": [],
+                        "createdAt": "2024-12-30T02:03:51.213Z",
+                        "updatedAt": "2024-12-30T02:03:51.222Z",
+                        "teamId": [
+                          {
+                            "_id": "6771ff879b6dd398908b3500",
+                            "travelId": "6771ff879b6dd398908b34fe",
+                            "personLimit": 8,
+                            "travelStartDate": "2024-07-15T00:00:00.000Z",
+                            "travelEndDate": "2024-07-18T00:00:00.000Z",
+                            "appliedUsers": [],
+                            "createdAt": "2024-12-30T02:03:51.219Z",
+                            "updatedAt": "2024-12-30T02:03:51.219Z",
                             "__v": 0
                           }
                         ],
