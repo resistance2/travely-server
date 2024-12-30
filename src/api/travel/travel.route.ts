@@ -22,21 +22,122 @@ const getReviewCount = async (travelId: mongoose.Types.ObjectId) => {
   return reviews.length;
 };
 
+const getReviews = async (travelId: mongoose.Types.ObjectId) => {
+  const reviews = await Review.find({ travelId }).lean();
+  return reviews.map((review) => {
+    return {
+      reviewId: review._id,
+      userId: review.userId,
+      imgSrc: review.reviewImg,
+      createdAt: review.createdDate,
+      content: review.content,
+      rating: review.travelScore,
+      title: review.title,
+    };
+  });
+};
+
+const checkIsBookmarked = async (userId: mongoose.Types.ObjectId, travelId: mongoose.Types.ObjectId) => {
+  const travel = await Travel.findOne({ _id: travelId }).lean();
+  return travel ? travel.bookmark.includes(userId) : false;
+}
+
 const travelRouter = Router();
 
 travelRouter.get(
   '/travel-detail/:travelId',
   checkRequiredFieldsParams(['travelId']),
   async (req, res) => {
-    const { travelId } = req.params;
-    const travels = await Travel.find({
+    const { travelId, userId } = req.params;
+    const travel = await Travel.findOne({
       _id: travelId,
     })
-      .populate('teamId')
-      .limit(100)
+      .populate('userId')
+      .populate({
+        path: 'teamId',
+        populate: {
+          path: 'appliedUsers.userId',
+          select: 'userName socialName userEmail phoneNumber mbti userId',
+        },
+      })
       .lean();
 
-    res.json(ResponseDTO.success(travels));
+    if (!travel) {
+      res.status(404).json(ResponseDTO.fail('Travel not found'));
+      return;
+    }
+
+    const userId_ = userId ? await User.findById(userId).lean() : null;
+
+    const review = await getReviews(travel._id);
+    const reviewWithUser = await Promise.all(
+      review.map(async (review) => {
+        const user = await User.findById(review.userId).lean();
+        return {
+          ...review,
+          userId: (user as any).userId,
+          isVerifiedUser: (user as any).isVerifiedUser,
+          socialName: (user as any).socialName || null,
+          userEmail: (user as any).userEmail || null,
+          userProfileImage: (user as any).userProfileImage,
+        };
+      }),
+    );
+
+    //일단 가이드 별점은 목데이터로 넣자. 나중에 가이드 별점 넣기
+    //전체 별점도 일다 목데이터를 넣음.
+    // 북마크도 일단은 목데이터로 넣음
+    const travelDetailData = {
+      guide: {
+        userProfileImage: (travel.userId as any).userProfileImage,
+        socialName: (travel.userId as any).socialName,
+        userEmail: (travel.userId as any).userEmail,
+        guideTotalRating: 4.5,
+      },
+      title: travel.travelTitle,
+      content: travel.travelContent,
+      price: travel.travelPrice,
+      thumbnail: travel.thumbnail,
+      tag: travel.tag,
+      travelCourse: travel.travelCourse,
+      includedItems: travel.includedItems,
+      excludedItems: travel.excludedItems,
+      meetingTime: travel.meetingTime,
+      meetingPlace: travel.meetingPlace,
+      FAQ: travel.travelFAQ,
+      team: travel.teamId.map((team) => ({
+        teamId: (team as any)._id,
+        personLimit: (team as any).personLimit,
+        travelStartDate: (team as any).travelStartDate,
+        travelEndDate: (team as any).travelEndDate,
+        appliedUsers: (team as any).appliedUsers.map((user: any) => ({
+          userName: (user as any).userId.userName,
+          socialName: (user as any).userId.socialName,
+          userEmail: (user as any).userId.userEmail,
+          phoneNumber: user.userId.phoneNumber,
+          mbti: user.userId.mbti,
+          status: user.status,
+          appliedAt: user.appliedAt,
+          userId: (user.userId as any)._id,
+        })),
+        approvedUsers: ((team as any).appliedUsers as any).filter((user: any) => user.status === 'approved').map((user: any) => ({
+          userName: user.userId.userName,
+          socialName: user.userId.socialName,
+          userEmail: user.userId.userEmail,
+          phoneNumber: user.userId.phoneNumber,
+          mbti: user.userId.mbti,
+          status: user.status,
+          appliedAt: user.appliedAt,
+          userId: (user.userId as any)._id,
+        }))
+      })),
+      reviews: reviewWithUser,
+      totalRating: await getReviewAverage(
+        travel._id
+      ),
+      bookmark: userId_ ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id) : false
+    };
+    res.json(ResponseDTO.success(travelDetailData));
   },
 );
 
@@ -163,7 +264,7 @@ travelRouter.get('/travel-list', async (req, res) => {
           },
           tag: travel.tag,
           createdAt: travel.createdAt,
-          bookmark: user ? travel.bookmark.includes(user._id as mongoose.Types.ObjectId) : false,
+          bookmark: await checkIsBookmarked(user?._id as mongoose.Types.ObjectId, travel._id),
         };
       }),
     );
@@ -281,8 +382,6 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
         },
       };
     });
-
-    console.log(travels);
 
     res.json(
       ResponseDTO.success({

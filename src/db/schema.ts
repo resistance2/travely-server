@@ -45,10 +45,11 @@ export interface ITeam {
 
 export interface IReview {
   userId: Types.ObjectId;
+  title: string;
+  content: string;
   travelId: Types.ObjectId;
   reviewImg: string[];
   createdDate: Date;
-  content: string;
   travelScore: number;
 }
 
@@ -152,6 +153,7 @@ const ReviewSchema: Schema<IReview> = new Schema(
     createdDate: { type: Date, default: Date.now },
     content: { type: String, required: true },
     travelScore: { type: Number, required: true },
+    title: { type: String, required: true },
   },
   { timestamps: true }
 );
