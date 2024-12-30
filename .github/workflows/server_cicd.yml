@@ -39,7 +39,7 @@ jobs:
           mv ecosystem.config.js dist/
           mv package.json dist/
           mv package-lock.json dist/
-          mv ./src/travely-server.openapi.json dist/
+          mv ./src/My\ Project.openapi.json dist/
 
       - name: EC2 backup
         uses: appleboy/ssh-action@master
