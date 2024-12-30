@@ -3,7 +3,7 @@ import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFields, checkRequiredFieldsQuery } from '../../checkRequiredFields';
 import { Router } from 'express';
 import mongoose from 'mongoose';
-import { validObjectId } from '../../validObjectId';
+import { checkIsValidThumbnail, validObjectId } from '../../validChecker';
 
 const travelGuideRouter = Router();
 
@@ -23,6 +23,13 @@ travelGuideRouter.post(
   checkRequiredFields(['team', 'travelTitle', 'travelContent']),
   async (req, res) => {
     const session = await mongoose.startSession();
+
+    if (req.body.thumbnail && !await checkIsValidThumbnail(req.body.thumbnail)) {
+      console.log('thumbnail boolean', Boolean(req.body.thumbnail));
+      res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
+      return;
+    }
+
     try {
       session.startTransaction();
       const userId = await User.findById(req.body.userId).lean();
@@ -35,6 +42,7 @@ travelGuideRouter.post(
           {
             ...req.body,
             userId: userId?._id,
+            travelThumbnail: req.body.travelThumbnail || null,
             createdAt: new Date(),
             updatedAt: new Date(),
           },
