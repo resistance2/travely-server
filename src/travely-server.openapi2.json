@@ -5209,7 +5209,7 @@
         "security": []
       }
     },
-    "/v1/travels/travel-detail/65fd1234a1b2c3d4e5f62223": {
+    "/v1/travels/travel-detail/672905e83f52cfeef7356cc3": {
       "get": {
         "summary": "여행 상세 조회",
         "deprecated": false,
@@ -5324,6 +5324,463 @@
                         }
                       ]
                     }
+                  },
+                  "2": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "guide": {
+                          "userProfileImage": "test.png",
+                          "socialName": "nakyenko4",
+                          "userEmail": "badclock@gmail.com",
+                          "guideTotalRating": 4.5
+                        },
+                        "title": "부산 여행",
+                        "content": "부산의 해변과 명소를 둘러보는 여행",
+                        "price": 350000,
+                        "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
+                        "tag": [
+                          "부산",
+                          "바다",
+                          "문화"
+                        ],
+                        "travelCourse": [
+                          "해운대",
+                          "광안리",
+                          "감천문화마을"
+                        ],
+                        "includedItems": [
+                          "숙박",
+                          "가이드",
+                          "해변 액티비티"
+                        ],
+                        "excludedItems": [
+                          "식사",
+                          "교통비",
+                          "개인 경비"
+                        ],
+                        "meetingTime": [
+                          "10:00",
+                          "15:00"
+                        ],
+                        "FAQ": [],
+                        "team": [
+                          {
+                            "teamId": "65fd1234a1b2c3d4e5f63336",
+                            "personLimit": 7,
+                            "travelStartDate": "2024-04-15T00:00:00.000Z",
+                            "travelEndDate": "2024-04-17T00:00:00.000Z",
+                            "appliedUsers": [
+                              {
+                                "userName": "김여행",
+                                "socialName": "traveler_kim",
+                                "userEmail": "kim@travel.com",
+                                "phoneNumber": "010-1234-5678",
+                                "mbti": "ENFP",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:20:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61111"
+                              },
+                              {
+                                "userName": "이방랑",
+                                "socialName": "wanderlust_lee",
+                                "userEmail": "lee@travel.com",
+                                "phoneNumber": "010-2345-6789",
+                                "mbti": "ISTJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:25:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61112"
+                              },
+                              {
+                                "userName": "박탐험",
+                                "socialName": "park_explorer",
+                                "userEmail": "park@travel.com",
+                                "phoneNumber": "010-3456-7890",
+                                "mbti": "INTP",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:30:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61113"
+                              },
+                              {
+                                "userName": "최모험",
+                                "socialName": "adventure_choi",
+                                "userEmail": "choi@travel.com",
+                                "phoneNumber": "010-4567-8901",
+                                "mbti": "ENTJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:35:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61114"
+                              },
+                              {
+                                "userName": "정여행",
+                                "socialName": "jeong_traveler",
+                                "userEmail": "jeong@travel.com",
+                                "phoneNumber": "010-5678-9012",
+                                "mbti": "ISFP",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:40:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61115"
+                              },
+                              {
+                                "userName": "한모험",
+                                "socialName": "han_adventurer",
+                                "userEmail": "han@travel.com",
+                                "phoneNumber": "010-6789-0123",
+                                "mbti": "ESFJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:45:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61116"
+                              },
+                              {
+                                "userName": "오여행",
+                                "socialName": "oh_wanderer",
+                                "userEmail": "oh@travel.com",
+                                "phoneNumber": "010-7890-1234",
+                                "mbti": "INFJ",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T09:50:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61117"
+                              },
+                              {
+                                "userName": "강탐험",
+                                "socialName": "kang_explorer",
+                                "userEmail": "kang@travel.com",
+                                "phoneNumber": "010-8901-2345",
+                                "mbti": "ENTP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T09:55:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61118"
+                              },
+                              {
+                                "userName": "김모험",
+                                "socialName": "adventurer_kim",
+                                "userEmail": "kim_adventurer@travel.com",
+                                "phoneNumber": "010-1212-3434",
+                                "mbti": "ENTP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:00:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61001"
+                              },
+                              {
+                                "userName": "최탐험",
+                                "socialName": "explorer_choi",
+                                "userEmail": "choi_explorer@travel.com",
+                                "phoneNumber": "010-5656-7878",
+                                "mbti": "INTJ",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:05:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61002"
+                              },
+                              {
+                                "userName": "박탐색",
+                                "socialName": "seeker_park",
+                                "userEmail": "park_seeker@travel.com",
+                                "phoneNumber": "010-8989-1010",
+                                "mbti": "INFJ",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:10:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61003"
+                              },
+                              {
+                                "userName": "김방랑",
+                                "socialName": "wander_lee",
+                                "userEmail": "kim_wander@travel.com",
+                                "phoneNumber": "010-2323-4545",
+                                "mbti": "ESFP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:15:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61004"
+                              },
+                              {
+                                "userName": "정추적",
+                                "socialName": "tracker_jeong",
+                                "userEmail": "jeong_tracker@travel.com",
+                                "phoneNumber": "010-3434-5656",
+                                "mbti": "ISTP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:20:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61005"
+                              },
+                              {
+                                "userName": "오여정",
+                                "socialName": "journey_oh",
+                                "userEmail": "oh_journey@travel.com",
+                                "phoneNumber": "010-4545-6767",
+                                "mbti": "ENFJ",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:25:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61006"
+                              },
+                              {
+                                "userName": "한여행",
+                                "socialName": "voyager_han",
+                                "userEmail": "han_voyager@travel.com",
+                                "phoneNumber": "010-5656-7878",
+                                "mbti": "ENTJ",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:30:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61007"
+                              },
+                              {
+                                "userName": "강유랑",
+                                "socialName": "nomad_kang",
+                                "userEmail": "kang_nomad@travel.com",
+                                "phoneNumber": "010-6767-8989",
+                                "mbti": "ISFP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:35:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61008"
+                              },
+                              {
+                                "userName": "이모험",
+                                "socialName": "adventure_lee",
+                                "userEmail": "lee_adventure@travel.com",
+                                "phoneNumber": "010-1111-2222",
+                                "mbti": "ENTP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:40:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61009"
+                              },
+                              {
+                                "userName": "박유랑",
+                                "socialName": "nomad_park",
+                                "userEmail": "park_nomad@travel.com",
+                                "phoneNumber": "010-3333-4444",
+                                "mbti": "ISFJ",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:45:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61010"
+                              },
+                              {
+                                "userName": "한탐험",
+                                "socialName": "explorer_han",
+                                "userEmail": "han_explorer@travel.com",
+                                "phoneNumber": "010-5555-6666",
+                                "mbti": "ESFP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:50:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61011"
+                              },
+                              {
+                                "userName": "장여행",
+                                "socialName": "traveler_jeong",
+                                "userEmail": "jaong_traveler@travel.com",
+                                "phoneNumber": "010-7777-8888",
+                                "mbti": "INFJ",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T10:55:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61012"
+                              },
+                              {
+                                "userName": "김탐색",
+                                "socialName": "seeker_kim",
+                                "userEmail": "kim_seeker@travel.com",
+                                "phoneNumber": "010-9999-0000",
+                                "mbti": "ENTJ",
+                                "status": "rejected",
+                                "appliedAt": "2024-03-24T11:00:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61013"
+                              },
+                              {
+                                "userName": "최여정",
+                                "socialName": "journey_choi",
+                                "userEmail": "choi_journey@travel.com",
+                                "phoneNumber": "010-1212-3434",
+                                "mbti": "INTP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T11:05:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61014"
+                              },
+                              {
+                                "userName": "강방랑",
+                                "socialName": "wander_kang",
+                                "userEmail": "kang_wander@travel.com",
+                                "phoneNumber": "010-5656-7878",
+                                "mbti": "ISFP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T11:10:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61015"
+                              },
+                              {
+                                "userName": "오추적",
+                                "socialName": "tracker_oh",
+                                "userEmail": "oh_tracker@travel.com",
+                                "phoneNumber": "010-6767-8989",
+                                "mbti": "ENFP",
+                                "status": "waiting",
+                                "appliedAt": "2024-03-24T11:15:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61016"
+                              }
+                            ],
+                            "approvedUsers": [
+                              {
+                                "userName": "김여행",
+                                "socialName": "traveler_kim",
+                                "userEmail": "kim@travel.com",
+                                "phoneNumber": "010-1234-5678",
+                                "mbti": "ENFP",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:20:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61111"
+                              },
+                              {
+                                "userName": "이방랑",
+                                "socialName": "wanderlust_lee",
+                                "userEmail": "lee@travel.com",
+                                "phoneNumber": "010-2345-6789",
+                                "mbti": "ISTJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:25:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61112"
+                              },
+                              {
+                                "userName": "박탐험",
+                                "socialName": "park_explorer",
+                                "userEmail": "park@travel.com",
+                                "phoneNumber": "010-3456-7890",
+                                "mbti": "INTP",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:30:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61113"
+                              },
+                              {
+                                "userName": "최모험",
+                                "socialName": "adventure_choi",
+                                "userEmail": "choi@travel.com",
+                                "phoneNumber": "010-4567-8901",
+                                "mbti": "ENTJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:35:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61114"
+                              },
+                              {
+                                "userName": "정여행",
+                                "socialName": "jeong_traveler",
+                                "userEmail": "jeong@travel.com",
+                                "phoneNumber": "010-5678-9012",
+                                "mbti": "ISFP",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:40:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61115"
+                              },
+                              {
+                                "userName": "한모험",
+                                "socialName": "han_adventurer",
+                                "userEmail": "han@travel.com",
+                                "phoneNumber": "010-6789-0123",
+                                "mbti": "ESFJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-24T09:45:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61116"
+                              }
+                            ]
+                          },
+                          {
+                            "teamId": "65fd1234a1b2c3d4e5f63333",
+                            "personLimit": 7,
+                            "travelStartDate": "2024-04-01T00:00:00.000Z",
+                            "travelEndDate": "2024-04-04T00:00:00.000Z",
+                            "appliedUsers": [
+                              {
+                                "userName": "이방랑",
+                                "socialName": "wanderlust_lee",
+                                "userEmail": "lee@travel.com",
+                                "phoneNumber": "010-2345-6789",
+                                "mbti": "ISTJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-21T10:00:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61112"
+                              },
+                              {
+                                "userName": "박탐험",
+                                "socialName": "park_explorer",
+                                "userEmail": "park@travel.com",
+                                "phoneNumber": "010-3456-7890",
+                                "mbti": "INTP",
+                                "status": "approved",
+                                "appliedAt": "2024-03-21T11:00:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61113"
+                              },
+                              {
+                                "userName": "오여행",
+                                "socialName": "oh_wanderer",
+                                "userEmail": "oh@travel.com",
+                                "phoneNumber": "010-7890-1234",
+                                "mbti": "INFJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-21T12:00:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61117"
+                              },
+                              {
+                                "socialName": "nakyenko4",
+                                "userEmail": "badclock@gmail.com",
+                                "status": "approved",
+                                "appliedAt": "2024-03-21T13:00:00.000Z",
+                                "userId": "672901f5f3339eca4777fc11"
+                              }
+                            ],
+                            "approvedUsers": [
+                              {
+                                "userName": "이방랑",
+                                "socialName": "wanderlust_lee",
+                                "userEmail": "lee@travel.com",
+                                "phoneNumber": "010-2345-6789",
+                                "mbti": "ISTJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-21T10:00:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61112"
+                              },
+                              {
+                                "userName": "박탐험",
+                                "socialName": "park_explorer",
+                                "userEmail": "park@travel.com",
+                                "phoneNumber": "010-3456-7890",
+                                "mbti": "INTP",
+                                "status": "approved",
+                                "appliedAt": "2024-03-21T11:00:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61113"
+                              },
+                              {
+                                "userName": "오여행",
+                                "socialName": "oh_wanderer",
+                                "userEmail": "oh@travel.com",
+                                "phoneNumber": "010-7890-1234",
+                                "mbti": "INFJ",
+                                "status": "approved",
+                                "appliedAt": "2024-03-21T12:00:00.000Z",
+                                "userId": "65fd1234a1b2c3d4e5f61117"
+                              },
+                              {
+                                "socialName": "nakyenko4",
+                                "userEmail": "badclock@gmail.com",
+                                "status": "approved",
+                                "appliedAt": "2024-03-21T13:00:00.000Z",
+                                "userId": "672901f5f3339eca4777fc11"
+                              }
+                            ]
+                          }
+                        ],
+                        "reviews": [
+                          {
+                            "reviewId": "65fd1234a1b2c3d4e5f65555",
+                            "imgSrc": [
+                              "https://example.com/reviews/jeju_review1.jpg",
+                              "https://example.com/reviews/jeju_review2.jpg"
+                            ],
+                            "content": "가이드님도 친절하시고 일정도 여유있게 잘 짜여져있어서 정말 좋았습니다!",
+                            "rating": 4.5,
+                            "title": "리뷰 타이틀",
+                            "isVerifiedUser": true,
+                            "socialName": "wanderlust_lee",
+                            "userEmail": "lee@travel.com",
+                            "userProfileImage": "https://example.com/profiles/user2.jpg"
+                          }
+                        ],
+                        "totalRating": 4.5,
+                        "bookmark": false
+                      }
+                    }
                   }
                 }
               }
@@ -5336,7 +5793,91 @@
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "Pet": {
+        "required": [
+          "name",
+          "photoUrls",
+          "id",
+          "category",
+          "tags",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Pet ID"
+          },
+          "category": {
+            "$ref": "#/components/schemas/Category",
+            "description": "group"
+          },
+          "name": {
+            "type": "string",
+            "description": "name",
+            "examples": [
+              "doggie"
+            ]
+          },
+          "photoUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "image URL"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "description": "tag"
+          },
+          "status": {
+            "type": "string",
+            "description": "Pet Sales Status",
+            "enum": [
+              "available",
+              "pending",
+              "sold"
+            ]
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Category ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Category Name"
+          }
+        }
+      },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Tag ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tag Name"
+          }
+        }
+      }
+    },
     "securitySchemes": {}
   },
   "servers": [
