@@ -7,7 +7,7 @@ import {
 } from "../../checkRequiredFields";
 import { Router } from "express";
 import mongoose from "mongoose";
-import { validObjectId } from "../../validObjectId";
+import { checkIsValidThumbnail, validObjectId } from "../../validChecker";
 
 const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
   const reviews = await Review.find({ travelId }).lean();
@@ -40,6 +40,7 @@ travelRouter.get(
   }
 );
 
+
 /**
  * 새로운 여행 계획하기
  * 여행자 모집 글
@@ -51,12 +52,18 @@ travelRouter.post(
     "team",
     "travelTitle",
     "travelContent",
-    "tag",
+    "thumbnail",
     "travelCourse",
     "travelPrice",
   ]),
   async (req, res) => {
     const session = await mongoose.startSession();
+
+    if(!await checkIsValidThumbnail(req.body.thumbnail)) {
+      res.status(400).json(ResponseDTO.fail("Invalid thumbnail URL"));
+      return;
+    }
+
     try {
       session.startTransaction();
       const userId = await User.findById(req.body.userId).lean();
