@@ -92,24 +92,25 @@ travelGuideRouter.post(
 /**
  * 여행 목록 조회, 가이드 구해요
  */
-travelGuideRouter.get('/travel-list', checkRequiredFieldsQuery(['userId']), async (req, res) => {
-  const { userId, page = 1, size = 10 } = req.query;
+travelGuideRouter.get('/travel-list', async (req, res) => {
+  const { page = 1, size = 10 } = req.query;
   const page_ = parseInt(page as string, 10) - 1;
   const size_ = parseInt(size as string, 10);
 
   try {
     const travelsGuides = await TravelGuide.find().sort({ createAt: -1 });
-    if (!validObjectId(userId as string)) {
-      res.status(400).json(ResponseDTO.fail('Invalid userId'));
-      return;
-    }
+    // if (!validObjectId(userId as string)) {
+    //   res.status(400).json(ResponseDTO.fail('Invalid userId'));
+    //   return;
+    // }
 
-    const user = await User.findById(userId).lean();
 
-    if (!user) {
-      res.status(404).json(ResponseDTO.fail('User not found'));
-      return;
-    }
+    // const user = await User.findById(userId).lean();
+
+    // if (!user) {
+    //   res.status(404).json(ResponseDTO.fail('User not found'));
+    //   return;
+    // }
     const userBookmarkTravels = await Promise.all(
       travelsGuides.map(async (travel) => {
         const createdByUser = await User.findById(travel.userId).lean();
