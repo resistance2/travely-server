@@ -485,10 +485,10 @@ const statusPriority = {
 };
 const sortUsersByStatus = (users: IAppliedUser[]) => {
   return users.sort((a, b) => {
-    const userPiorityA = statusPriority[a.status];
-    const userPiorityB = statusPriority[b.status];
-    if (userPiorityA !== userPiorityB) {
-      return userPiorityA - userPiorityB;
+    const userPriorityA = statusPriority[a.status];
+    const userPriorityB = statusPriority[b.status];
+    if (userPriorityA !== userPriorityB) {
+      return userPriorityA - userPriorityB;
     } else {
       return a.appliedAt.getTime() - b.appliedAt.getTime();
     }
