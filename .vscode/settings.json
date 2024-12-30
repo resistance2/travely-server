@@ -6,11 +6,5 @@
     "quickfix.biome": "explicit",
     "source.organizeImports.biome": "explicit"
   },
-  "prettier.enable": false,
-  "biome.ignoredPaths": [
-    "node_modules",
-    "**/node_modules/**",
-    "dist/**",
-    "build/**"
-  ]
+  "prettier.enable": false
 }
