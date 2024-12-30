@@ -55,11 +55,12 @@ travelRouter.post(
     "thumbnail",
     "travelCourse",
     "travelPrice",
+    "tag",
   ]),
   async (req, res) => {
     const session = await mongoose.startSession();
 
-    if(!await checkIsValidThumbnail(req.body.thumbnail)) {
+    if(req.body.thumbnail && !await checkIsValidThumbnail(req.body.thumbnail)) {
       res.status(400).json(ResponseDTO.fail("Invalid thumbnail URL"));
       return;
     }
