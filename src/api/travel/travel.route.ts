@@ -146,13 +146,8 @@ travelRouter.get(
 
     try {
       const travels = await Travel.find().sort({ createAt: -1 });
-      
-      // if (!validObjectId(userId as string)) {
-      //   res.status(400).json(ResponseDTO.fail("Invalid userId"));
-      //   return;
-      // }
 
-      const user = await User.findById(userId).lean();
+      const user = JSON.parse(userId as string) ? await User.findById(userId).lean() : null;
 
       // if (!user) {
       //   res.status(404).json(ResponseDTO.fail("User not found"));
