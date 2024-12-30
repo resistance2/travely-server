@@ -10,7 +10,7 @@ import { reviewRouter } from "./api/review/review.routes";
 import { travelGuideRouter } from "./api/travelGuide/travelGuide.route";
 
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./travely-server.openapi.json";
+import swaggerDocument from "./My Project.openapi.json";
 
 dotenv.config();
 const app = express();
