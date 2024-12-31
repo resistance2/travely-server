@@ -74,6 +74,39 @@ export interface IUser {
   isVerifiedUser: boolean;
 }
 
+export interface IUserRating {
+  fromUserId: Types.ObjectId;   // 평가를 한 유저
+  toUserId: Types.ObjectId;     // 평가를 받은 유저
+  ratingScore: number
+  createdAt: Date;
+  isDeleted: boolean;
+}
+
+const UserRatingSchema: Schema<IUserRating> = new Schema({
+  fromUserId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+  toUserId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+  ratingScore: { type: Number, required: true },
+  createdAt: { type: Date, default: Date.now, required: true },
+  isDeleted: { type: Boolean, default: false },
+}, 
+  {
+    timestamps: true,
+    query: {
+      isDeleted: false,
+    },
+  }
+)
+
+UserRatingSchema.pre(["find", "findOne"], function (next) {
+  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), "isDeleted")) {
+    this?.where({ isDeleted: false });
+  }
+  next();
+});
+
+export const UserRating = mongoose.model<IUserRating>("UserRating", UserRatingSchema);
+
+
 const TravelSchema: Schema<ITravel> = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },

@@ -6,7 +6,7 @@ import {
   checkRequiredFieldsParams,
   checkRequiredFieldsQuery,
 } from '../../checkRequiredFields';
-import { IAppliedUser, Review, Team, Travel, User } from '../../db/schema';
+import { IAppliedUser, Review, Team, Travel, User, UserRating } from '../../db/schema';
 import { checkIsValidThumbnail, validObjectId } from '../../validChecker';
 
 const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
@@ -42,6 +42,28 @@ const checkIsBookmarked = async (userId: mongoose.Types.ObjectId, travelId: mong
   return travel ? travel.bookmark.some(
     (bookmarkUserId: mongoose.Types.ObjectId) => bookmarkUserId.equals(userId),
   ) : false;
+}
+
+// const ReviewSchema: Schema<IReview> = new Schema(
+//   {
+//     userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+//     travelId: { type: Schema.Types.ObjectId, required: true, ref: "Travel" },
+//     reviewImg: { type: [String], default: [] },
+//     createdDate: { type: Date, default: Date.now },
+//     content: { type: String, required: true },
+//     travelScore: { type: Number, required: true },
+//     title: { type: String, required: true },
+//   },
+//   { timestamps: true }
+// );
+
+
+const isReviewWritten = async (userId: mongoose.Types.ObjectId, travelId: mongoose.Types.ObjectId): Promise<boolean> => {
+  const review = await Review.findOne({ userId, travelId }).lean();
+  if (review) {
+    return true;
+  }
+  return false;
 }
 
 const travelRouter = Router();
@@ -328,6 +350,8 @@ travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (
   }
 });
 
+
+
 /**
  * 내여행- 내가 참여한 여행 목록 조회
  * /api/v1/travels/my-travels
@@ -340,6 +364,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
       res.status(404).json(ResponseDTO.fail('User not found'));
       return;
     }
+
 
     const teams = await Team.find({
       appliedUsers: {
@@ -362,28 +387,36 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
       })
       .lean();
 
-    const travels = teams.map((team) => {
-      return {
-        guideInfo: {
-          socialName: (team.travelId as any).userId.socialName,
-          userProfileImg: (team.travelId as any).userId.userProfileImage,
-          userId: (team.travelId as any).userId._id,
-          userName: (team.travelId as any).userId.userName || null,
-        },
-        travelTeam: {
+    const getUserReviewAverage = async (userId: mongoose.Types.ObjectId) => {
+      const userRating = await UserRating.findOne({ toUserId: userId }).lean();
+      return userRating?.ratingScore || null;
+    };
+
+    const travels = await Promise.all(
+      teams.map(async (team) => {
+        return {
+          travelTitle: (team.travelId as any).travelTitle,
+          guideInfo: {
+            socialName: (team.travelId as any).userId.socialName,
+            userProfileImg: (team.travelId as any).userId.userProfileImage,
+            userEmail: (team.travelId as any).userId.userEmail,
+            userId: (team.travelId as any).userId._id,
+            userRating: await getUserReviewAverage((team.travelId as any).userId._id),
+          },
+          travelTeam: {
           travelStartDate: team.travelStartDate,
           travelEndDate: team.travelEndDate,
           personLimit: team.personLimit,
-          approvedMembers: team.appliedUsers.map((user) => {
-            return {
-              userId: user.userId._id,
-              mbti: (user.userId as any).mbti || null,
-              status: user.status,
-            };
-          }),
+          approvedMembersMbti: {
+            mbti: team.appliedUsers.map((user) => (user.userId as any).mbti)
+          },
         },
+        currentUserStatus: {
+          status: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))?.status,
+        },
+        reviewWritten: await isReviewWritten(user._id, team.travelId._id),
       };
-    });
+    }));
 
     res.json(
       ResponseDTO.success({
