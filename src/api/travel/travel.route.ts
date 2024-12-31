@@ -442,38 +442,6 @@ travelRouter.patch(
   },
 );
 
-// 북마크 삭제 /travels/bookmark-delete
-travelRouter.patch(
-  '/bookmark-delete',
-  checkRequiredFields(['userId', 'travelId']),
-  async (req, res) => {
-    const { userId, travelId } = req.body;
-    try {
-      const travel = await Travel.findById(travelId);
-      if (!travel) {
-        res.status(404).json(ResponseDTO.fail('Travel not found'));
-        return;
-      }
-      if (!travel?.bookmark.includes(userId)) {
-        res.status(400).json(ResponseDTO.fail('it is not bookmarked'));
-        return;
-      }
-      const updatedTravel = await Travel.findByIdAndUpdate(travelId, {
-        $pull: { bookmark: userId },
-      }).lean();
-      res.json(
-        ResponseDTO.success({
-          id: updatedTravel?._id,
-          userId: updatedTravel?.userId,
-        }),
-      );
-    } catch (error) {
-      console.error(error);
-      res.status(500).json(ResponseDTO.fail((error as Error).message));
-    }
-  },
-);
-
 // 여행 활성화 비활성화
 travelRouter.patch(
   '/update-active',
