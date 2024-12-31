@@ -250,7 +250,7 @@ travelRouter.get('/travel-list', async (req, res) => {
   try {
     const travels = await Travel.find().sort({ createAt: -1 });
 
-    const user = JSON.parse(userId as string) ? await User.findById(userId).lean() : null;
+    const user = userId === 'null' ? null : await User.findById(userId).lean();
 
     // if (!user) {
     //   res.status(404).json(ResponseDTO.fail("User not found"));
