@@ -99,6 +99,7 @@ travelRouter.get(
     // bookmark: 북마크수
     const travelDetailData = {
       guide: {
+        userId: (travel.userId as any)._id,
         userProfileImage: (travel.userId as any).userProfileImage,
         socialName: (travel.userId as any).socialName,
         userEmail: (travel.userId as any).userEmail,
