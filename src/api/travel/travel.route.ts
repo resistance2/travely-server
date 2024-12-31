@@ -37,7 +37,7 @@ const getReviews = async (travelId: mongoose.Types.ObjectId) => {
   });
 };
 
-const checkIsBookmarked = async (userId: mongoose.Types.ObjectId, travelId: mongoose.Types.ObjectId) => {
+const checkIsBookmarked = async (userId: mongoose.Types.ObjectId, travelId: mongoose.Types.ObjectId): Promise<boolean> => {
   const travel = await Travel.findOne({ _id: travelId }).lean();
   return travel ? travel.bookmark.some(
     (bookmarkUserId: mongoose.Types.ObjectId) => bookmarkUserId.equals(userId),
@@ -397,60 +397,42 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
 });
 
 // 북마크 추가 /travels/bookmark-add
-travelRouter.patch(
-  '/bookmark-add',
-  checkRequiredFields(['userId', 'travelId']),
-  async (req, res) => {
-    const { userId, travelId } = req.body;
-    try {
-      const travel = await Travel.findById(travelId);
-      if (!travel) {
-        res.status(404).json(ResponseDTO.fail('Travel not found'));
-        return;
-      }
-      if (travel.bookmark.includes(userId)) {
-        res.status(400).json(ResponseDTO.fail('Already bookmarked'));
-        return;
-      }
-      const updatedTravel = await Travel.findByIdAndUpdate(travelId, {
-        $push: { bookmark: userId },
-      });
-      res.json(
-        ResponseDTO.success({
-          id: updatedTravel?.id,
-          userId: updatedTravel?.userId,
-        }),
-      );
-    } catch (error) {
-      console.error(error);
-      res.status(500).json(ResponseDTO.fail((error as Error).message));
-    }
-  },
-);
 
-// 북마크 삭제 /travels/bookmark-delete
+  // ### Request Body Example
+
+  //   {
+  //     "userId": "user123",
+  //     "travelId": "travel456",
+  //     "isBookmark": true
+  //   }
+
 travelRouter.patch(
-  '/bookmark-delete',
-  checkRequiredFields(['userId', 'travelId']),
+  '/bookmark',
+  checkRequiredFields(['userId', 'travelId','isBookmark']),
   async (req, res) => {
-    const { userId, travelId } = req.body;
+    const { userId, travelId, isBookmark } = req.body;
     try {
       const travel = await Travel.findById(travelId);
       if (!travel) {
         res.status(404).json(ResponseDTO.fail('Travel not found'));
         return;
       }
-      if (!travel?.bookmark.includes(userId)) {
-        res.status(400).json(ResponseDTO.fail('it is not bookmarked'));
+      
+      const user = await User.findById(userId);
+      if(!user) {
+        res.status(404).json(ResponseDTO.fail('User not found'));
         return;
       }
+
       const updatedTravel = await Travel.findByIdAndUpdate(travelId, {
-        $pull: { bookmark: userId },
+        [isBookmark ? '$addToSet' : '$pull']: { bookmark: userId },
       }).lean();
+
       res.json(
         ResponseDTO.success({
           id: updatedTravel?._id,
           userId: updatedTravel?.userId,
+          isBookmark: await checkIsBookmarked(userId, travelId),
         }),
       );
     } catch (error) {
