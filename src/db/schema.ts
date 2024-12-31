@@ -59,6 +59,7 @@ export interface IAppliedUser {
   status: "waiting" | "approved" | "rejected";
 }
 
+//TODO: user schema에서 myBookmark 삭제 필요
 export interface IUser {
   userProfileImage: string;
   socialName: string;
