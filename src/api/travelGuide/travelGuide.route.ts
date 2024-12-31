@@ -82,13 +82,6 @@ travelGuideRouter.post(
   },
 );
 
-// const isBookmarked = (userId: ObjectId, travel: ITravelGuide) => {
-//   console.log('userId', userId);
-//   console.log('bookmarks', travel.bookmark);
-//   console.log('isBookmarked', travel.bookmark.includes(userId as mongoose.Types.ObjectId));
-//   return travel.bookmark.includes(userId as mongoose.Types.ObjectId);
-// };
-
 /**
  * 여행 목록 조회, 가이드 구해요
  */

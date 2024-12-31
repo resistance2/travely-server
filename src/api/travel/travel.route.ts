@@ -39,7 +39,9 @@ const getReviews = async (travelId: mongoose.Types.ObjectId) => {
 
 const checkIsBookmarked = async (userId: mongoose.Types.ObjectId, travelId: mongoose.Types.ObjectId) => {
   const travel = await Travel.findOne({ _id: travelId }).lean();
-  return travel ? travel.bookmark.includes(userId) : false;
+  return travel ? travel.bookmark.some(
+    (bookmarkUserId: mongoose.Types.ObjectId) => bookmarkUserId.equals(userId),
+  ) : false;
 }
 
 const travelRouter = Router();
@@ -48,7 +50,8 @@ travelRouter.get(
   '/travel-detail/:travelId',
   checkRequiredFieldsParams(['travelId']),
   async (req, res) => {
-    const { travelId, userId } = req.params;
+    const { travelId } = req.params;
+    const { userId } = req.query;
     const travel = await Travel.findOne({
       _id: travelId,
     })
@@ -87,6 +90,13 @@ travelRouter.get(
     //일단 가이드 별점은 목데이터로 넣자. 나중에 가이드 별점 넣기
     //전체 별점도 일다 목데이터를 넣음.
     // 북마크도 일단은 목데이터로 넣음
+
+
+
+
+    // 승인된 유저만 보내기
+    // isBookmark: 북마크 여부
+    // bookmark: 북마크수
     const travelDetailData = {
       guide: {
         userProfileImage: (travel.userId as any).userProfileImage,
@@ -135,7 +145,8 @@ travelRouter.get(
       totalRating: await getReviewAverage(
         travel._id
       ),
-      bookmark: userId_ ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id) : false
+      bookmark: travel.bookmark.length,
+      isbookmark: userId_ ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id) : false
     };
     res.json(ResponseDTO.success(travelDetailData));
   },
