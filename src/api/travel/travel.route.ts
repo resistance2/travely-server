@@ -120,16 +120,6 @@ travelRouter.get(
         personLimit: (team as any).personLimit,
         travelStartDate: (team as any).travelStartDate,
         travelEndDate: (team as any).travelEndDate,
-        appliedUsers: (team as any).appliedUsers.map((user: any) => ({
-          userName: (user as any).userId.userName,
-          socialName: (user as any).userId.socialName,
-          userEmail: (user as any).userId.userEmail,
-          phoneNumber: user.userId.phoneNumber,
-          mbti: user.userId.mbti,
-          status: user.status,
-          appliedAt: user.appliedAt,
-          userId: (user.userId as any)._id,
-        })),
         approvedUsers: ((team as any).appliedUsers as any).filter((user: any) => user.status === 'approved').map((user: any) => ({
           userName: user.userId.userName,
           socialName: user.userId.socialName,
