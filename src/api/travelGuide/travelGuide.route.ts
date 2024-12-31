@@ -1,6 +1,6 @@
 import { Team, TravelGuide, User } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
-import { checkRequiredFields, checkRequiredFieldsQuery } from '../../checkRequiredFields';
+import { checkRequiredFieldsBody, checkRequiredFieldsQuery } from '../../checkRequiredFields';
 import { Router } from 'express';
 import mongoose from 'mongoose';
 import { checkIsValidThumbnail, validObjectId } from '../../validChecker';
@@ -20,7 +20,7 @@ travelGuideRouter.get('/travel', async (_req, res) => {
  */
 travelGuideRouter.post(
   '/add-travel',
-  checkRequiredFields(['team', 'travelTitle', 'travelContent']),
+  checkRequiredFieldsBody(['team', 'travelTitle', 'travelContent']),
   async (req, res) => {
     const session = await mongoose.startSession();
 

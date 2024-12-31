@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import { Review, Travel } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
-import { checkRequiredFields } from '../../checkRequiredFields';
+import { checkRequiredFieldsBody } from '../../checkRequiredFields';
 
 const reviewRouter = Router();
 
-reviewRouter.post('/review-list', checkRequiredFields(['userId', 'page']), async (req, res) => {
+reviewRouter.post('/review-list', checkRequiredFieldsBody(['userId', 'page']), async (req, res) => {
   const { userId, page, pageSize = 10 } = req.body;
   try {
     const skip = (page - 1) * pageSize;
@@ -57,7 +57,7 @@ reviewRouter.post('/review-list', checkRequiredFields(['userId', 'page']), async
 
 reviewRouter.post(
   '/review-create',
-  checkRequiredFields(['userId', 'travelId', 'reviewImg', 'content', 'travelScore', 'createdDate']),
+  checkRequiredFieldsBody(['userId', 'travelId', 'reviewImg', 'content', 'travelScore', 'createdDate']),
   async (req, res) => {
     const { userId, travelId, reviewImg, content, travelScore, createdDate } = req.body;
     try {
