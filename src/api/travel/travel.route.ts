@@ -2,7 +2,7 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import { ResponseDTO } from '../../ResponseDTO';
 import {
-  checkRequiredFields,
+  checkRequiredFieldsBody,
   checkRequiredFieldsParams,
   checkRequiredFieldsQuery,
 } from '../../checkRequiredFields';
@@ -150,7 +150,7 @@ travelRouter.get(
  */
 travelRouter.post(
   '/add-travel',
-  checkRequiredFields([
+  checkRequiredFieldsBody([
     'team',
     'travelTitle',
     'travelContent',
@@ -408,7 +408,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
 
 travelRouter.patch(
   '/bookmark',
-  checkRequiredFields(['userId', 'travelId','isBookmark']),
+  checkRequiredFieldsBody(['userId', 'travelId','isBookmark']),
   async (req, res) => {
     const { userId, travelId, isBookmark } = req.body;
     try {
@@ -445,7 +445,7 @@ travelRouter.patch(
 // 여행 활성화 비활성화
 travelRouter.patch(
   '/update-active',
-  checkRequiredFields(['travelId', 'isActive']),
+  checkRequiredFieldsBody(['travelId', 'isActive']),
   async (req, res) => {
     const { travelId, isActive } = req.body;
     try {
@@ -476,7 +476,7 @@ travelRouter.patch(
 // 내 여행 관리 페이지
 // 여행 삭제, isDeleted: true
 // 팀안에 approved 상태인 유저가 없을 경우 삭제 가능
-travelRouter.patch('/delete-travel', checkRequiredFields(['travelId']), async (req, res) => {
+travelRouter.patch('/delete-travel', checkRequiredFieldsBody(['travelId']), async (req, res) => {
   const { travelId } = req.body;
   try {
     const travel = await Travel.findById(travelId);
@@ -704,5 +704,59 @@ travelRouter.get(
     }
   },
 );
+
+
+// 여행 팀 참가 신청
+travelRouter.post('/:teamId/join', checkRequiredFieldsParams(['teamId']),
+checkRequiredFieldsBody(['userId']),
+async (req, res) => {
+  const { teamId } = req.params;
+  const { userId } = req.body;
+  try {
+
+    const team = await Team.findById(teamId);
+    if (!team) {
+      res.status(404).json(ResponseDTO.fail('Team not found'));
+      return;
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json(ResponseDTO.fail('User not found'));
+      return;
+    }
+
+    if(team.appliedUsers.some((user) => user.userId.equals(userId))) {
+      res.status(400).json(ResponseDTO.fail('Already applied'));
+      return;
+    }
+
+    team.appliedUsers.push({ 
+      userId: user._id,
+      appliedAt: new Date(),
+      status: 'waiting',
+    });
+
+    await team.save();
+
+    const updatedTeam = await Team.findById(teamId).lean();
+
+    res.json(ResponseDTO.success({ 
+      travelId: updatedTeam?.travelId,
+      teamId: updatedTeam?._id,
+      currentMemberCount: updatedTeam?.appliedUsers.length,
+      travelStartDate: updatedTeam?.travelStartDate,
+      travelEndDate: updatedTeam?.travelEndDate,
+      personLimit: updatedTeam?.personLimit,
+      user: updatedTeam?.appliedUsers.filter((user) => user.userId.equals(userId)),
+    }));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseDTO.fail((error as Error).message));
+  }
+});
+
+
+
 
 export { travelRouter };

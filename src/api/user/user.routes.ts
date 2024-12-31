@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Team, User } from "../../db/schema";
-import { checkRequiredFields } from "../../checkRequiredFields";
+import { checkRequiredFieldsBody } from "../../checkRequiredFields";
 import { ResponseDTO } from "../../ResponseDTO";
 import { isEmail } from "../../isEmail";
 
@@ -17,7 +17,7 @@ curl -X POST http://localhost:3000/api/v1/users/login \
 */
 userRouter.post(
   "/login",
-  checkRequiredFields(["socialName", "userEmail"]),
+  checkRequiredFieldsBody(["socialName", "userEmail"]),
   async (req, res) => {
     const { socialName, userEmail, userProfileImage = null } = req.body;
 
@@ -53,7 +53,7 @@ userRouter.post(
 // 해당 유저 대기중인 상태에서 approved, rejected로 변경
 userRouter.patch(
   "/update-user-status",
-  checkRequiredFields(["teamId", "userId", "status"]),
+  checkRequiredFieldsBody(["teamId", "userId", "status"]),
   async (req, res) => {
     const { userId, status, teamId } = req.body;
     try {

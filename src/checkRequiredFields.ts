@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { ResponseDTO } from "./ResponseDTO";
 
-export const checkRequiredFields = (fields: string[]) => {
+export const checkRequiredFieldsBody = (fields: string[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     for (const field of fields) {
       if (!(field in req.body)) {
