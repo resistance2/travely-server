@@ -7,7 +7,7 @@ import {
   checkRequiredFieldsQuery,
 } from '../../checkRequiredFields';
 import { IAppliedUser, Review, Team, Travel, User, UserRating } from '../../db/schema';
-import { checkIsValidThumbnail, validObjectId } from '../../validChecker';
+import { checkIsValidImage, validObjectId } from '../../validChecker';
 
 const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
   const reviews = await Review.find({ travelId }).lean();
@@ -184,7 +184,7 @@ travelRouter.post(
   async (req, res) => {
     const session = await mongoose.startSession();
 
-    if (req.body.thumbnail && !(await checkIsValidThumbnail(req.body.thumbnail))) {
+    if (req.body.thumbnail && !(await checkIsValidImage(req.body.thumbnail))) {
       res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
       return;
     }

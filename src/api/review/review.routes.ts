@@ -1,21 +1,30 @@
 import { Router } from 'express';
-import { Review, Travel } from '../../db/schema';
+import { Review, Travel, User } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
-import { checkRequiredFieldsBody } from '../../checkRequiredFields';
+import { checkRequiredFieldsBody, checkRequiredFieldsQuery } from '../../checkRequiredFields';
+import { checkIsValidImage, checkIsValidScore } from '../../validChecker';
 
 const reviewRouter = Router();
 
-reviewRouter.post('/review-list', checkRequiredFieldsBody(['userId', 'page']), async (req, res) => {
-  const { userId, page, pageSize = 10 } = req.body;
+reviewRouter.get('/', checkRequiredFieldsQuery(['userId', 'page']), async (req, res) => {
+  const { userId, page, pageSize: pageSize = 10 } = req.query;
+  const page_ = Number(page);
+  const pageSize_ = Number(pageSize);
+
+  if(isNaN(page_) || isNaN(pageSize_)){
+    res.status(400).json(ResponseDTO.fail('Invalid page or pageSize'));
+    return;
+  }
+
   try {
-    const skip = (page - 1) * pageSize;
+    const skip = (page_ - 1) * pageSize_;
     const totalReviews = await Review.countDocuments({ userId });
-    const totalPages = Math.ceil(totalReviews / pageSize);
+    const totalPages = Math.ceil(totalReviews / pageSize_);
 
     const reviews = await Review.find({ userId })
       .sort({ createdDate: -1 })
       .skip(skip)
-      .limit(pageSize)
+      .limit(pageSize_)
       .lean();
 
     const reviewsWithTravelInfo = await Promise.all(
@@ -36,7 +45,7 @@ reviewRouter.post('/review-list', checkRequiredFieldsBody(['userId', 'page']), a
     res.json(
       ResponseDTO.success({
         page,
-        pageSize,
+        pageSize: pageSize_,
         totalPages,
         data: {
           reviews: reviewsWithTravelInfo,
@@ -50,24 +59,76 @@ reviewRouter.post('/review-list', checkRequiredFieldsBody(['userId', 'page']), a
   }
 });
 
-// 테스트용 curl 명령어:
-// curl -X POST http://localhost:3000/api/v1/reviews/review-list -H "Content-Type: application/json" -d '{"userId": "user001", "page": 1, "pageSize": 10}'
 
 // 리뷰 만들기
+// curl -X POST http://localhost:3000/api/v1/reviews/ -H "Content-Type: application/json" -d '{"userId": "user001", "travelId": "travel001", "reviewImg": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"], "content": "정말 멋진 여행이었어요!", "travelScore": 5, "createdDate": "2024-10-19T14:10:25Z"}'
 
+/**
+ * body example
+ * {
+ *   userId: 'user001',
+ *   travelId: 'travel001',
+ *   reviewImg: ['https://example.com/image1.jpg', 'https://example.com/image2.jpg'],
+ *   content: '정말 멋진 여행이었어요!',
+ *   travelScore: 5,
+ *   createdDate: '2024-10-19T14:10:25Z',
+ * }
+ */
 reviewRouter.post(
-  '/review-create',
-  checkRequiredFieldsBody(['userId', 'travelId', 'reviewImg', 'content', 'travelScore', 'createdDate']),
+  '/',
+  checkRequiredFieldsBody(['userId', 'travelId', 'reviewImg', 'content', 'travelScore','title']),
   async (req, res) => {
-    const { userId, travelId, reviewImg, content, travelScore, createdDate } = req.body;
+    const { userId, travelId, reviewImg, content, travelScore, title } = req.body;
+
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      res.status(404).json(ResponseDTO.fail('사용자를 찾을 수 없습니다'));
+      return;
+    }
+
+    const travel = await Travel.findById(travelId);
+    if (!travel) {
+      res.status(404).json(ResponseDTO.fail('여행을 찾을 수 없습니다'));
+      return;
+    }
+
+
+    // req.body에 이미지가 있을 때만
+    if (reviewImg) {
+      //문자열 배열인지 검사
+      if (!Array.isArray(reviewImg)) {
+        res.status(400).json(ResponseDTO.fail('reviewImg must be an array'));
+        return;
+      }
+
+      //이미지의 유효성 검사
+      const IsValidImages = await Promise.all(
+        reviewImg.map(async (image) => {
+          return await checkIsValidImage(image);
+        }),
+      );
+      if (!IsValidImages.every((isValid) => isValid)) {
+        res.status(400).json(ResponseDTO.fail('Invalid image URL'));
+        return;
+      }
+    }
+
+    if(!checkIsValidScore(travelScore)){
+      res.status(400).json(ResponseDTO.fail('Invalid travel score'));
+      return;
+    }
+
+    // TODO: 리뷰 유효성 검증 로직, 해당 유저가 실제로 여행을 다녀오고 리뷰를 작성하는지 체크 필요
+
     try {
       const newReview = new Review({
-        userId: userId,
-        travelId: travelId,
+        userId: user._id,
+        travelId: travel._id,
         reviewImg,
         content,
         travelScore,
-        createdDate: new Date(createdDate),
+        title
       });
 
       const savedReview = await newReview.save();
