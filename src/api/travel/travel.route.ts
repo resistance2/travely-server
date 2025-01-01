@@ -365,7 +365,6 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
       return;
     }
 
-
     const teams = await Team.find({
       appliedUsers: {
         $elemMatch: {
@@ -395,6 +394,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
     const travels = await Promise.all(
       teams.map(async (team) => {
         return {
+          id: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))?.appliedAt,
           travelTitle: (team.travelId as any).travelTitle,
           guideInfo: {
             socialName: (team.travelId as any).userId.socialName,
