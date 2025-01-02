@@ -44,20 +44,6 @@ const checkIsBookmarked = async (userId: mongoose.Types.ObjectId, travelId: mong
   ) : false;
 }
 
-// const ReviewSchema: Schema<IReview> = new Schema(
-//   {
-//     userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-//     travelId: { type: Schema.Types.ObjectId, required: true, ref: "Travel" },
-//     reviewImg: { type: [String], default: [] },
-//     createdDate: { type: Date, default: Date.now },
-//     content: { type: String, required: true },
-//     travelScore: { type: Number, required: true },
-//     title: { type: String, required: true },
-//   },
-//   { timestamps: true }
-// );
-
-
 const isReviewWritten = async (userId: mongoose.Types.ObjectId, travelId: mongoose.Types.ObjectId): Promise<boolean> => {
   const review = await Review.findOne({ userId, travelId }).lean();
   if (review) {
@@ -365,7 +351,6 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
       return;
     }
 
-
     const teams = await Team.find({
       appliedUsers: {
         $elemMatch: {
@@ -395,6 +380,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
     const travels = await Promise.all(
       teams.map(async (team) => {
         return {
+          id: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))?.appliedAt,
           travelTitle: (team.travelId as any).travelTitle,
           guideInfo: {
             socialName: (team.travelId as any).userId.socialName,
