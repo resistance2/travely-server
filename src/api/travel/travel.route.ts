@@ -285,6 +285,8 @@ travelRouter.get('/travel-list', async (req, res) => {
         };
       }),
     );
+    console.log('hello, world!');
+    console.log(userBookmarkTravels);
 
     const totalElements = await Travel.countDocuments();
     const totalPages = Math.ceil(totalElements / size_);
