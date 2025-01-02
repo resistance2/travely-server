@@ -1,8 +1,8 @@
-import { Team, TravelGuide, User } from '../../db/schema';
-import { ResponseDTO } from '../../ResponseDTO';
-import { checkRequiredFieldsBody, checkRequiredFieldsQuery } from '../../checkRequiredFields';
 import { Router } from 'express';
 import mongoose from 'mongoose';
+import { ResponseDTO } from '../../ResponseDTO';
+import { checkRequiredFieldsBody, checkRequiredFieldsQuery } from '../../checkRequiredFields';
+import { Team, TravelGuide, User } from '../../db/schema';
 import { checkIsValidImage, validObjectId } from '../../validChecker';
 
 const travelGuideRouter = Router();
@@ -24,7 +24,7 @@ travelGuideRouter.post(
   async (req, res) => {
     const session = await mongoose.startSession();
 
-    if (req.body.thumbnail && !await checkIsValidImage(req.body.thumbnail)) {
+    if (req.body.thumbnail && !(await checkIsValidImage(req.body.thumbnail))) {
       console.log('thumbnail boolean', Boolean(req.body.thumbnail));
       res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
       return;
@@ -87,23 +87,12 @@ travelGuideRouter.post(
  */
 travelGuideRouter.get('/travel-list', async (req, res) => {
   const { page = 1, size = 10 } = req.query;
-  const page_ = parseInt(page as string, 10) - 1;
+  const page_ = parseInt(page as string, 10);
   const size_ = parseInt(size as string, 10);
+  const skip = (page_ - 1) * size_;
 
   try {
-    const travelsGuides = await TravelGuide.find().sort({ createAt: -1 });
-    // if (!validObjectId(userId as string)) {
-    //   res.status(400).json(ResponseDTO.fail('Invalid userId'));
-    //   return;
-    // }
-
-
-    // const user = await User.findById(userId).lean();
-
-    // if (!user) {
-    //   res.status(404).json(ResponseDTO.fail('User not found'));
-    //   return;
-    // }
+    const travelsGuides = await TravelGuide.find().skip(skip).limit(size_).sort({ createdAt: -1 });
     const userBookmarkTravels = await Promise.all(
       travelsGuides.map(async (travel) => {
         const createdByUser = await User.findById(travel.userId).lean();
@@ -120,6 +109,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
           })) || null;
 
         return {
+          id: travel._id,
           travelTitle: travel.travelTitle,
           userId: travel.userId,
           createdBy: {
@@ -136,19 +126,15 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
       }),
     );
 
-    const paginatedTravels = userBookmarkTravels
-      .slice(page_ * size_, (page_ + 1) * size_)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-
-    const totalElements = travelsGuides.length;
+    const totalElements = await TravelGuide.countDocuments();
     const totalPages = Math.ceil(totalElements / size_);
-    const currentPage = page_ + 1;
+    const currentPage = page_;
     const pageSize = size_;
     const hasNext = totalPages - currentPage > 0;
 
     res.json(
       ResponseDTO.success({
-        travels: paginatedTravels,
+        travels: userBookmarkTravels,
         pageInfo: {
           totalElements,
           totalPages,
