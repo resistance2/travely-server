@@ -9,8 +9,7 @@ import { travelRouter } from "./api/travel/travel.route";
 import { reviewRouter } from "./api/review/review.routes";
 import { travelGuideRouter } from "./api/travelGuide/travelGuide.route";
 
-import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "./My Project.openapi.json";
+import path from "path";
 
 dotenv.config();
 const app = express();
@@ -56,7 +55,9 @@ async function startServer() {
     res.send("Hello World");
   });
 
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/api-docs", (_req, res) => {
+    res.sendFile(path.join(__dirname, 'public', './My Project.html'));
+});
 
   return app;
 }
