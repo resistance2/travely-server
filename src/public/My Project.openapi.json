@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "My Project",
     "description": "",
@@ -7,6 +7,398 @@
   },
   "tags": [],
   "paths": {
+    "/v1/users/login": {
+      "post": {
+        "summary": "로그인 및 유저 생성",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "example": {
+                "socialName": "nakyenko5",
+                "userEmail": "badclock4@gmail.com",
+                "userProfileImage": "test.png"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "_id": "672906fc3f52cfeef7356cda",
+                        "userProfileImage": "test.png",
+                        "socialName": "nakyenko5",
+                        "userEmail": "badclock4@gmail.com",
+                        "myCreatedTravel": [],
+                        "myPassedTravel": [],
+                        "myReviews": [],
+                        "myBookmark": [],
+                        "isVerifiedUser": false,
+                        "createdAt": "2024-11-04T17:40:12.297Z",
+                        "updatedAt": "2024-11-04T17:40:12.297Z",
+                        "__v": 0,
+                        "isCreated": false
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/users/phone": {
+      "patch": {
+        "summary": "유저 전화번호 변경",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "description": "유저 아이디"
+                  },
+                  "phoneNumber": {
+                    "type": "string",
+                    "description": "전화번호"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "phoneNumber"
+                ]
+              },
+              "example": {
+                "userId": "675fc04e097ae2625fde9d75",
+                "phoneNumber": "010-1234-5678"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "userId": "675fc04e097ae2625fde9d75"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/users/mbti": {
+      "patch": {
+        "summary": "유저 mbti 변경",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  },
+                  "mbti": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "mbti"
+                ]
+              },
+              "example": {
+                "userId": "675fc04e097ae2625fde9d75",
+                "mbti": "INFP"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "userId": "675fc04e097ae2625fde9d75"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/reviews": {
+      "post": {
+        "summary": "여행 리뷰 작성",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "example": {
+                "userId": "672906fc3f52cfeef7356cda",
+                "travelId": "672905e83f52cfeef7356cc3",
+                "reviewImg": [
+                  "https://i.imgur.com/GAdReeB.jpeg"
+                ],
+                "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
+                "title": "제주도 여행",
+                "travelScore": 4.5
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "review": {
+                          "reviewId": "6774bbe4bdec1e26356a494e",
+                          "userId": "672906fc3f52cfeef7356cda",
+                          "travelId": "672905e83f52cfeef7356cc3",
+                          "reviewImg": [
+                            "https://i.imgur.com/GAdReeB.jpeg"
+                          ],
+                          "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
+                          "travelScore": 4.5,
+                          "createdDate": "2025-01-01T03:52:04.319Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "get": {
+        "summary": "리뷰 조회( 해당 여행 리뷰 조회)",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "travelId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "672905e83f52cfeef7356cc3",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "2",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "data": {
+                          "reviews": [
+                            {
+                              "id": "6774bbe4bdec1e26356a494e",
+                              "travelId": "672905e83f52cfeef7356cc3",
+                              "reviewImg": [
+                                "https://i.imgur.com/GAdReeB.jpeg"
+                              ],
+                              "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
+                              "travelScore": 4.5,
+                              "createdDate": "2025-01-01T03:52:04.319Z",
+                              "travelTitle": ""
+                            },
+                            {
+                              "id": "6774ba725f55097059f3373c",
+                              "travelId": "672905e83f52cfeef7356cc3",
+                              "reviewImg": [
+                                "https://i.imgur.com/GAdReeB.jpeg"
+                              ],
+                              "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
+                              "travelScore": 4.5,
+                              "createdDate": "2025-01-01T03:45:54.023Z",
+                              "travelTitle": ""
+                            }
+                          ]
+                        },
+                        "pageInfo": {
+                          "page": 1,
+                          "pageSize": 2,
+                          "totalPages": 1,
+                          "hasNext": false
+                        }
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "data": {
+                          "reviews": [
+                            {
+                              "id": "6774bbe4bdec1e26356a494e",
+                              "travelId": "672905e83f52cfeef7356cc3",
+                              "reviewImg": [
+                                "https://i.imgur.com/GAdReeB.jpeg"
+                              ],
+                              "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
+                              "travelScore": 4.5,
+                              "createdDate": "2025-01-01T03:52:04.319Z",
+                              "travelTitle": "",
+                              "socialName": "nakyenko5",
+                              "userProfileImage": "test.png",
+                              "userEmail": "badclock4@gmail.com",
+                              "isVerifiedUser": false
+                            },
+                            {
+                              "id": "6774ba725f55097059f3373c",
+                              "travelId": "672905e83f52cfeef7356cc3",
+                              "reviewImg": [
+                                "https://i.imgur.com/GAdReeB.jpeg"
+                              ],
+                              "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
+                              "travelScore": 4.5,
+                              "createdDate": "2025-01-01T03:45:54.023Z",
+                              "travelTitle": "",
+                              "socialName": "nakyenko5",
+                              "userProfileImage": "test.png",
+                              "userEmail": "badclock4@gmail.com",
+                              "isVerifiedUser": false
+                            }
+                          ]
+                        },
+                        "pageInfo": {
+                          "page": 1,
+                          "pageSize": 2,
+                          "totalPages": 2,
+                          "hasNext": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
     "/v1/travels": {
       "get": {
         "summary": "여행 전체 조회",
@@ -4429,68 +4821,6 @@
         "security": []
       }
     },
-    "/v1/users/login": {
-      "post": {
-        "summary": "로그인 및 유저 생성",
-        "deprecated": false,
-        "description": "",
-        "tags": [],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {}
-              },
-              "example": {
-                "socialName": "nakyenko5",
-                "userEmail": "badclock4@gmail.com",
-                "userProfileImage": "test.png"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {}
-                },
-                "examples": {
-                  "1": {
-                    "summary": "Success",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "_id": "672906fc3f52cfeef7356cda",
-                        "userProfileImage": "test.png",
-                        "socialName": "nakyenko5",
-                        "userEmail": "badclock4@gmail.com",
-                        "myCreatedTravel": [],
-                        "myPassedTravel": [],
-                        "myReviews": [],
-                        "myBookmark": [],
-                        "isVerifiedUser": false,
-                        "createdAt": "2024-11-04T17:40:12.297Z",
-                        "updatedAt": "2024-11-04T17:40:12.297Z",
-                        "__v": 0,
-                        "isCreated": false
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": []
-      }
-    },
     "/v1/travels/my-travels": {
       "get": {
         "summary": "내여행 -내가 참여한 여행",
@@ -4543,6 +4873,46 @@
                                   "ISTJ",
                                   "INTP",
                                   "INFJ",
+                                  null
+                                ]
+                              }
+                            },
+                            "currentUserStatus": {
+                              "status": "waiting"
+                            },
+                            "reviewWritten": true
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "travels": [
+                          {
+                            "id": "2025-01-01T05:10:27.536Z",
+                            "travelTitle": "부산 여행",
+                            "guideInfo": {
+                              "socialName": "nakyenko4",
+                              "userProfileImg": "test.png",
+                              "userEmail": "badclock@gmail.com",
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userRating": 5
+                            },
+                            "travelTeam": {
+                              "travelStartDate": "2024-04-01T00:00:00.000Z",
+                              "travelEndDate": "2024-04-04T00:00:00.000Z",
+                              "personLimit": 7,
+                              "approvedMembersMbti": {
+                                "mbti": [
+                                  "ISTJ",
+                                  "INTP",
+                                  "INFJ",
+                                  "ENTJ",
+                                  null,
                                   null
                                 ]
                               }
@@ -4816,13 +5186,23 @@
         "security": []
       }
     },
-    "/v1/travels/manage-my-travel/672905e83f52cfeef7356cc3": {
+    "/v1/travels/manage-my-travel/{traveId}": {
       "get": {
         "summary": "여행 관리 페이지 - 해당 여행의 팀과 팀에 있는 유저 목록 조회",
         "deprecated": false,
         "description": "",
         "tags": [],
         "parameters": [
+          {
+            "name": "traveId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "672905e83f52cfeef7356cc3",
+            "schema": {
+              "type": "string"
+            }
+          },
           {
             "name": "page",
             "in": "query",
@@ -5114,13 +5494,24 @@
         "security": []
       }
     },
-    "/v1/travels/manage-my-travel-teams/672905e83f52cfeef7356cc3": {
+    "/v1/travels/manage-my-travel-teams/{travelId}": {
       "get": {
         "summary": "여행 팀 조회 - 여행 아이디로 팀 조회",
         "deprecated": false,
         "description": "",
         "tags": [],
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "travelId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "672905e83f52cfeef7356cc3",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -5366,6 +5757,85 @@
                         "totalRating": 4.5,
                         "bookmark": 2,
                         "isbookmark": false
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/travels/{teamId}/join": {
+      "post": {
+        "summary": "여행 팀에 유저 등록(여행 신청하기)",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "teamId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "/65fd1234a1b2c3d4e5f63333",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "userId"
+                ]
+              },
+              "example": {
+                "userId": "65fd1234a1b2c3d4e5f61013"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "travelId": "672905e83f52cfeef7356cc3",
+                        "teamId": "65fd1234a1b2c3d4e5f63333",
+                        "currentMemberCount": 5,
+                        "travelStartDate": "2024-04-01T00:00:00.000Z",
+                        "travelEndDate": "2024-04-04T00:00:00.000Z",
+                        "personLimit": 7,
+                        "user": [
+                          {
+                            "userId": "6731c71d08295816dc516576",
+                            "appliedAt": "2025-01-01T00:48:30.776Z",
+                            "status": "waiting",
+                            "_id": "677490de8dd0d42c6575136b"
+                          }
+                        ]
                       }
                     }
                   }
