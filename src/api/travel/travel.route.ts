@@ -37,20 +37,28 @@ const getReviews = async (travelId: mongoose.Types.ObjectId) => {
   });
 };
 
-const checkIsBookmarked = async (userId: mongoose.Types.ObjectId, travelId: mongoose.Types.ObjectId): Promise<boolean> => {
+const checkIsBookmarked = async (
+  userId: mongoose.Types.ObjectId,
+  travelId: mongoose.Types.ObjectId,
+): Promise<boolean> => {
   const travel = await Travel.findOne({ _id: travelId }).lean();
-  return travel ? travel.bookmark.some(
-    (bookmarkUserId: mongoose.Types.ObjectId) => bookmarkUserId.equals(userId),
-  ) : false;
-}
+  return travel
+    ? travel.bookmark.some((bookmarkUserId: mongoose.Types.ObjectId) =>
+        bookmarkUserId.equals(userId),
+      )
+    : false;
+};
 
-const isReviewWritten = async (userId: mongoose.Types.ObjectId, travelId: mongoose.Types.ObjectId): Promise<boolean> => {
+const isReviewWritten = async (
+  userId: mongoose.Types.ObjectId,
+  travelId: mongoose.Types.ObjectId,
+): Promise<boolean> => {
   const review = await Review.findOne({ userId, travelId }).lean();
   if (review) {
     return true;
   }
   return false;
-}
+};
 
 const travelRouter = Router();
 
@@ -99,9 +107,6 @@ travelRouter.get(
     //전체 별점도 일다 목데이터를 넣음.
     // 북마크도 일단은 목데이터로 넣음
 
-
-
-
     // 승인된 유저만 보내기
     // isBookmark: 북마크 여부
     // bookmark: 북마크수
@@ -129,23 +134,25 @@ travelRouter.get(
         personLimit: (team as any).personLimit,
         travelStartDate: (team as any).travelStartDate,
         travelEndDate: (team as any).travelEndDate,
-        approvedUsers: ((team as any).appliedUsers as any).filter((user: any) => user.status === 'approved').map((user: any) => ({
-          userName: user.userId.userName,
-          socialName: user.userId.socialName,
-          userEmail: user.userId.userEmail,
-          phoneNumber: user.userId.phoneNumber,
-          mbti: user.userId.mbti,
-          status: user.status,
-          appliedAt: user.appliedAt,
-          userId: (user.userId as any)._id,
-        }))
+        approvedUsers: ((team as any).appliedUsers as any)
+          .filter((user: any) => user.status === 'approved')
+          .map((user: any) => ({
+            userName: user.userId.userName,
+            socialName: user.userId.socialName,
+            userEmail: user.userId.userEmail,
+            phoneNumber: user.userId.phoneNumber,
+            mbti: user.userId.mbti,
+            status: user.status,
+            appliedAt: user.appliedAt,
+            userId: (user.userId as any)._id,
+          })),
       })),
       reviews: reviewWithUser,
-      totalRating: await getReviewAverage(
-        travel._id
-      ),
+      totalRating: await getReviewAverage(travel._id),
       bookmark: travel.bookmark.length,
-      isbookmark: userId_ ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id) : false
+      isbookmark: userId_
+        ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id)
+        : false,
     };
     res.json(ResponseDTO.success(travelDetailData));
   },
@@ -237,30 +244,30 @@ travelRouter.get('/', async (_req, res) => {
  */
 travelRouter.get('/travel-list', async (req, res) => {
   const { userId, page = 1, size = 10 } = req.query;
-  const page_ = parseInt(page as string, 10) - 1;
+  const page_ = parseInt(page as string, 10);
   const size_ = parseInt(size as string, 10);
-  // const teams = await Team.findOne({ travelId, _id: teamId })
-  //   .populate({
-  //     path: 'appliedUsers.userId',
-  //     select: 'userProfileImage socialName userName userEmail phoneNumber mbti',
-  //   })
-  //   .lean();
+  const skip = (page_ - 1) * size_;
 
   try {
-    const travels = await Travel.find().sort({ createAt: -1 });
+    const travels = await Travel.find().skip(skip).limit(size_).lean();
 
-    const user = userId === 'null' ? null : await User.findById(userId).lean();
-
-    // if (!user) {
-    //   res.status(404).json(ResponseDTO.fail("User not found"));
-    //   return;
-    // }
+    let user: any;
+    if (userId === 'null') {
+      user = null;
+    } else {
+      user = await User.findById(userId).lean();
+      if (!user) {
+        res.status(404).json(ResponseDTO.fail('User not found'));
+        return;
+      }
+    }
     const userBookmarkTravels = await Promise.all(
       travels.map(async (travel) => {
         const reviewCnt = await getReviewCount(travel._id);
         const travelScore = await getReviewAverage(travel._id);
         const createdByUser = await User.findById(travel.userId).lean();
         return {
+          id: travel._id,
           travelTitle: travel.travelTitle,
           price: travel.travelPrice,
           thumbnail: travel.thumbnail,
@@ -279,19 +286,15 @@ travelRouter.get('/travel-list', async (req, res) => {
       }),
     );
 
-    const paginatedTravels = userBookmarkTravels
-      .slice(page_ * size_, (page_ + 1) * size_)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-
-    const totalElements = travels.length;
+    const totalElements = await Travel.countDocuments();
     const totalPages = Math.ceil(totalElements / size_);
-    const currentPage = page_ + 1;
+    const currentPage = page_;
     const pageSize = size_;
     const hasNext = totalPages - currentPage > 0;
 
     res.json(
       ResponseDTO.success({
-        travels: paginatedTravels,
+        travels: userBookmarkTravels,
         pageInfo: {
           totalElements,
           totalPages,
@@ -336,8 +339,6 @@ travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (
   }
 });
 
-
-
 /**
  * 내여행- 내가 참여한 여행 목록 조회
  * /api/v1/travels/my-travels
@@ -380,7 +381,8 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
     const travels = await Promise.all(
       teams.map(async (team) => {
         return {
-          id: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))?.appliedAt,
+          id: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))
+            ?.appliedAt,
           travelTitle: (team.travelId as any).travelTitle,
           guideInfo: {
             socialName: (team.travelId as any).userId.socialName,
@@ -390,19 +392,21 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
             userRating: await getUserReviewAverage((team.travelId as any).userId._id),
           },
           travelTeam: {
-          travelStartDate: team.travelStartDate,
-          travelEndDate: team.travelEndDate,
-          personLimit: team.personLimit,
-          approvedMembersMbti: {
-            mbti: team.appliedUsers.map((user) => (user.userId as any).mbti)
+            travelStartDate: team.travelStartDate,
+            travelEndDate: team.travelEndDate,
+            personLimit: team.personLimit,
+            approvedMembersMbti: {
+              mbti: team.appliedUsers.map((user) => (user.userId as any).mbti),
+            },
           },
-        },
-        currentUserStatus: {
-          status: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))?.status,
-        },
-        reviewWritten: await isReviewWritten(user._id, team.travelId._id),
-      };
-    }));
+          currentUserStatus: {
+            status: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))
+              ?.status,
+          },
+          reviewWritten: await isReviewWritten(user._id, team.travelId._id),
+        };
+      }),
+    );
 
     res.json(
       ResponseDTO.success({
@@ -417,17 +421,17 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
 
 // 북마크 추가 /travels/bookmark-add
 
-  // ### Request Body Example
+// ### Request Body Example
 
-  //   {
-  //     "userId": "user123",
-  //     "travelId": "travel456",
-  //     "isBookmark": true
-  //   }
+//   {
+//     "userId": "user123",
+//     "travelId": "travel456",
+//     "isBookmark": true
+//   }
 
 travelRouter.patch(
   '/bookmark',
-  checkRequiredFieldsBody(['userId', 'travelId','isBookmark']),
+  checkRequiredFieldsBody(['userId', 'travelId', 'isBookmark']),
   async (req, res) => {
     const { userId, travelId, isBookmark } = req.body;
     try {
@@ -436,9 +440,9 @@ travelRouter.patch(
         res.status(404).json(ResponseDTO.fail('Travel not found'));
         return;
       }
-      
+
       const user = await User.findById(userId);
-      if(!user) {
+      if (!user) {
         res.status(404).json(ResponseDTO.fail('User not found'));
         return;
       }
@@ -724,58 +728,58 @@ travelRouter.get(
   },
 );
 
-
 // 여행 팀 참가 신청
-travelRouter.post('/:teamId/join', checkRequiredFieldsParams(['teamId']),
-checkRequiredFieldsBody(['userId']),
-async (req, res) => {
-  const { teamId } = req.params;
-  const { userId } = req.body;
-  try {
+travelRouter.post(
+  '/:teamId/join',
+  checkRequiredFieldsParams(['teamId']),
+  checkRequiredFieldsBody(['userId']),
+  async (req, res) => {
+    const { teamId } = req.params;
+    const { userId } = req.body;
+    try {
+      const team = await Team.findById(teamId);
+      if (!team) {
+        res.status(404).json(ResponseDTO.fail('Team not found'));
+        return;
+      }
 
-    const team = await Team.findById(teamId);
-    if (!team) {
-      res.status(404).json(ResponseDTO.fail('Team not found'));
-      return;
+      const user = await User.findById(userId);
+      if (!user) {
+        res.status(404).json(ResponseDTO.fail('User not found'));
+        return;
+      }
+
+      if (team.appliedUsers.some((user) => user.userId.equals(userId))) {
+        res.status(400).json(ResponseDTO.fail('Already applied'));
+        return;
+      }
+
+      team.appliedUsers.push({
+        userId: user._id,
+        appliedAt: new Date(),
+        status: 'waiting',
+      });
+
+      await team.save();
+
+      const updatedTeam = await Team.findById(teamId).lean();
+
+      res.json(
+        ResponseDTO.success({
+          travelId: updatedTeam?.travelId,
+          teamId: updatedTeam?._id,
+          currentMemberCount: updatedTeam?.appliedUsers.length,
+          travelStartDate: updatedTeam?.travelStartDate,
+          travelEndDate: updatedTeam?.travelEndDate,
+          personLimit: updatedTeam?.personLimit,
+          user: updatedTeam?.appliedUsers.filter((user) => user.userId.equals(userId)),
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
     }
-
-    const user = await User.findById(userId);
-    if (!user) {
-      res.status(404).json(ResponseDTO.fail('User not found'));
-      return;
-    }
-
-    if(team.appliedUsers.some((user) => user.userId.equals(userId))) {
-      res.status(400).json(ResponseDTO.fail('Already applied'));
-      return;
-    }
-
-    team.appliedUsers.push({ 
-      userId: user._id,
-      appliedAt: new Date(),
-      status: 'waiting',
-    });
-
-    await team.save();
-
-    const updatedTeam = await Team.findById(teamId).lean();
-
-    res.json(ResponseDTO.success({ 
-      travelId: updatedTeam?.travelId,
-      teamId: updatedTeam?._id,
-      currentMemberCount: updatedTeam?.appliedUsers.length,
-      travelStartDate: updatedTeam?.travelStartDate,
-      travelEndDate: updatedTeam?.travelEndDate,
-      personLimit: updatedTeam?.personLimit,
-      user: updatedTeam?.appliedUsers.filter((user) => user.userId.equals(userId)),
-    }));
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(ResponseDTO.fail((error as Error).message));
-  }
-});
-
-
-
+  },
+);
 
 export { travelRouter };
