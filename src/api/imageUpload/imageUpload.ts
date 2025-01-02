@@ -1,15 +1,13 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import { v4 as uuidv4 } from "uuid";
-import { Express } from "express";
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { Express } from 'express';
+import { v4 as uuidv4 } from 'uuid';
 
 const s3Client = new S3Client({
   region: process.env.AWS_REGION,
 });
 
-export const uploadImage = async (
-  file: Express.Multer.File
-): Promise<string> => {
-  const fileExtension = file.originalname.split(".").pop();
+export const uploadImage = async (file: Express.Multer.File): Promise<string> => {
+  const fileExtension = file.originalname.split('.').pop();
   const fileName = `${uuidv4()}.${fileExtension}`;
 
   const params = {
@@ -23,16 +21,14 @@ export const uploadImage = async (
     await s3Client.send(new PutObjectCommand(params));
     return `${process.env.CLOUDFRONT_URL}/${fileName}`;
   } catch (error) {
-    console.error("S3 업로드 오류:", error);
-    throw new Error("이미지 업로드 실패");
+    console.error('S3 업로드 오류:', error);
+    throw new Error('이미지 업로드 실패');
   }
 };
 
-export const uploadImages = async (
-  files: Express.Multer.File[]
-): Promise<string[]> => {
+export const uploadImages = async (files: Express.Multer.File[]): Promise<string[]> => {
   const uploadPromises = files.map(async (file) => {
-    const fileExtension = file.originalname.split(".").pop();
+    const fileExtension = file.originalname.split('.').pop();
     const fileName = `${uuidv4()}.${fileExtension}`;
 
     const params = {
@@ -46,8 +42,8 @@ export const uploadImages = async (
       await s3Client.send(new PutObjectCommand(params));
       return `${process.env.CLOUDFRONT_URL}/${fileName}`;
     } catch (error) {
-      console.error("S3 업로드 오류:", error);
-      throw new Error("이미지 업로드 실패");
+      console.error('S3 업로드 오류:', error);
+      throw new Error('이미지 업로드 실패');
     }
   });
 

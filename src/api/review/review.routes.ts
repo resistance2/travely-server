@@ -1,31 +1,29 @@
 import { Router } from 'express';
-import { Review, Travel, User } from '../../db/schema';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFieldsBody, checkRequiredFieldsQuery } from '../../checkRequiredFields';
+import { Review, Travel, User } from '../../db/schema';
 import { checkIsValidImage, checkIsValidScore } from '../../validChecker';
 
 const reviewRouter = Router();
 
-  interface QueryType {
-  userId?: string;  
+interface QueryType {
+  userId?: string;
   travelId?: string;
-  }
-
+}
 
 reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
   const { userId, travelId, page, pageSize: pageSize = 10 } = req.query;
   const page_ = Number(page);
   const pageSize_ = Number(pageSize);
 
-  if(isNaN(page_) || isNaN(pageSize_)){
+  if (isNaN(page_) || isNaN(pageSize_)) {
     res.status(400).json(ResponseDTO.fail('Invalid page or pageSize'));
     return;
   }
 
-
-  const findQuery:QueryType = {};
+  const findQuery: QueryType = {};
   if (userId) findQuery.userId = String(userId);
-  if(travelId) findQuery.travelId = String(travelId);
+  if (travelId) findQuery.travelId = String(travelId);
 
   try {
     const skip = (page_ - 1) * pageSize_;
@@ -49,7 +47,7 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
           content: review.content,
           travelScore: review.travelScore,
           createdDate: review.createdDate,
-          travelTitle: travel?.travelTitle || '',      
+          travelTitle: travel?.travelTitle || '',
           userName: user?.userName,
           socialName: user?.socialName,
           userProfileImage: user?.userProfileImage,
@@ -65,12 +63,12 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
         data: {
           reviews: reviewsWithTravelInfo,
         },
-        pageInfo:{
+        pageInfo: {
           page: page_,
           pageSize: pageSize_,
           totalPages: totalPages,
           hasNext: totalPages - page_ > 0,
-        }
+        },
       }),
     );
   } catch (error) {
@@ -78,7 +76,6 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
-
 
 // 리뷰 만들기
 // curl -X POST http://localhost:3000/api/v1/reviews/ -H "Content-Type: application/json" -d '{"userId": "user001", "travelId": "travel001", "reviewImg": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"], "content": "정말 멋진 여행이었어요!", "travelScore": 5, "createdDate": "2024-10-19T14:10:25Z"}'
@@ -96,12 +93,12 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
  */
 reviewRouter.post(
   '/',
-  checkRequiredFieldsBody(['userId', 'travelId', 'reviewImg', 'content', 'travelScore','title']),
+  checkRequiredFieldsBody(['userId', 'travelId', 'reviewImg', 'content', 'travelScore', 'title']),
   async (req, res) => {
     const { userId, travelId, reviewImg, content, travelScore, title } = req.body;
 
     const user = await User.findById(userId);
-    
+
     if (!user) {
       res.status(404).json(ResponseDTO.fail('사용자를 찾을 수 없습니다'));
       return;
@@ -112,7 +109,6 @@ reviewRouter.post(
       res.status(404).json(ResponseDTO.fail('여행을 찾을 수 없습니다'));
       return;
     }
-
 
     // req.body에 이미지가 있을 때만
     if (reviewImg) {
@@ -134,7 +130,7 @@ reviewRouter.post(
       }
     }
 
-    if(!checkIsValidScore(travelScore)){
+    if (!checkIsValidScore(travelScore)) {
       res.status(400).json(ResponseDTO.fail('Invalid travel score'));
       return;
     }
@@ -148,7 +144,7 @@ reviewRouter.post(
         reviewImg,
         content,
         travelScore,
-        title
+        title,
       });
 
       const savedReview = await newReview.save();
@@ -174,4 +170,3 @@ reviewRouter.post(
 );
 
 export { reviewRouter };
-

@@ -3,10 +3,7 @@
     "id": "review001",
     "userId": "user001",
     "travelId": "travel001",
-    "reviewImg": [
-      "https://example.com/image1.jpg",
-      "https://example.com/image2.jpg"
-    ],
+    "reviewImg": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"],
     "createdDate": { "$date": "2024-10-19T14:10:25Z" },
     "content": "정말 멋진 여행이었어요! 풍경이 최고였어요.",
     "travelScore": 5
@@ -33,10 +30,7 @@
     "id": "review004",
     "userId": "user004",
     "travelId": "travel004",
-    "reviewImg": [
-      "https://example.com/image4.jpg",
-      "https://example.com/image5.jpg"
-    ],
+    "reviewImg": ["https://example.com/image4.jpg", "https://example.com/image5.jpg"],
     "createdDate": { "$date": "2024-10-17T09:15:45Z" },
     "content": "이런 멋진 장소를 발견하게 되다니!",
     "travelScore": 5
@@ -72,10 +66,7 @@
     "id": "review008",
     "userId": "user008",
     "travelId": "travel008",
-    "reviewImg": [
-      "https://example.com/image8.jpg",
-      "https://example.com/image9.jpg"
-    ],
+    "reviewImg": ["https://example.com/image8.jpg", "https://example.com/image9.jpg"],
     "createdDate": { "$date": "2024-10-13T10:22:32Z" },
     "content": "가족들과 함께 좋은 시간을 보냈어요.",
     "travelScore": 4

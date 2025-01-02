@@ -12,12 +12,7 @@
     "type-check": "tsc --noEmit",
     "test": "jest"
   },
-  "keywords": [
-    "express",
-    "mongodb",
-    "typescript",
-    "api"
-  ],
+  "keywords": ["express", "mongodb", "typescript", "api"],
   "author": "Your Name",
   "license": "ISC",
   "dependencies": {

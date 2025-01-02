@@ -1,4 +1,4 @@
-import mongoose, { Schema, Types } from "mongoose";
+import mongoose, { Schema, Types } from 'mongoose';
 
 export interface ITravel {
   userId: Types.ObjectId;
@@ -56,7 +56,7 @@ export interface IReview {
 export interface IAppliedUser {
   userId: Types.ObjectId;
   appliedAt: Date;
-  status: "waiting" | "approved" | "rejected";
+  status: 'waiting' | 'approved' | 'rejected';
 }
 
 //TODO: user schema에서 myBookmark 삭제 필요
@@ -75,41 +75,41 @@ export interface IUser {
 }
 
 export interface IUserRating {
-  fromUserId: Types.ObjectId;   // 평가를 한 유저
-  toUserId: Types.ObjectId;     // 평가를 받은 유저
-  ratingScore: number
+  fromUserId: Types.ObjectId; // 평가를 한 유저
+  toUserId: Types.ObjectId; // 평가를 받은 유저
+  ratingScore: number;
   createdAt: Date;
   isDeleted: boolean;
 }
 
-const UserRatingSchema: Schema<IUserRating> = new Schema({
-  fromUserId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-  toUserId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-  ratingScore: { type: Number, required: true },
-  createdAt: { type: Date, default: Date.now, required: true },
-  isDeleted: { type: Boolean, default: false },
-}, 
+const UserRatingSchema: Schema<IUserRating> = new Schema(
+  {
+    fromUserId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    toUserId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    ratingScore: { type: Number, required: true },
+    createdAt: { type: Date, default: Date.now, required: true },
+    isDeleted: { type: Boolean, default: false },
+  },
   {
     timestamps: true,
     query: {
       isDeleted: false,
     },
-  }
-)
+  },
+);
 
-UserRatingSchema.pre(["find", "findOne"], function (next) {
-  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), "isDeleted")) {
+UserRatingSchema.pre(['find', 'findOne'], function (next) {
+  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), 'isDeleted')) {
     this?.where({ isDeleted: false });
   }
   next();
 });
 
-export const UserRating = mongoose.model<IUserRating>("UserRating", UserRatingSchema);
-
+export const UserRating = mongoose.model<IUserRating>('UserRating', UserRatingSchema);
 
 const TravelSchema: Schema<ITravel> = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+    userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     thumbnail: { type: String, required: true },
     travelTitle: { type: String, required: true },
     travelContent: { type: String, required: true },
@@ -124,7 +124,7 @@ const TravelSchema: Schema<ITravel> = new Schema(
     bookmark: [{ type: Schema.Types.ObjectId, default: [] }],
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
-    teamId: [{ type: Schema.Types.ObjectId, ref: "Team", default: [] }],
+    teamId: [{ type: Schema.Types.ObjectId, ref: 'Team', default: [] }],
     travelActive: { type: Boolean, default: true },
     reviewWrite: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
@@ -135,28 +135,28 @@ const TravelSchema: Schema<ITravel> = new Schema(
     query: {
       isDeleted: false,
     },
-  }
+  },
 );
 
-TravelSchema.pre(["find", "findOne"], function (next) {
-  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), "isDeleted")) {
+TravelSchema.pre(['find', 'findOne'], function (next) {
+  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), 'isDeleted')) {
     this?.where({ isDeleted: false });
   }
   next();
 });
 
-export const Travel = mongoose.model<ITravel>("Travel", TravelSchema);
+export const Travel = mongoose.model<ITravel>('Travel', TravelSchema);
 
 const TravelGuideSchema: Schema<ITravelGuide> = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
+    userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     thumbnail: { type: String, required: true },
     travelTitle: { type: String, required: true },
     travelContent: { type: String, required: true },
     bookmark: [{ type: Schema.Types.ObjectId, default: [] }],
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
-    teamId: [{ type: Schema.Types.ObjectId, ref: "Team", default: [] }],
+    teamId: [{ type: Schema.Types.ObjectId, ref: 'Team', default: [] }],
     isDeleted: { type: Boolean, default: false },
   },
   {
@@ -164,59 +164,56 @@ const TravelGuideSchema: Schema<ITravelGuide> = new Schema(
     query: {
       isDeleted: false,
     },
-  }
+  },
 );
 
-TravelGuideSchema.pre(["find", "findOne"], function (next) {
-  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), "isDeleted")) {
+TravelGuideSchema.pre(['find', 'findOne'], function (next) {
+  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), 'isDeleted')) {
     this?.where({ isDeleted: false });
   }
   next();
 });
 
-export const TravelGuide = mongoose.model<ITravelGuide>(
-  "TravelGuide",
-  TravelGuideSchema
-);
+export const TravelGuide = mongoose.model<ITravelGuide>('TravelGuide', TravelGuideSchema);
 
 const ReviewSchema: Schema<IReview> = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, required: true, ref: "User" },
-    travelId: { type: Schema.Types.ObjectId, required: true, ref: "Travel" },
+    userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    travelId: { type: Schema.Types.ObjectId, required: true, ref: 'Travel' },
     reviewImg: { type: [String], default: [] },
     createdDate: { type: Date, default: Date.now, required: true },
     content: { type: String, required: true },
     travelScore: { type: Number, required: true },
     title: { type: String, required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const Review = mongoose.model<IReview>("Review", ReviewSchema);
+export const Review = mongoose.model<IReview>('Review', ReviewSchema);
 
 export const AppliedUserSchema: Schema<IAppliedUser> = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   appliedAt: { type: Date, default: Date.now, required: true },
   status: {
     type: String,
-    enum: ["waiting", "approved", "rejected"],
-    default: "waiting",
+    enum: ['waiting', 'approved', 'rejected'],
+    default: 'waiting',
     required: true,
   },
 });
 
 const TeamSchema: Schema = new Schema(
   {
-    travelId: { type: Schema.Types.ObjectId, required: true, ref: "Travel" },
+    travelId: { type: Schema.Types.ObjectId, required: true, ref: 'Travel' },
     personLimit: { type: Number, required: true },
     appliedUsers: [AppliedUserSchema],
     travelStartDate: { type: Date, required: true },
     travelEndDate: { type: Date, required: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
-export const Team = mongoose.model<ITeam>("Team", TeamSchema);
+export const Team = mongoose.model<ITeam>('Team', TeamSchema);
 
 const UserSchema: Schema = new Schema(
   {
@@ -226,17 +223,13 @@ const UserSchema: Schema = new Schema(
     userEmail: { type: String, unique: true },
     phoneNumber: { type: String },
     mbti: { type: String },
-    myCreatedTravel: [
-      { type: Schema.Types.ObjectId, ref: "Travel", default: [] },
-    ],
-    myPassedTravel: [
-      { type: Schema.Types.ObjectId, ref: "Travel", default: [] },
-    ],
-    myReviews: [{ type: Schema.Types.ObjectId, ref: "Review", default: [] }],
-    myBookmark: [{ type: Schema.Types.ObjectId, ref: "Travel", default: [] }],
+    myCreatedTravel: [{ type: Schema.Types.ObjectId, ref: 'Travel', default: [] }],
+    myPassedTravel: [{ type: Schema.Types.ObjectId, ref: 'Travel', default: [] }],
+    myReviews: [{ type: Schema.Types.ObjectId, ref: 'Review', default: [] }],
+    myBookmark: [{ type: Schema.Types.ObjectId, ref: 'Travel', default: [] }],
     isVerifiedUser: { type: Boolean, default: false },
   },
-  { timestamps: true, id: false, _id: true }
+  { timestamps: true, id: false, _id: true },
 );
 
-export const User = mongoose.model<IUser>("User", UserSchema);
+export const User = mongoose.model<IUser>('User', UserSchema);
