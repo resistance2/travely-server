@@ -1,15 +1,18 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
   "vcs": { "enabled": false, "clientKind": "git", "useIgnoreFile": false },
-  "files": { "ignoreUnknown": false, "ignore": [
-    "**/dist/",
-    "**/node_modules/",
-    "**/.github/",
-    "**/.gitignore",
-    "**/firebase.json",
-    "**/.firebase/",
-    "dist"
-  ] },
+  "files": {
+    "ignoreUnknown": false,
+    "ignore": [
+      "**/dist/",
+      "**/node_modules/",
+      "**/.github/",
+      "**/.gitignore",
+      "**/firebase.json",
+      "**/.firebase/",
+      "dist"
+    ]
+  },
   "formatter": {
     "enabled": true,
     "useEditorconfig": true,

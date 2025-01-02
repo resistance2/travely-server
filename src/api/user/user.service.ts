@@ -1,7 +1,11 @@
-import { User } from "../../db/schema";
+import { User } from '../../db/schema';
 
 export class UserService {
-  static async login(socialName: string, userEmail: string, userProfileImage: string | null = null) {
+  static async login(
+    socialName: string,
+    userEmail: string,
+    userProfileImage: string | null = null,
+  ) {
     const user = await User.findOne({
       $or: [{ userEmail }, { socialName }],
     }).lean();
@@ -20,28 +24,20 @@ export class UserService {
   }
 
   static async updateMbti(userId: string, mbti: string) {
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { mbti },
-      { new: true }
-    );
+    const user = await User.findByIdAndUpdate(userId, { mbti }, { new: true });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
 
     return { userId: user._id };
   }
 
   static async updatePhoneNumber(userId: string, phoneNumber: string) {
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { phoneNumber },
-      { new: true }
-    );
+    const user = await User.findByIdAndUpdate(userId, { phoneNumber }, { new: true });
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
 
     return { userId: user._id };
