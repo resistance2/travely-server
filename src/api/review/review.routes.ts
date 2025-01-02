@@ -6,8 +6,14 @@ import { checkIsValidImage, checkIsValidScore } from '../../validChecker';
 
 const reviewRouter = Router();
 
-reviewRouter.get('/', checkRequiredFieldsQuery(['userId', 'page']), async (req, res) => {
-  const { userId, page, pageSize: pageSize = 10 } = req.query;
+  interface QueryType {
+  userId?: string;  
+  travelId?: string;
+  }
+
+
+reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
+  const { userId, travelId, page, pageSize: pageSize = 10 } = req.query;
   const page_ = Number(page);
   const pageSize_ = Number(pageSize);
 
@@ -16,12 +22,17 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['userId', 'page']), async (req, 
     return;
   }
 
+
+  const findQuery:QueryType = {};
+  if (userId) findQuery.userId = String(userId);
+  if(travelId) findQuery.travelId = String(travelId);
+
   try {
     const skip = (page_ - 1) * pageSize_;
-    const totalReviews = await Review.countDocuments({ userId });
+    const totalReviews = await Review.countDocuments(findQuery);
     const totalPages = Math.ceil(totalReviews / pageSize_);
 
-    const reviews = await Review.find({ userId })
+    const reviews = await Review.find(findQuery)
       .sort({ createdDate: -1 })
       .skip(skip)
       .limit(pageSize_)
@@ -30,6 +41,7 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['userId', 'page']), async (req, 
     const reviewsWithTravelInfo = await Promise.all(
       reviews.map(async (review) => {
         const travel = await Travel.findOne({ id: review.travelId }).lean();
+        const user = await User.findById(review.userId).lean();
         return {
           id: review._id,
           travelId: review.travelId,
@@ -37,7 +49,13 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['userId', 'page']), async (req, 
           content: review.content,
           travelScore: review.travelScore,
           createdDate: review.createdDate,
-          travelTitle: travel?.travelTitle || '',
+          travelTitle: travel?.travelTitle || '',      
+          userName: user?.userName,
+          socialName: user?.socialName,
+          userProfileImage: user?.userProfileImage,
+          userEmail: user?.userEmail,
+          isVerifiedUser: user?.isVerifiedUser,
+          mbti: user?.mbti,
         };
       }),
     );
