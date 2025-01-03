@@ -10,7 +10,8 @@
     "lint": "biome lint .",
     "check": "biome check --apply-unsafe .",
     "type-check": "tsc --noEmit",
-    "test": "jest"
+    "test": "jest",
+    "ex": "bun"
   },
   "keywords": ["express", "mongodb", "typescript", "api"],
   "author": "Your Name",
