@@ -9,7 +9,6 @@ const travelGuideRouter = Router();
 
 travelGuideRouter.get('/travel', async (_req, res) => {
   const data = await TravelGuide.find().sort({ createAt: -1 }).lean();
-  console.log(data);
   res.status(200).json(ResponseDTO.success(data));
 });
 
@@ -25,7 +24,6 @@ travelGuideRouter.post(
     const session = await mongoose.startSession();
 
     if (req.body.thumbnail && !(await checkIsValidImage(req.body.thumbnail))) {
-      console.log('thumbnail boolean', Boolean(req.body.thumbnail));
       res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
       return;
     }
