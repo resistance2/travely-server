@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFieldsBody, checkRequiredFieldsQuery } from '../../checkRequiredFields';
-import { Review, Travel, User } from '../../db/schema';
+import { Review, Travel, User, UserRating } from '../../db/schema';
 import { checkIsValidImage, checkIsValidScore } from '../../validChecker';
 
 const reviewRouter = Router();
@@ -77,6 +77,26 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
   }
 });
 
+const checkUserInTravel = async (travelId: string, userId: string): Promise<boolean> => {
+  const travel = await Travel.findById(travelId).populate({
+    path: 'teamId',
+    populate: {
+      path: 'appliedUsers.userId',
+      select: 'userName socialName userEmail phoneNumber mbti',
+    },
+  });
+
+  if (!travel) return false;
+
+  for (const team of travel.teamId) {
+    const userExists = (team as any).appliedUsers.some(
+      (user: any) => user.userId._id.equals(userId) && user.status === 'approved',
+    );
+    if (userExists) return true;
+  }
+  return false;
+};
+
 // 리뷰 만들기
 // curl -X POST http://localhost:3000/api/v1/reviews/ -H "Content-Type: application/json" -d '{"userId": "user001", "travelId": "travel001", "reviewImg": ["https://example.com/image1.jpg", "https://example.com/image2.jpg"], "content": "정말 멋진 여행이었어요!", "travelScore": 5, "createdDate": "2024-10-19T14:10:25Z"}'
 
@@ -95,7 +115,7 @@ reviewRouter.post(
   '/',
   checkRequiredFieldsBody(['userId', 'travelId', 'reviewImg', 'content', 'travelScore', 'title']),
   async (req, res) => {
-    const { userId, travelId, reviewImg, content, travelScore, title } = req.body;
+    const { userId, travelId, reviewImg, content, travelScore, title, userReview } = req.body;
 
     const user = await User.findById(userId);
 
@@ -130,12 +150,42 @@ reviewRouter.post(
       }
     }
 
+    // userReview가 있을때만
+    if (userReview) {
+      //userReview.toUserId와 userReview.ratingScore를 검사
+      if (
+        !userReview.toUserId ||
+        !userReview.userScore ||
+        typeof Number(userReview.userScore) !== 'number' ||
+        typeof userReview.toUserId !== 'string'
+      ) {
+        res.status(400).json(ResponseDTO.fail('Invalid userReview'));
+        return;
+      }
+
+      if (!checkIsValidScore(userReview.userScore)) {
+        res.status(400).json(ResponseDTO.fail('Invalid userScore'));
+        return;
+      }
+
+      await UserRating.create({
+        fromUserId: user._id,
+        toUserId: userReview.toUserId,
+        userScore: userReview.userScore,
+      });
+    }
+
     if (!checkIsValidScore(travelScore)) {
       res.status(400).json(ResponseDTO.fail('Invalid travel score'));
       return;
     }
 
-    // TODO: 리뷰 유효성 검증 로직, 해당 유저가 실제로 여행을 다녀오고 리뷰를 작성하는지 체크 필요
+    // TODO: 리뷰 유효성 검증 로직,ただ이번에는 유저가 실제로 여행을 다녀오고 여행을 다녀오고 리뷰를 작성하는지 체크 필요
+
+    if (!(await checkUserInTravel(travelId, userId))) {
+      res.status(400).json(ResponseDTO.fail('User is not in the travel'));
+      return;
+    }
 
     try {
       const newReview = new Review({
@@ -152,6 +202,7 @@ reviewRouter.post(
       res.json(
         ResponseDTO.success({
           review: {
+            id: savedReview.id,
             reviewId: savedReview.id,
             userId: savedReview.userId,
             travelId: savedReview.travelId,
@@ -159,6 +210,11 @@ reviewRouter.post(
             content: savedReview.content,
             travelScore: savedReview.travelScore,
             createdDate: savedReview.createdDate,
+            userReview: {
+              toUserId: userReview?.toUserId,
+              fromUserId: user._id,
+              userScore: userReview?.userScore,
+            },
           },
         }),
       );
