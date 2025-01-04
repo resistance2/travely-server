@@ -62,6 +62,7 @@ const isReviewWritten = async (
 
 const travelRouter = Router();
 
+// 여행 상세 조회
 travelRouter.get(
   '/travel-detail/:travelId',
   checkRequiredFieldsParams(['travelId']),
@@ -377,7 +378,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
 
     const getUserReviewAverage = async (userId: mongoose.Types.ObjectId) => {
       const userRating = await UserRating.findOne({ toUserId: userId }).lean();
-      return userRating?.ratingScore || null;
+      return userRating?.userScore || null;
     };
 
     const travels = await Promise.all(

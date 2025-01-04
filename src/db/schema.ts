@@ -77,7 +77,7 @@ export interface IUser {
 export interface IUserRating {
   fromUserId: Types.ObjectId; // 평가를 한 유저
   toUserId: Types.ObjectId; // 평가를 받은 유저
-  ratingScore: number;
+  userScore: number;
   createdAt: Date;
   isDeleted: boolean;
 }
@@ -86,7 +86,7 @@ const UserRatingSchema: Schema<IUserRating> = new Schema(
   {
     fromUserId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     toUserId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    ratingScore: { type: Number, required: true },
+    userScore: { type: Number, required: true },
     createdAt: { type: Date, default: Date.now, required: true },
     isDeleted: { type: Boolean, default: false },
   },
