@@ -37,7 +37,7 @@ export const checkIsValidScore = (score: number): boolean => {
 };
 
 //010-1234-5678
-export const checIsValidPhoneNumber = (phoneNumber: string): boolean => {
+export const checkIsValidPhoneNumber = (phoneNumber: string): boolean => {
   const regex = /^\d{3}-\d{4}-\d{4}$/;
   return regex.test(phoneNumber);
 };

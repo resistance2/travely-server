@@ -4,7 +4,7 @@ import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFieldsBody } from '../../checkRequiredFields';
 import { Team, User } from '../../db/schema';
 import { isEmail } from '../../isEmail';
-import { checIsValidPhoneNumber, checkIsValidMBTI } from '../../validChecker';
+import { checkIsValidMBTI, checkIsValidPhoneNumber } from '../../validChecker';
 import { uploadImage } from '../imageUpload/imageUpload';
 import { UserService } from './user.service';
 
@@ -133,6 +133,7 @@ userRouter.patch('/phone', checkRequiredFieldsBody(['userId', 'phoneNumber']), a
 // });
 
 //FIXME 메모리가 아니라 storage에 임시저장하고 그다음에 S3에 업로드하는 방식으로 수정 필요
+// 프로필 이미지 업로드는 선택적
 const upload = multer({ storage: memoryStorage() });
 
 userRouter.patch('/profile', upload.single('profileImage'), async (req, res) => {
@@ -140,13 +141,13 @@ userRouter.patch('/profile', upload.single('profileImage'), async (req, res) => 
   const profileImage = req.file;
 
   const user = await User.findById(userId);
-  if (!user) {
-    res.status(404).json(ResponseDTO.fail('User not found'));
+  if (!userId) {
+    res.status(400).json(ResponseDTO.fail('userId is required'));
     return;
   }
 
-  if (!userId) {
-    res.status(400).json(ResponseDTO.fail('userId is required'));
+  if (!user) {
+    res.status(404).json(ResponseDTO.fail('User not found'));
     return;
   }
 
@@ -159,8 +160,7 @@ userRouter.patch('/profile', upload.single('profileImage'), async (req, res) => 
     }
 
     if (phoneNumber) {
-      //TODO: 전화번호 검증
-      if (!checIsValidPhoneNumber(phoneNumber)) {
+      if (!checkIsValidPhoneNumber(phoneNumber)) {
         res.status(400).json(ResponseDTO.fail('Invalid phone number'));
         return;
       }
