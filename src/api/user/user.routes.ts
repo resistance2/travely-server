@@ -32,6 +32,7 @@ userRouter.post(
 
     try {
       const result = await UserService.login(socialName, userEmail, userProfileImage);
+      // console.log(result);
       res.status(200).json(ResponseDTO.success(result));
     } catch (error) {
       console.error(error);

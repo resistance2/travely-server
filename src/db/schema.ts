@@ -72,6 +72,7 @@ export interface IUser {
   myReviews: Types.ObjectId[];
   myBookmark: Types.ObjectId[];
   isVerifiedUser: boolean;
+  userScore: number;
 }
 
 export interface IUserRating {
@@ -228,6 +229,7 @@ const UserSchema: Schema = new Schema(
     myReviews: [{ type: Schema.Types.ObjectId, ref: 'Review', default: [] }],
     myBookmark: [{ type: Schema.Types.ObjectId, ref: 'Travel', default: [] }],
     isVerifiedUser: { type: Boolean, default: false },
+    userScore: { type: Number, default: 0 },
   },
   { timestamps: true, id: false, _id: true },
 );
