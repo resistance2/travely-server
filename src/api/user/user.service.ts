@@ -20,7 +20,7 @@ export class UserService {
       userProfileImage: userProfileImage || null,
     });
 
-    return { ...newUser.toJSON(), isCreated: true };
+    return { ...newUser.toJSON(), isCreated: true, userScore: 0 };
   }
 
   static async updateMbti(userId: string, mbti: string) {

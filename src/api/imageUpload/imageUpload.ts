@@ -6,14 +6,19 @@ const s3Client = new S3Client({
   region: process.env.AWS_REGION,
 });
 
-const getFileExtension = (filename: string) => {
+export const getFileExtension = (filename: string) => {
   if (!filename.includes('.')) return '';
   return filename.split('.').slice(-1)[0];
 };
 
-export const uploadImage = async (file: Express.Multer.File): Promise<string> => {
-  const fileExtension = getFileExtension(file.originalname);
+export const generateFileName = (originalname: string) => {
+  const fileExtension = getFileExtension(originalname);
   const fileName = `${uuidv4()}.${fileExtension}`;
+  return fileName;
+};
+
+export const uploadImage = async (file: Express.Multer.File): Promise<string> => {
+  const fileName = generateFileName(file.originalname);
 
   const params = {
     Bucket: process.env.AWS_BUCKET_NAME as string,
