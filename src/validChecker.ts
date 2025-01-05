@@ -35,3 +35,32 @@ export const checkIsValidScore = (score: number): boolean => {
   }
   return true;
 };
+
+//010-1234-5678
+export const checIsValidPhoneNumber = (phoneNumber: string): boolean => {
+  const regex = /^\d{3}-\d{4}-\d{4}$/;
+  return regex.test(phoneNumber);
+};
+
+// MBTI 유효성 검증
+const MBTI_TYPES = [
+  'ISTJ',
+  'ISFJ',
+  'INFJ',
+  'INTJ',
+  'ISTP',
+  'ISFP',
+  'INFP',
+  'INTP',
+  'ESTP',
+  'ESFP',
+  'ENFP',
+  'ENTP',
+  'ESTJ',
+  'ESFJ',
+  'ENFJ',
+  'ENTJ',
+] as const;
+export const checkIsValidMBTI = (mbti: (typeof MBTI_TYPES)[number]): boolean => {
+  return MBTI_TYPES.includes(mbti);
+};
