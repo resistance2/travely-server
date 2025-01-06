@@ -172,7 +172,6 @@ travelRouter.post(
     'travelContent',
     'thumbnail',
     'travelCourse',
-    'travelPrice',
     'tag',
   ]),
   async (req, res) => {
