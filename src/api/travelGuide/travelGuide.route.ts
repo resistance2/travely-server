@@ -19,7 +19,7 @@ travelGuideRouter.get('/travel', async (_req, res) => {
  */
 travelGuideRouter.post(
   '/add-travel',
-  checkRequiredFieldsBody(['team', 'travelTitle', 'travelContent']),
+  checkRequiredFieldsBody(['team', 'travelTitle', 'travelPrice', 'travelContent']),
   async (req, res) => {
     const session = await mongoose.startSession();
 

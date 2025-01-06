@@ -20,7 +20,7 @@ export interface ITravel {
   travelActive: boolean;
   reviewWrite: boolean;
   isDeleted: boolean;
-  meetingPlace: string;
+  meetingPlace: string | null;
 }
 
 export interface ITravelGuide {
@@ -133,7 +133,7 @@ const TravelSchema: Schema<ITravel> = new Schema(
     travelActive: { type: Boolean, default: true },
     reviewWrite: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
-    meetingPlace: { type: String, required: true },
+    meetingPlace: { type: String, default: null },
   },
   {
     timestamps: true,
