@@ -1,7 +1,7 @@
 name: 설정 변경
 description: 프로젝트 구성 변경(npm, env, db, 등)
 title: '[setting] '
-projects: ["FC-DEV-FinalProject/2"]
+projects: ["resistance2/1"]
 labels: ['setting']
 body:
   - type: textarea

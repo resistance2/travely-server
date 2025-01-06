@@ -1,7 +1,7 @@
 name: 기능 추가
 description: 새로운 기능이나 사양이 있나요?
 title: '[feat] '
-projects: ["FC-DEV-FinalProject/2"]
+projects: ["resistance2/1"]
 labels: ['feat']
 body:
   - type: textarea
