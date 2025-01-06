@@ -73,10 +73,14 @@ export interface IUser {
   myBookmark: Types.ObjectId[];
   isVerifiedUser: boolean;
   userScore: number;
+  backAccount: {
+    bankCode: string;
+    accountNumber: string;
+  };
 }
 
 export interface IUserRating {
-  fromUserId: Types.ObjectId; // 평가를 한 유저
+  fromUserId: Types.ObjectId; // 평가를한 유저
   toUserId: Types.ObjectId; // 평가를 받은 유저
   userScore: number;
   createdAt: Date;
@@ -230,6 +234,10 @@ const UserSchema: Schema = new Schema(
     myBookmark: [{ type: Schema.Types.ObjectId, ref: 'Travel', default: [] }],
     isVerifiedUser: { type: Boolean, default: false },
     userScore: { type: Number, default: 0 },
+    backAccount: {
+      bankCode: { type: String, default: null },
+      accountNumber: { type: String, default: null },
+    },
   },
   { timestamps: true, id: false, _id: true },
 );

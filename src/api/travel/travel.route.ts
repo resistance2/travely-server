@@ -622,7 +622,7 @@ travelRouter.get(
     }
 
     try {
-      const travel = await Travel.findById(travelId).populate('teamId').lean();
+      const travel = await Travel.findById(travelId).populate('teamId').populate('userId').lean();
       if (!travel) {
         res.status(404).json(ResponseDTO.fail('Travel not found'));
         return;
@@ -680,6 +680,7 @@ travelRouter.get(
           travelEndDate: teams?.travelEndDate,
           personLimit: teams?.personLimit,
           travelActive: travel.travelActive,
+          accountNumber: (travel.userId as any).backAccount.accountNumber,
           appliedUsers: paginatedAppliedUsers,
           approvedUsers,
           pagination: {
