@@ -10,7 +10,8 @@
       "**/.gitignore",
       "**/firebase.json",
       "**/.firebase/",
-      "dist"
+      "dist",
+      "node_modules"
     ]
   },
   "formatter": {
