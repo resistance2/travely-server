@@ -177,13 +177,15 @@ travelRouter.post(
   ]),
   async (req, res) => {
     const session = await mongoose.startSession();
-
-    if (req.body.thumbnail && !(await checkIsValidImage(req.body.thumbnail))) {
-      res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
-      return;
-    }
-
     try {
+      if (req.body.thumbnail) {
+        const isValid = await checkIsValidImage(req.body.thumbnail);
+        if (!isValid) {
+          res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
+          return;
+        }
+      }
+
       session.startTransaction();
       const userId = await User.findById(req.body.userId).lean();
       if (!userId) {
@@ -250,7 +252,7 @@ travelRouter.get('/travel-list', async (req, res) => {
   const skip = (page_ - 1) * size_;
 
   try {
-    const travels = await Travel.find().skip(skip).limit(size_).lean();
+    const travels = await Travel.find().sort({ createdAt: -1 }).skip(skip).limit(size_).lean();
 
     let user: any;
     if (userId === 'null') {
@@ -286,8 +288,6 @@ travelRouter.get('/travel-list', async (req, res) => {
         };
       }),
     );
-    console.log('hello, world!');
-    console.log(userBookmarkTravels);
 
     const totalElements = await Travel.countDocuments();
     const totalPages = Math.ceil(totalElements / size_);

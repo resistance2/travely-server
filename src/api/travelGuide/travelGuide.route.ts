@@ -90,7 +90,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
   const skip = (page_ - 1) * size_;
 
   try {
-    const travelsGuides = await TravelGuide.find().skip(skip).limit(size_).sort({ createdAt: -1 });
+    const travelsGuides = await TravelGuide.find().sort({ createdAt: -1 }).skip(skip).limit(size_);
     const userBookmarkTravels = await Promise.all(
       travelsGuides.map(async (travel) => {
         const createdByUser = await User.findById(travel.userId).lean();

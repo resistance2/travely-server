@@ -7,12 +7,12 @@ export const validObjectId = (id: string): boolean => {
 };
 
 export const checkIsValidImage = async (image: string) => {
-  if (!image.startsWith('http://') && !image.startsWith('https://')) {
-    return false;
-  } else if (!image.endsWith('.jpg') && !image.endsWith('.jpeg') && !image.endsWith('.png')) {
-    return false;
-  }
   try {
+    if (!image.startsWith('http://') && !image.startsWith('https://')) {
+      return false;
+    } else if (!image.endsWith('.jpg') && !image.endsWith('.jpeg') && !image.endsWith('.png')) {
+      return false;
+    }
     const response = await fetch(image);
     if (!response.ok) {
       throw new Error('Invalid image URL');
