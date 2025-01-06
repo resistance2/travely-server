@@ -1,7 +1,7 @@
 name: 코드 리펙토링
 description: 코드 리팩토링
 title: '[refactor] '
-projects: ["FC-DEV-FinalProject/2"]
+projects: ["resistance2/1"]
 labels: ['refactor']
 body:
   - type: textarea
