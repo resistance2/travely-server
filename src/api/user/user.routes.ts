@@ -160,10 +160,10 @@ userRouter.patch('/profile', upload.single('profileImage'), async (req, res) => 
     }
 
     if (phoneNumber) {
-      if (!checkIsValidPhoneNumber(phoneNumber)) {
-        res.status(400).json(ResponseDTO.fail('Invalid phone number'));
-        return;
-      }
+      // if (!checkIsValidPhoneNumber(phoneNumber)) {
+      //   res.status(400).json(ResponseDTO.fail('Invalid phone number'));
+      //   return;
+      // }
       updateData.phoneNumber = phoneNumber;
     }
     if (mbti) {
