@@ -52,9 +52,9 @@ imageRouter.post(
 );
 
 // 단일 이미지 업로드
-/* imageRouter.post(
+imageRouter.post(
   '/upload/single',
-  upload.single('image'),
+  upload.single('file'),
   async (req: Request, res: Response): Promise<void> => {
     try {
       const imageUrl = await uploadImage(req.file!);
@@ -64,7 +64,7 @@ imageRouter.post(
       res.status(500).json(ResponseDTO.fail('이미지 업로드 실패'));
     }
   },
-); */
+);
 
 export { imageRouter };
 
