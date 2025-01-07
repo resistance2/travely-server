@@ -39,7 +39,7 @@ jobs:
           mv ecosystem.config.js dist/
           mv package.json dist/
           mv bun.lockb dist/
-          mv ./src/public dist/
+          rm -rf dist/public && mv ./src/public dist/public
 
       - name: EC2 backup
         uses: appleboy/ssh-action@master
