@@ -1,18 +1,34 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.1",
   "info": {
     "title": "My Project",
     "description": "",
     "version": "1.0.0"
   },
-  "tags": [],
+  "tags": [
+    {
+      "name": "travely-server"
+    },
+    {
+      "name": "travely-server/users"
+    },
+    {
+      "name": "travely-server/reviews"
+    },
+    {
+      "name": "travely-server/travels"
+    },
+    {
+      "name": "travely-server/images"
+    }
+  ],
   "paths": {
     "/v1/users/login": {
       "post": {
         "summary": "로그인 및 유저 생성",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/users"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -59,6 +75,28 @@
                         "isCreated": false
                       }
                     }
+                  },
+                  "2": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "_id": "672906fc3f52cfeef7356cda",
+                        "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                        "socialName": "nakyenko5",
+                        "userEmail": "badclock4@gmail.com",
+                        "myCreatedTravel": [],
+                        "myPassedTravel": [],
+                        "myReviews": [],
+                        "myBookmark": [],
+                        "isVerifiedUser": false,
+                        "createdAt": "2024-11-04T17:40:12.297Z",
+                        "updatedAt": "2024-11-04T17:40:12.297Z",
+                        "__v": 0,
+                        "userScore": 0,
+                        "isCreated": false
+                      }
+                    }
                   }
                 }
               }
@@ -74,7 +112,7 @@
         "summary": "유저 전화번호 변경",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/users"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -133,7 +171,7 @@
         "summary": "유저 mbti 변경",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/users"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -185,12 +223,100 @@
         "security": []
       }
     },
+    "/v1/users/profile": {
+      "patch": {
+        "summary": "유저 정보 수정(프로필이미지, 전화번호, mbti)",
+        "deprecated": false,
+        "description": "",
+        "tags": ["travely-server/users"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "example": "672901f5f3339eca4777fc11",
+                    "type": "string"
+                  },
+                  "profileImage": {
+                    "format": "binary",
+                    "type": "string",
+                    "example": "file://C:\\Users\\badac\\OneDrive\\사진\\삼성 갤러리\\DCIM\\짤방\\20240616_121316.jpg"
+                  },
+                  "mbti": {
+                    "example": "INTP",
+                    "type": "string"
+                  },
+                  "phoneNumber": {
+                    "example": "010-2121-4444",
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "user": {
+                          "userId": "672901f5f3339eca4777fc11",
+                          "userProfileImage": "https://d2epmqt9moz4ga.cloudfront.net/c00fa858-649f-4ccb-bb6e-0dd0e4913253.jpg",
+                          "socialName": "nakyenko4",
+                          "userEmail": "badclock@gmail.com",
+                          "phoneNumber": "010-1234-5678",
+                          "mbti": "INFP",
+                          "userScore": 0
+                        }
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "user": {
+                          "userId": "65fd1234a1b2c3d4e5f61001",
+                          "userProfileImage": "https://d2epmqt9moz4ga.cloudfront.net/31ffb6e7-a53e-4a4f-943d-f85272d48a57.jpg",
+                          "socialName": "adventurer_kim",
+                          "userEmail": "kim_adventurer@travel.com",
+                          "phoneNumber": "010-2222-222",
+                          "mbti": "INFP",
+                          "userScore": 0
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
     "/v1/reviews": {
       "post": {
         "summary": "여행 리뷰 작성",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/reviews"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -200,12 +326,16 @@
                 "properties": {}
               },
               "example": {
-                "userId": "672906fc3f52cfeef7356cda",
+                "userId": "65fd1234a1b2c3d4e5f61112",
                 "travelId": "672905e83f52cfeef7356cc3",
                 "reviewImg": ["https://i.imgur.com/GAdReeB.jpeg"],
                 "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
                 "title": "제주도 여행",
-                "travelScore": 4.5
+                "travelScore": 4.5,
+                "userReview": {
+                  "toUserId": "672901f5f3339eca4777fc11",
+                  "userScore": 5
+                }
               }
             }
           }
@@ -226,13 +356,19 @@
                       "success": true,
                       "data": {
                         "review": {
-                          "reviewId": "6774bbe4bdec1e26356a494e",
-                          "userId": "672906fc3f52cfeef7356cda",
+                          "id": "67788b12a87c4cd72b03eac6",
+                          "reviewId": "67788b12a87c4cd72b03eac6",
+                          "userId": "65fd1234a1b2c3d4e5f61112",
                           "travelId": "672905e83f52cfeef7356cc3",
                           "reviewImg": ["https://i.imgur.com/GAdReeB.jpeg"],
                           "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
                           "travelScore": 4.5,
-                          "createdDate": "2025-01-01T03:52:04.319Z"
+                          "createdDate": "2025-01-04T01:12:50.385Z",
+                          "userReview": {
+                            "toUserId": "672901f5f3339eca4777fc11",
+                            "fromUserId": "65fd1234a1b2c3d4e5f61112",
+                            "userScore": 5
+                          }
                         }
                       }
                     }
@@ -249,7 +385,7 @@
         "summary": "리뷰 조회( 해당 여행 리뷰 조회)",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/reviews"],
         "parameters": [
           {
             "name": "travelId",
@@ -386,7 +522,7 @@
         "summary": "여행 전체 조회",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "responses": {
           "200": {
@@ -2013,7 +2149,7 @@
         "summary": "새로운 여행 계획하기(여행자 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -2947,7 +3083,7 @@
         "summary": "새로운 여행 계획하기(가이드 구해요 글)",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -3058,7 +3194,7 @@
         "summary": "여행 목록 조회(여행자 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "userId",
@@ -3108,150 +3244,163 @@
                       "data": {
                         "travels": [
                           {
-                            "travelTitle": "부산 여행4",
+                            "id": "672905e83f52cfeef7356cc3",
+                            "travelTitle": "부산 여행",
                             "price": 350000,
-                            "thumbnail": "https://example.com/busan-image.jpg",
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
-                              "travelScore": null,
-                              "reviewCnt": 0
+                              "travelScore": 4.5,
+                              "reviewCnt": 3
                             },
                             "createdBy": {
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
                             "tag": ["부산", "바다", "문화"],
-                            "createdAt": "2024-12-27T16:16:00.379Z",
-                            "bookmark": false
+                            "createdAt": "2024-11-04T17:35:36.014Z",
+                            "bookmark": true
                           },
                           {
-                            "travelTitle": "부산 여행2",
-                            "price": 350000,
-                            "thumbnail": "https://example.com/busan-image.jpg",
+                            "id": "65fd1234a1b2c3d4e5f62222",
+                            "travelTitle": "제주도 3박 4일 힐링여행",
+                            "price": 450000,
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
                               "travelScore": null,
                               "reviewCnt": 0
                             },
                             "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
+                              "userId": "65fd1234a1b2c3d4e5f61111",
+                              "userName": "김여행"
                             },
-                            "tag": ["부산", "바다", "문화"],
-                            "createdAt": "2024-12-27T16:12:36.060Z",
+                            "tag": ["제주도", "힐링", "자연", "섬"],
+                            "createdAt": "2024-03-21T09:00:00.000Z",
                             "bookmark": false
                           },
                           {
-                            "travelTitle": "부산 여행2",
+                            "id": "65fd1234a1b2c3d4e5f62223",
+                            "travelTitle": "부산 2박 3일 맛집 투어",
                             "price": 350000,
-                            "thumbnail": "https://example.com/busan-image.jpg",
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
                               "travelScore": null,
                               "reviewCnt": 0
                             },
                             "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
+                              "userId": "65fd1234a1b2c3d4e5f61111",
+                              "userName": "김여행"
                             },
-                            "tag": ["부산", "바다", "문화"],
-                            "createdAt": "2024-12-27T16:10:20.854Z",
+                            "tag": ["부산", "맛집", "미식", "바다"],
+                            "createdAt": "2024-03-22T09:00:00.000Z",
                             "bookmark": false
                           },
                           {
-                            "travelTitle": "부산 여행2",
-                            "price": 350000,
-                            "thumbnail": "https://example.com/busan-image.jpg",
+                            "id": "672905e83f52cfeef7356cc4",
+                            "travelTitle": "제주도 3일 힐링여행",
+                            "price": 450000,
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
                               "travelScore": null,
                               "reviewCnt": 0
                             },
                             "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
+                              "userId": "672901f5f3339eca4777fc13",
+                              "userName": "nakyenko17"
                             },
-                            "tag": ["부산", "바다", "문화"],
-                            "createdAt": "2024-12-27T16:08:57.162Z",
+                            "tag": ["제주도", "올레길", "힐링", "맛집"],
+                            "createdAt": "2024-12-01T08:30:00.000Z",
                             "bookmark": false
                           },
                           {
-                            "travelTitle": "부산 여행2",
-                            "price": 350000,
-                            "thumbnail": "https://example.com/busan-image.jpg",
+                            "id": "672905e83f52cfeef7356cc5",
+                            "travelTitle": "서울 야간 투어",
+                            "price": 55000,
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
                               "travelScore": null,
                               "reviewCnt": 0
                             },
                             "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
+                              "userId": "672901f5f3339eca4777fc15",
+                              "userName": "nakyenko14"
                             },
-                            "tag": ["부산", "바다", "문화"],
-                            "createdAt": "2024-12-27T16:06:24.394Z",
+                            "tag": ["서울", "야경", "문화체험", "도심투어"],
+                            "createdAt": "2024-12-15T10:20:00.000Z",
                             "bookmark": false
                           },
                           {
-                            "travelTitle": "부산 여행2",
-                            "price": 350000,
-                            "thumbnail": "https://example.com/busan-image.jpg",
+                            "id": "672905e83f52cfeef7356cc6",
+                            "travelTitle": "전주 한옥마을 당일치기",
+                            "price": 65000,
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
                               "travelScore": null,
                               "reviewCnt": 0
                             },
                             "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
+                              "userId": "672901f5f3339eca4777fc16",
+                              "userName": "nakyenko256"
                             },
-                            "tag": ["부산", "바다", "문화"],
-                            "createdAt": "2024-12-27T16:03:31.499Z",
+                            "tag": ["전주", "한옥마을", "전통문화", "맛집투어"],
+                            "createdAt": "2024-12-18T09:15:00.000Z",
                             "bookmark": false
                           },
                           {
-                            "travelTitle": "부산 여행2",
-                            "price": 350000,
-                            "thumbnail": null,
+                            "id": "672905e83f52cfeef7356cc7",
+                            "travelTitle": "경주 역사 탐방 2일",
+                            "price": 280000,
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
                               "travelScore": null,
                               "reviewCnt": 0
                             },
                             "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
+                              "userId": "672901f5f3339eca4777fc19",
+                              "userName": "nakyenko13"
                             },
-                            "tag": ["부산", "바다", "문화"],
-                            "createdAt": "2024-12-20T13:02:55.078Z",
+                            "tag": ["경주", "역사", "문화유산", "불교문화"],
+                            "createdAt": "2024-12-16T11:20:00.000Z",
                             "bookmark": false
                           },
                           {
-                            "travelTitle": "부산 여행2",
-                            "price": 350000,
-                            "thumbnail": null,
+                            "id": "672905e83f52cfeef7356cc8",
+                            "travelTitle": "설악산 단풍 트레킹",
+                            "price": 89000,
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
                               "travelScore": null,
                               "reviewCnt": 0
                             },
                             "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
+                              "userId": "672901f5f3339eca4777fc21",
+                              "userName": "nakyenko2567"
                             },
-                            "tag": ["부산", "바다", "문화"],
-                            "createdAt": "2024-12-20T01:34:11.522Z",
+                            "tag": ["설악산", "트레킹", "단풍", "자연"],
+                            "createdAt": "2024-12-17T13:45:00.000Z",
                             "bookmark": false
                           },
                           {
-                            "travelTitle": "안동 전통문화 체험",
-                            "price": 85000,
-                            "thumbnail": null,
+                            "id": "672905e83f52cfeef7356cc9",
+                            "travelTitle": "강릉 커피투어",
+                            "price": 75000,
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
                               "travelScore": null,
                               "reviewCnt": 0
                             },
-                            "createdBy": {},
-                            "tag": ["안동", "전통문화", "하회마을", "체험"],
-                            "createdAt": "2024-12-19T16:15:00.000Z",
+                            "createdBy": {
+                              "userId": "672901f5f3339eca4777fc24",
+                              "userName": "nakyenko25"
+                            },
+                            "tag": ["강릉", "커피", "카페", "바다"],
+                            "createdAt": "2024-12-18T14:30:00.000Z",
                             "bookmark": false
                           },
                           {
+                            "id": "672905e83f52cfeef7356cca",
                             "travelTitle": "여수 밤바다 투어",
                             "price": 69000,
-                            "thumbnail": null,
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                             "review": {
                               "travelScore": null,
                               "reviewCnt": 0
@@ -3266,8 +3415,8 @@
                           }
                         ],
                         "pageInfo": {
-                          "totalElements": 19,
-                          "totalPages": 2,
+                          "totalElements": 21,
+                          "totalPages": 3,
                           "currentPage": 1,
                           "pageSize": 10,
                           "hasNext": true
@@ -3289,7 +3438,7 @@
         "summary": "여행 목록 조회(가이드 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "userId",
@@ -3339,6 +3488,127 @@
                       "data": {
                         "travels": [
                           {
+                            "id": "67721d01e5aca3e968abdea3",
+                            "travelTitle": "부산 여행 가이드 개발 모집글",
+                            "userId": "672901f5f3339eca4777fc11",
+                            "createdBy": {
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userName": "nakyenko4"
+                            },
+                            "team": {
+                              "personLimit": 7,
+                              "mbti": []
+                            },
+                            "createdAt": "2024-12-30T04:09:37.177Z",
+                            "commentCnt": 20
+                          },
+                          {
+                            "id": "67721c8e7a18a4ace6f82127",
+                            "travelTitle": "부산 여행 가이드 개발 모집글",
+                            "userId": "672901f5f3339eca4777fc11",
+                            "createdBy": {
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userName": "nakyenko4"
+                            },
+                            "team": {
+                              "personLimit": 7,
+                              "mbti": []
+                            },
+                            "createdAt": "2024-12-30T04:07:42.110Z",
+                            "commentCnt": 20
+                          },
+                          {
+                            "id": "67721b7788272ecb0871153e",
+                            "travelTitle": "부산 여행 가이드 개발 모집글",
+                            "userId": "672901f5f3339eca4777fc11",
+                            "createdBy": {
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userName": "nakyenko4"
+                            },
+                            "team": {
+                              "personLimit": 7,
+                              "mbti": []
+                            },
+                            "createdAt": "2024-12-30T04:03:03.640Z",
+                            "commentCnt": 20
+                          },
+                          {
+                            "id": "6771ff879b6dd398908b34fe",
+                            "travelTitle": "부산 여행 가이드 개발 모집글",
+                            "userId": "672901f5f3339eca4777fc11",
+                            "createdBy": {
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userName": "nakyenko4"
+                            },
+                            "team": {
+                              "personLimit": 7,
+                              "mbti": []
+                            },
+                            "createdAt": "2024-12-30T02:03:51.213Z",
+                            "commentCnt": 20
+                          },
+                          {
+                            "id": "676f6c3415008c763cf33c92",
+                            "travelTitle": "부산 여행 가이드 개발 모집글",
+                            "userId": "672901f5f3339eca4777fc11",
+                            "createdBy": {
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userName": "nakyenko4"
+                            },
+                            "team": {
+                              "personLimit": 7,
+                              "mbti": []
+                            },
+                            "createdAt": "2024-12-28T03:10:44.452Z",
+                            "commentCnt": 20
+                          },
+                          {
+                            "id": "67656c4ecb7684fe77b0d2ad",
+                            "travelTitle": "부산 여행 가이드 개발 모집글",
+                            "userId": "672901f5f3339eca4777fc11",
+                            "createdBy": {
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userName": "nakyenko4"
+                            },
+                            "team": {
+                              "personLimit": 7,
+                              "mbti": []
+                            },
+                            "createdAt": "2024-12-20T13:08:30.374Z",
+                            "commentCnt": 20
+                          },
+                          {
+                            "id": "6764124c8f9dc0a592ab1b6d",
+                            "travelTitle": "포항 호미곶 일출 여행",
+                            "userId": "672905e83f52cfeef7356cc3",
+                            "createdBy": {
+                              "userId": "672905e83f52cfeef7356cc3",
+                              "userName": "nakyenko18"
+                            },
+                            "team": {
+                              "personLimit": null,
+                              "mbti": null
+                            },
+                            "createdAt": "2024-04-16T14:45:00.000Z",
+                            "commentCnt": 20
+                          },
+                          {
+                            "id": "6764124c8f9dc0a592ab1b6c",
+                            "travelTitle": "태안 해안길 트레킹",
+                            "userId": "672905e83f52cfeef7356cc3",
+                            "createdBy": {
+                              "userId": "672905e83f52cfeef7356cc3",
+                              "userName": "nakyenko18"
+                            },
+                            "team": {
+                              "personLimit": null,
+                              "mbti": null
+                            },
+                            "createdAt": "2024-04-14T11:30:00.000Z",
+                            "commentCnt": 20
+                          },
+                          {
+                            "id": "6764124c8f9dc0a592ab1b6a",
                             "travelTitle": "안동 문화유산 탐방",
                             "userId": "672905e83f52cfeef7356cc3",
                             "createdBy": {
@@ -3353,6 +3623,7 @@
                             "commentCnt": 20
                           },
                           {
+                            "id": "6764124c8f9dc0a592ab1b69",
                             "travelTitle": "통영 미식 여행",
                             "userId": "672905e83f52cfeef7356cc3",
                             "createdBy": {
@@ -3365,122 +3636,10 @@
                             },
                             "createdAt": "2024-04-05T15:20:00.000Z",
                             "commentCnt": 20
-                          },
-                          {
-                            "travelTitle": "울릉도 완전정복",
-                            "userId": "672905e83f52cfeef7356cc3",
-                            "createdBy": {
-                              "userId": "672905e83f52cfeef7356cc3",
-                              "userName": "nakyenko18"
-                            },
-                            "team": {
-                              "personLimit": null,
-                              "mbti": null
-                            },
-                            "createdAt": "2024-04-01T09:30:00.000Z",
-                            "commentCnt": 20
-                          },
-                          {
-                            "travelTitle": "속초 먹방 여행",
-                            "userId": "672905e83f52cfeef7356cc3",
-                            "createdBy": {
-                              "userId": "672905e83f52cfeef7356cc3",
-                              "userName": "nakyenko18"
-                            },
-                            "team": {
-                              "personLimit": null,
-                              "mbti": null
-                            },
-                            "createdAt": "2024-03-25T12:00:00.000Z",
-                            "commentCnt": 20
-                          },
-                          {
-                            "travelTitle": "여수 밤바다 여행",
-                            "userId": "672905e83f52cfeef7356cc3",
-                            "createdBy": {
-                              "userId": "672905e83f52cfeef7356cc3",
-                              "userName": "nakyenko18"
-                            },
-                            "team": {
-                              "personLimit": null,
-                              "mbti": null
-                            },
-                            "createdAt": "2024-03-20T16:30:00.000Z",
-                            "commentCnt": 20
-                          },
-                          {
-                            "travelTitle": "전주 한옥마을 당일치기",
-                            "userId": "672905e83f52cfeef7356cc3",
-                            "createdBy": {
-                              "userId": "672905e83f52cfeef7356cc3",
-                              "userName": "nakyenko18"
-                            },
-                            "team": {
-                              "personLimit": null,
-                              "mbti": null
-                            },
-                            "createdAt": "2024-03-15T13:45:00.000Z",
-                            "commentCnt": 20
-                          },
-                          {
-                            "travelTitle": "경주 역사 탐방 코스",
-                            "userId": "672905e83f52cfeef7356cc3",
-                            "createdBy": {
-                              "userId": "672905e83f52cfeef7356cc3",
-                              "userName": "nakyenko18"
-                            },
-                            "team": {
-                              "personLimit": null,
-                              "mbti": null
-                            },
-                            "createdAt": "2024-03-01T11:15:00.000Z",
-                            "commentCnt": 20
-                          },
-                          {
-                            "travelTitle": "강원도 스키장 여행기",
-                            "userId": "672901f5f3339eca4777fc11",
-                            "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
-                            },
-                            "team": {
-                              "personLimit": null,
-                              "mbti": null
-                            },
-                            "createdAt": "2024-02-15T14:20:00.000Z",
-                            "commentCnt": 20
-                          },
-                          {
-                            "travelTitle": "부산 맛집 투어 가이드",
-                            "userId": "672901f5f3339eca4777fc11",
-                            "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
-                            },
-                            "team": {
-                              "personLimit": null,
-                              "mbti": null
-                            },
-                            "createdAt": "2024-02-01T10:30:00.000Z",
-                            "commentCnt": 20
-                          },
-                          {
-                            "travelTitle": "제주도 3박 4일 완벽 여행 코스",
-                            "userId": "672901f5f3339eca4777fc11",
-                            "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
-                            },
-                            "team": {
-                              "personLimit": null,
-                              "mbti": null
-                            },
-                            "createdAt": "2024-01-15T09:00:00.000Z",
-                            "commentCnt": 20
                           }
                         ],
                         "pageInfo": {
-                          "totalElements": 16,
+                          "totalElements": 18,
                           "totalPages": 2,
                           "currentPage": 1,
                           "pageSize": 10,
@@ -3503,7 +3662,7 @@
         "summary": "북마크 리스트 조회",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "userId",
@@ -3573,7 +3732,7 @@
         "summary": "북마크 추가/삭제",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -3646,7 +3805,7 @@
         "summary": "내여행 -내가 참여한 여행",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "userId",
@@ -3748,7 +3907,7 @@
         "summary": "내 여행 관리 페이지( 해당 유저 대기중인 상태에서 approverd, rejected로 변경)",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -3824,7 +3983,7 @@
         "summary": "여행 활성화 비활성화",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -3862,7 +4021,7 @@
         "summary": "내여행-내가 만든 여행",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "userId",
@@ -3999,7 +4158,7 @@
         "summary": "여행 관리 페이지 - 해당 여행의 팀과 팀에 있는 유저 목록 조회",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "traveId",
@@ -4064,10 +4223,59 @@
                         "travelEndDate": "2024-04-17T00:00:00.000Z",
                         "personLimit": 7,
                         "travelActive": true,
+                        "accountNumber": null,
                         "appliedUsers": [
                           {
+                            "_id": "65fd1234a1b2c3d4e5f61006",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "journey_oh",
+                            "userName": "오여정",
+                            "userEmail": "oh_journey@travel.com",
+                            "phoneNumber": "010-4545-6767",
+                            "mbti": "ENFJ",
+                            "userId": "65fd1234a1b2c3d4e5f61006",
+                            "appliedAt": "2024-03-24T10:25:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61007",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "voyager_han",
+                            "userName": "한여행",
+                            "userEmail": "han_voyager@travel.com",
+                            "phoneNumber": "010-5656-7878",
+                            "mbti": "ENTJ",
+                            "userId": "65fd1234a1b2c3d4e5f61007",
+                            "appliedAt": "2024-03-24T10:30:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61009",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "adventure_lee",
+                            "userName": "이모험",
+                            "userEmail": "lee_adventure@travel.com",
+                            "phoneNumber": "010-1111-2222",
+                            "mbti": "ENTP",
+                            "userId": "65fd1234a1b2c3d4e5f61009",
+                            "appliedAt": "2024-03-24T10:40:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61010",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "nomad_park",
+                            "userName": "박유랑",
+                            "userEmail": "park_nomad@travel.com",
+                            "phoneNumber": "010-3333-4444",
+                            "mbti": "ISFJ",
+                            "userId": "65fd1234a1b2c3d4e5f61010",
+                            "appliedAt": "2024-03-24T10:45:00.000Z",
+                            "status": "approved"
+                          },
+                          {
                             "_id": "65fd1234a1b2c3d4e5f61011",
-                            "userProfileImage": "https://example.com/profiles/user19.jpg",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
                             "socialName": "explorer_han",
                             "userName": "한탐험",
                             "userEmail": "han_explorer@travel.com",
@@ -4075,11 +4283,11 @@
                             "mbti": "ESFP",
                             "userId": "65fd1234a1b2c3d4e5f61011",
                             "appliedAt": "2024-03-24T10:50:00.000Z",
-                            "status": "waiting"
+                            "status": "approved"
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61012",
-                            "userProfileImage": "https://example.com/profiles/user20.jpg",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
                             "socialName": "traveler_jeong",
                             "userName": "장여행",
                             "userEmail": "jaong_traveler@travel.com",
@@ -4087,7 +4295,7 @@
                             "mbti": "INFJ",
                             "userId": "65fd1234a1b2c3d4e5f61012",
                             "appliedAt": "2024-03-24T10:55:00.000Z",
-                            "status": "waiting"
+                            "status": "approved"
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61014",
@@ -4099,7 +4307,7 @@
                             "mbti": "INTP",
                             "userId": "65fd1234a1b2c3d4e5f61014",
                             "appliedAt": "2024-03-24T11:05:00.000Z",
-                            "status": "waiting"
+                            "status": "approved"
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61015",
@@ -4111,7 +4319,7 @@
                             "mbti": "ISFP",
                             "userId": "65fd1234a1b2c3d4e5f61015",
                             "appliedAt": "2024-03-24T11:10:00.000Z",
-                            "status": "waiting"
+                            "status": "approved"
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61016",
@@ -4123,83 +4331,35 @@
                             "mbti": "ENFP",
                             "userId": "65fd1234a1b2c3d4e5f61016",
                             "appliedAt": "2024-03-24T11:15:00.000Z",
-                            "status": "waiting"
-                          },
-                          {
-                            "_id": "65fd1234a1b2c3d4e5f61111",
-                            "userProfileImage": "https://example.com/profiles/user1.jpg",
-                            "socialName": "traveler_kim",
-                            "userName": "김여행",
-                            "userEmail": "kim@travel.com",
-                            "phoneNumber": "010-1234-5678",
-                            "mbti": "ENFP",
-                            "userId": "65fd1234a1b2c3d4e5f61111",
-                            "appliedAt": "2024-03-24T09:20:00.000Z",
                             "status": "approved"
                           },
                           {
-                            "_id": "65fd1234a1b2c3d4e5f61112",
-                            "userProfileImage": "https://example.com/profiles/user2.jpg",
-                            "socialName": "wanderlust_lee",
-                            "userName": "이방랑",
-                            "userEmail": "lee@travel.com",
-                            "phoneNumber": "010-2345-6789",
-                            "mbti": "ISTJ",
-                            "userId": "65fd1234a1b2c3d4e5f61112",
-                            "appliedAt": "2024-03-24T09:25:00.000Z",
-                            "status": "approved"
+                            "_id": "65fd1234a1b2c3d4e5f61004",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "wander_lee",
+                            "userName": "김방랑",
+                            "userEmail": "kim_wander@travel.com",
+                            "phoneNumber": "010-2323-4545",
+                            "mbti": "ESFP",
+                            "userId": "65fd1234a1b2c3d4e5f61004",
+                            "appliedAt": "2024-03-24T10:15:00.000Z",
+                            "status": "rejected"
                           },
                           {
-                            "_id": "65fd1234a1b2c3d4e5f61113",
-                            "userProfileImage": "https://example.com/profiles/user3.jpg",
-                            "socialName": "park_explorer",
-                            "userName": "박탐험",
-                            "userEmail": "park@travel.com",
-                            "phoneNumber": "010-3456-7890",
-                            "mbti": "INTP",
-                            "userId": "65fd1234a1b2c3d4e5f61113",
-                            "appliedAt": "2024-03-24T09:30:00.000Z",
-                            "status": "approved"
-                          },
-                          {
-                            "_id": "65fd1234a1b2c3d4e5f61114",
-                            "userProfileImage": "https://example.com/profiles/user4.jpg",
-                            "socialName": "adventure_choi",
-                            "userName": "최모험",
-                            "userEmail": "choi@travel.com",
-                            "phoneNumber": "010-4567-8901",
-                            "mbti": "ENTJ",
-                            "userId": "65fd1234a1b2c3d4e5f61114",
-                            "appliedAt": "2024-03-24T09:35:00.000Z",
-                            "status": "approved"
-                          },
-                          {
-                            "_id": "65fd1234a1b2c3d4e5f61115",
-                            "userProfileImage": "https://example.com/profiles/user5.jpg",
-                            "socialName": "jeong_traveler",
-                            "userName": "정여행",
-                            "userEmail": "jeong@travel.com",
-                            "phoneNumber": "010-5678-9012",
+                            "_id": "65fd1234a1b2c3d4e5f61008",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "nomad_kang",
+                            "userName": "강유랑",
+                            "userEmail": "kang_nomad@travel.com",
+                            "phoneNumber": "010-6767-8989",
                             "mbti": "ISFP",
-                            "userId": "65fd1234a1b2c3d4e5f61115",
-                            "appliedAt": "2024-03-24T09:40:00.000Z",
-                            "status": "approved"
-                          },
-                          {
-                            "_id": "65fd1234a1b2c3d4e5f61116",
-                            "userProfileImage": "https://example.com/profiles/user6.jpg",
-                            "socialName": "han_adventurer",
-                            "userName": "한모험",
-                            "userEmail": "han@travel.com",
-                            "phoneNumber": "010-6789-0123",
-                            "mbti": "ESFJ",
-                            "userId": "65fd1234a1b2c3d4e5f61116",
-                            "appliedAt": "2024-03-24T09:45:00.000Z",
-                            "status": "approved"
+                            "userId": "65fd1234a1b2c3d4e5f61008",
+                            "appliedAt": "2024-03-24T10:35:00.000Z",
+                            "status": "rejected"
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61013",
-                            "userProfileImage": "https://example.com/profiles/user21.jpg",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
                             "socialName": "seeker_kim",
                             "userName": "김탐색",
                             "userEmail": "kim_seeker@travel.com",
@@ -4213,7 +4373,7 @@
                         "approvedUsers": [
                           {
                             "_id": "65fd1234a1b2c3d4e5f61111",
-                            "userProfileImage": "https://example.com/profiles/user1.jpg",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
                             "socialName": "traveler_kim",
                             "userName": "김여행",
                             "userEmail": "kim@travel.com",
@@ -4225,7 +4385,7 @@
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61112",
-                            "userProfileImage": "https://example.com/profiles/user2.jpg",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
                             "socialName": "wanderlust_lee",
                             "userName": "이방랑",
                             "userEmail": "lee@travel.com",
@@ -4237,7 +4397,7 @@
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61113",
-                            "userProfileImage": "https://example.com/profiles/user3.jpg",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
                             "socialName": "park_explorer",
                             "userName": "박탐험",
                             "userEmail": "park@travel.com",
@@ -4249,7 +4409,7 @@
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61114",
-                            "userProfileImage": "https://example.com/profiles/user4.jpg",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
                             "socialName": "adventure_choi",
                             "userName": "최모험",
                             "userEmail": "choi@travel.com",
@@ -4261,7 +4421,7 @@
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61115",
-                            "userProfileImage": "https://example.com/profiles/user5.jpg",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
                             "socialName": "jeong_traveler",
                             "userName": "정여행",
                             "userEmail": "jeong@travel.com",
@@ -4273,7 +4433,7 @@
                           },
                           {
                             "_id": "65fd1234a1b2c3d4e5f61116",
-                            "userProfileImage": "https://example.com/profiles/user6.jpg",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
                             "socialName": "han_adventurer",
                             "userName": "한모험",
                             "userEmail": "han@travel.com",
@@ -4281,6 +4441,126 @@
                             "mbti": "ESFJ",
                             "userId": "65fd1234a1b2c3d4e5f61116",
                             "appliedAt": "2024-03-24T09:45:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61005",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "tracker_jeong",
+                            "userName": "정추적",
+                            "userEmail": "jeong_tracker@travel.com",
+                            "phoneNumber": "010-3434-5656",
+                            "mbti": "ISTP",
+                            "userId": "65fd1234a1b2c3d4e5f61005",
+                            "appliedAt": "2024-03-24T10:20:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61006",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "journey_oh",
+                            "userName": "오여정",
+                            "userEmail": "oh_journey@travel.com",
+                            "phoneNumber": "010-4545-6767",
+                            "mbti": "ENFJ",
+                            "userId": "65fd1234a1b2c3d4e5f61006",
+                            "appliedAt": "2024-03-24T10:25:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61007",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "voyager_han",
+                            "userName": "한여행",
+                            "userEmail": "han_voyager@travel.com",
+                            "phoneNumber": "010-5656-7878",
+                            "mbti": "ENTJ",
+                            "userId": "65fd1234a1b2c3d4e5f61007",
+                            "appliedAt": "2024-03-24T10:30:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61009",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "adventure_lee",
+                            "userName": "이모험",
+                            "userEmail": "lee_adventure@travel.com",
+                            "phoneNumber": "010-1111-2222",
+                            "mbti": "ENTP",
+                            "userId": "65fd1234a1b2c3d4e5f61009",
+                            "appliedAt": "2024-03-24T10:40:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61010",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "nomad_park",
+                            "userName": "박유랑",
+                            "userEmail": "park_nomad@travel.com",
+                            "phoneNumber": "010-3333-4444",
+                            "mbti": "ISFJ",
+                            "userId": "65fd1234a1b2c3d4e5f61010",
+                            "appliedAt": "2024-03-24T10:45:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61011",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "explorer_han",
+                            "userName": "한탐험",
+                            "userEmail": "han_explorer@travel.com",
+                            "phoneNumber": "010-5555-6666",
+                            "mbti": "ESFP",
+                            "userId": "65fd1234a1b2c3d4e5f61011",
+                            "appliedAt": "2024-03-24T10:50:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61012",
+                            "userProfileImage": "https://i.imgur.com/XYSdv1w.png",
+                            "socialName": "traveler_jeong",
+                            "userName": "장여행",
+                            "userEmail": "jaong_traveler@travel.com",
+                            "phoneNumber": "010-7777-8888",
+                            "mbti": "INFJ",
+                            "userId": "65fd1234a1b2c3d4e5f61012",
+                            "appliedAt": "2024-03-24T10:55:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61014",
+                            "userProfileImage": "https://example.com/profiles/user22.jpg",
+                            "socialName": "journey_choi",
+                            "userName": "최여정",
+                            "userEmail": "choi_journey@travel.com",
+                            "phoneNumber": "010-1212-3434",
+                            "mbti": "INTP",
+                            "userId": "65fd1234a1b2c3d4e5f61014",
+                            "appliedAt": "2024-03-24T11:05:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61015",
+                            "userProfileImage": "https://example.com/profiles/user23.jpg",
+                            "socialName": "wander_kang",
+                            "userName": "강방랑",
+                            "userEmail": "kang_wander@travel.com",
+                            "phoneNumber": "010-5656-7878",
+                            "mbti": "ISFP",
+                            "userId": "65fd1234a1b2c3d4e5f61015",
+                            "appliedAt": "2024-03-24T11:10:00.000Z",
+                            "status": "approved"
+                          },
+                          {
+                            "_id": "65fd1234a1b2c3d4e5f61016",
+                            "userProfileImage": "https://example.com/profiles/user24.jpg",
+                            "socialName": "tracker_oh",
+                            "userName": "오추적",
+                            "userEmail": "oh_tracker@travel.com",
+                            "phoneNumber": "010-6767-8989",
+                            "mbti": "ENFP",
+                            "userId": "65fd1234a1b2c3d4e5f61016",
+                            "appliedAt": "2024-03-24T11:15:00.000Z",
                             "status": "approved"
                           }
                         ],
@@ -4307,7 +4587,7 @@
         "summary": "여행 팀 조회 - 여행 아이디로 팀 조회",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "travelId",
@@ -4367,13 +4647,24 @@
         "security": []
       }
     },
-    "/v1/travels/travel-detail/672905e83f52cfeef7356cc3": {
+    "/v1/travels/travel-detail/{travelId}": {
       "get": {
         "summary": "여행 상세 조회",
         "deprecated": false,
         "description": "",
-        "tags": [],
-        "parameters": [],
+        "tags": ["travely-server/travels"],
+        "parameters": [
+          {
+            "name": "travelId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "672905e83f52cfeef7356cc3",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -4557,7 +4848,7 @@
         "summary": "여행 팀에 유저 등록(여행 신청하기)",
         "deprecated": false,
         "description": "",
-        "tags": [],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "teamId",
@@ -4628,16 +4919,199 @@
         },
         "security": []
       }
+    },
+    "/images/upload": {
+      "post": {
+        "summary": "이미지 업로드(여러 파일)",
+        "deprecated": false,
+        "description": "",
+        "tags": ["travely-server/images"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "meetingSpace": {
+                    "format": "binary",
+                    "type": "string",
+                    "example": "file://C:\\Users\\badac\\OneDrive\\사진\\삼성 갤러리\\DCIM\\Camera\\20220828_111105.jpg"
+                  },
+                  "introSrcs": {
+                    "format": "binary",
+                    "type": "string",
+                    "example": "file://C:\\Users\\badac\\OneDrive\\사진\\삼성 갤러리\\DCIM\\Camera\\20221023_200644.jpg"
+                  },
+                  "thumbnail": {
+                    "format": "binary",
+                    "type": "string",
+                    "example": "file://C:\\Users\\badac\\OneDrive\\사진\\삼성 갤러리\\DCIM\\Camera\\20230111_124912.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "thumbnail": [
+                        "https://d2epmqt9moz4ga.cloudfront.net/a622eb7b-1948-4204-ac49-8b604c4c8e4f.jpg"
+                      ],
+                      "meetingSpace": [
+                        "https://d2epmqt9moz4ga.cloudfront.net/3e197a0a-5af5-4d6b-a4cf-8e2cad7d1761.jpg"
+                      ],
+                      "introSrcs": [
+                        "https://d2epmqt9moz4ga.cloudfront.net/504ede6e-1398-4ed5-a520-8a70e419d4f4.jpg"
+                      ]
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/images/upload/single": {
+      "post": {
+        "summary": "이미지 업로드(단일 파일)",
+        "deprecated": false,
+        "description": "",
+        "tags": ["travely-server/images"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "format": "binary",
+                    "type": "string",
+                    "example": "file://C:\\Users\\badac\\OneDrive\\사진\\삼성 갤러리\\DCIM\\베트남\\20240324_083333.jpg"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "imageUrl": "https://d2epmqt9moz4ga.cloudfront.net/5ee1d6c4-675a-4246-a59b-7c3c025ff811.jpg"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
     }
   },
   "components": {
-    "schemas": {},
+    "schemas": {
+      "Pet": {
+        "required": ["name", "photoUrls", "id", "category", "tags", "status"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Pet ID"
+          },
+          "category": {
+            "$ref": "#/components/schemas/Category",
+            "description": "group"
+          },
+          "name": {
+            "type": "string",
+            "description": "name",
+            "examples": ["doggie"]
+          },
+          "photoUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "image URL"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Tag"
+            },
+            "description": "tag"
+          },
+          "status": {
+            "type": "string",
+            "description": "Pet Sales Status",
+            "enum": ["available", "pending", "sold"]
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Category ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Category Name"
+          }
+        }
+      },
+      "Tag": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1,
+            "description": "Tag ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Tag Name"
+          }
+        }
+      }
+    },
     "securitySchemes": {}
   },
-  "servers": [
-    {
-      "url": "http://3.37.101.147:3000/api",
-      "description": "travely-server"
-    }
-  ]
+  "servers": []
 }

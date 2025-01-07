@@ -9,6 +9,9 @@ import { travelGuideRouter } from './api/travelGuide/travelGuide.route';
 import { userRouter } from './api/user/user.routes';
 import { connectDatabase, disconnectDatabase } from './db/connect';
 
+import swaggerUiExpress from 'swagger-ui-express';
+import swaggerSpec from './public/My Project.openapi.json';
+
 import path from 'path';
 
 dotenv.config();
@@ -53,10 +56,14 @@ async function startServer() {
     res.send('Hello World');
   });
 
+  // app.use(
+  //   '/api/api-docs',
+  //   swaggerUiExpress.serve,
+  //   swaggerUiExpress.setup(swaggerSpec, { explorer: true }),
+  // );
   app.use('/api-docs', (_req, res) => {
-    res.sendFile(path.join(__dirname, 'public', './My Project.html'));
+    res.sendFile(path.join(__dirname, 'public', 'My Project.html'));
   });
-
   return app;
 }
 
