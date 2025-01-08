@@ -201,4 +201,51 @@ userRouter.patch('/profile', upload.single('profileImage'), async (req, res) => 
   }
 });
 
+/**
+ * Update user's bank account information
+ */
+userRouter.patch(
+  '/bank-account',
+  checkRequiredFieldsBody(['userId', 'accountNumber', 'bankCode']),
+  async (req, res) => {
+    const { userId, accountNumber, bankCode } = req.body;
+
+    try {
+      const user = await User.findById(userId);
+      if (!user) {
+        res.status(404).json(ResponseDTO.fail('User not found'));
+        return;
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        {
+          $set: {
+            'backAccount.bankCode': bankCode,
+            'backAccount.accountNumber': accountNumber,
+          },
+        },
+        { new: true },
+      ).lean();
+
+      if (!updatedUser) {
+        res.status(500).json(ResponseDTO.fail('Failed to update bank account information'));
+        return;
+      }
+
+      res.status(200).json(
+        ResponseDTO.success({
+          bankAccount: {
+            bankCode: updatedUser.backAccount?.bankCode,
+            accountNumber: updatedUser.backAccount?.accountNumber,
+          },
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
+
 export { userRouter };
