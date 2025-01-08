@@ -155,7 +155,7 @@ export const Travel = mongoose.model<ITravel>('Travel', TravelSchema);
 const TravelGuideSchema: Schema<ITravelGuide> = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    thumbnail: { type: String, required: true },
+    thumbnail: { type: String, default: null },
     travelTitle: { type: String, required: true },
     travelContent: { type: String, required: true },
     bookmark: [{ type: Schema.Types.ObjectId, default: [] }],

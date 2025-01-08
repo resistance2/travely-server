@@ -23,9 +23,13 @@ travelGuideRouter.post(
   async (req, res) => {
     const session = await mongoose.startSession();
 
-    if (req.body.thumbnail && !(await checkIsValidImage(req.body.thumbnail))) {
-      res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
-      return;
+    // thumbnail의 유효성 검사, thumbnail이 있을 때만 유효성 검사
+    if (req.body.thumbnail) {
+      const isValid = await checkIsValidImage(req.body.thumbnail);
+      if (!isValid) {
+        res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
+        return;
+      }
     }
 
     try {
