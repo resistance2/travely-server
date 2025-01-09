@@ -174,8 +174,8 @@ travelGuideRouter.get(
   checkRequiredFieldsParams(['travelId']),
   async (req, res) => {
     const { travelId } = req.params;
-    const { userId } = req.query;
-    console.log(userId);
+    // const { userId } = req.query;
+
     try {
       if (!validObjectId(travelId)) {
         res.status(400).json(ResponseDTO.fail('Invalid travelId'));
@@ -199,6 +199,7 @@ travelGuideRouter.get(
         userId: comment.userId._id,
         socialName: (comment.userId as any).socialName,
         userProfileImage: (comment.userId as any).userProfileImage,
+        updatedAt: comment.updatedAt,
         comment: comment.comment,
       }));
 
