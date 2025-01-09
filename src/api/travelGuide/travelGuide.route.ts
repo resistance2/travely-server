@@ -1,14 +1,9 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
 import { ResponseDTO } from '../../ResponseDTO';
-import {
-  checkRequiredFieldsBody,
-  checkRequiredFieldsParams,
-  checkRequiredFieldsQuery,
-} from '../../checkRequiredFields';
+import { checkRequiredFieldsBody, checkRequiredFieldsParams } from '../../checkRequiredFields';
 import { Team, TravelGuide, TravelGuideComment, User } from '../../db/schema';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
-import { checkIsBookmarked } from '../travel/travel.route';
 
 const travelGuideRouter = Router();
 
