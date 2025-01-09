@@ -246,7 +246,7 @@ travelRouter.get('/', async (_req, res) => {
  */
 travelRouter.get('/travel-list', async (req, res) => {
   const { userId, page = 1, size = 10, tag = '' } = req.query;
-  if (!checkPageAndSize(parseInt(page as string), parseInt(size as string), tag as string)) {
+  if (!checkPageAndSize(parseInt(page as string), parseInt(size as string))) {
     res.status(400).json(ResponseDTO.fail('Invalid page or size'));
     return;
   }
@@ -255,7 +255,7 @@ travelRouter.get('/travel-list', async (req, res) => {
   const skip = (page_ - 1) * size_;
 
   let query: any = {};
-  if (tag !== 'all') {
+  if (tag !== 'all' && tag !== '') {
     query = { tag: { $in: [tag] } };
   }
 
