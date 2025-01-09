@@ -1,9 +1,14 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
 import { ResponseDTO } from '../../ResponseDTO';
-import { checkRequiredFieldsBody, checkRequiredFieldsQuery } from '../../checkRequiredFields';
-import { Team, TravelGuide, User } from '../../db/schema';
+import {
+  checkRequiredFieldsBody,
+  checkRequiredFieldsParams,
+  checkRequiredFieldsQuery,
+} from '../../checkRequiredFields';
+import { Team, TravelGuide, TravelGuideComment, User } from '../../db/schema';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
+import { checkIsBookmarked } from '../travel/travel.route';
 
 const travelGuideRouter = Router();
 
@@ -160,5 +165,73 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
+
+/**
+ * 여행 상세 조회(가이드 글)
+ */
+travelGuideRouter.get(
+  '/travel-detail/:travelId',
+  checkRequiredFieldsParams(['travelId']),
+  async (req, res) => {
+    const { travelId } = req.params;
+    // const { userId } = req.query;
+
+    try {
+      if (!validObjectId(travelId)) {
+        res.status(400).json(ResponseDTO.fail('Invalid travelId'));
+        return;
+      }
+      const travel = await TravelGuide.findById(travelId)
+        .populate('teamId')
+        .populate('userId')
+        .lean();
+      // const user = userId ? await User.findById(userId).lean() : null;
+      if (!travel) {
+        res.status(404).json(ResponseDTO.fail('Travel not found'));
+        return;
+      }
+
+      const comment = await TravelGuideComment.find({ travelId: travel._id })
+        .populate('userId')
+        .lean();
+
+      const commentList = comment.map((comment) => ({
+        userId: comment.userId._id,
+        socialName: (comment.userId as any).socialName,
+        userProfileImage: (comment.userId as any).userProfileImage,
+        updatedAt: comment.updatedAt,
+        comment: comment.comment,
+      }));
+
+      const travelDetail = {
+        author: {
+          userId: travel.userId._id,
+          userName: (travel.userId as any).userName,
+          socialName: (travel.userId as any).socialName,
+          userProfileImage: (travel.userId as any).userProfileImage,
+          userScore: (travel.userId as any).userScore,
+        },
+        title: travel.travelTitle,
+        content: travel.travelContent,
+        thumbnail: travel.thumbnail || null,
+        team: travel.teamId.map((team) => ({
+          teamId: (team as any)._id,
+          personLimit: (team as any).personLimit,
+          travelStartDate: (team as any).travelStartDate,
+          travelEndDate: (team as any).travelEndDate,
+        })),
+        createdAt: travel.createdAt,
+        updatedAt: travel.updatedAt,
+        // bookmark: travel.bookmark.length,
+        // isbookmark: user ? await checkIsBookmarkedInGuide(user._id, travel._id) : false,
+        commentList: commentList || null,
+      };
+      res.json(ResponseDTO.success(travelDetail));
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
 
 export { travelGuideRouter };

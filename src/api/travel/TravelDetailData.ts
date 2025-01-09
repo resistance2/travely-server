@@ -64,3 +64,30 @@ export interface TravelDetailData {
   totalRating: number;
   bookmark: number;
 }
+
+export interface FindGuideData {
+  author: {
+    // 글쓴이 정보 필수
+    userId: string;
+    userProfileImage: string;
+    socialName: string;
+    userEmail: string;
+    userScore: number;
+  };
+  title: string; // 제목 필수
+  content: string; // 글 필수
+  thumbnail: string | null; // 썸네일 선택
+  team: Pick<TravelTeamData, 'travelStartDate' | 'travelEndDate' | 'personLimit'>[];
+  // team: [{‘teamId’ | 'travelStartDate' | 'travelEndDate' | 'personLimit' }] 필수 ,
+  // 가이드 구해요 페이지는 “일정 추가” 하나만 추가 가능하기때문에 한개만 있을 거임
+  commentList: [
+    // 댓글 목록, 댓글이 있을수도 있고 없을수도 있음 Comment[] | null
+    {
+      userId: string;
+      updatedAt: string;
+      socialName: string;
+      userProfileImage: string;
+      comment: string;
+    }, // 댓글 작성한 유저데이터와 댓글 정보, 모두 필수
+  ];
+}
