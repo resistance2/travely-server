@@ -72,10 +72,9 @@ export const isValidNumber = (value: Number): boolean => {
   return true;
 };
 
-export const checkPageAndSize = (page: number, size: number, tag: string): boolean => {
+export const checkPageAndSize = (page: number, size: number): boolean => {
   const isValidPage = isValidNumber(page);
   const isValidSize = isValidNumber(size);
   if (!isValidPage || !isValidSize) return false;
-  if (!tag && typeof tag !== 'string') return false;
   return true;
 };
