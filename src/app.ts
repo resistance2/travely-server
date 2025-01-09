@@ -13,7 +13,7 @@ import swaggerUiExpress from 'swagger-ui-express';
 import swaggerSpec from './public/My Project.openapi.json';
 
 import path from 'path';
-import { travelGuideCommentRouter } from './api/comment/comment.route';
+import { travelGuideCommentRouter } from './api/travelGuide/comment/comment.route';
 
 dotenv.config();
 const app = express();

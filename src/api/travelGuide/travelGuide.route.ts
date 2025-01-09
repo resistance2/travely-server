@@ -192,6 +192,7 @@ travelGuideRouter.get(
 
       const commentList = comment.map((comment) => ({
         userId: comment.userId._id,
+        commentId: comment._id,
         socialName: (comment.userId as any).socialName,
         userProfileImage: (comment.userId as any).userProfileImage,
         updatedAt: comment.updatedAt,
