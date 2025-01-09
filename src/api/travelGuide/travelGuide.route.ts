@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFieldsBody, checkRequiredFieldsQuery } from '../../checkRequiredFields';
 import { Team, TravelGuide, User } from '../../db/schema';
-import { checkIsValidImage, validObjectId } from '../../validChecker';
+import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
 
 const travelGuideRouter = Router();
 
@@ -88,13 +88,21 @@ travelGuideRouter.post(
  * 여행 목록 조회, 가이드 구해요
  */
 travelGuideRouter.get('/travel-list', async (req, res) => {
-  const { page = 1, size = 10 } = req.query;
+  const { page = 1, size = 10, tag = '' } = req.query;
+  if (!checkPageAndSize(parseInt(page as string), parseInt(size as string), tag as string)) {
+    res.status(400).json(ResponseDTO.fail('Invalid page or size'));
+    return;
+  }
   const page_ = parseInt(page as string, 10);
   const size_ = parseInt(size as string, 10);
   const skip = (page_ - 1) * size_;
+  const tagArray = [tag];
 
   try {
-    const travelsGuides = await TravelGuide.find().sort({ createdAt: -1 }).skip(skip).limit(size_);
+    const travelsGuides = await TravelGuide.find({ tag: { $in: tagArray } })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(size_);
     const userBookmarkTravels = await Promise.all(
       travelsGuides.map(async (travel) => {
         const createdByUser = await User.findById(travel.userId).lean();
@@ -129,7 +137,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
       }),
     );
 
-    const totalElements = await TravelGuide.countDocuments();
+    const totalElements = await TravelGuide.countDocuments({ tag: { $in: tagArray } });
     const totalPages = Math.ceil(totalElements / size_);
     const currentPage = page_;
     const pageSize = size_;

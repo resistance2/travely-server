@@ -7,7 +7,7 @@ import {
   checkRequiredFieldsQuery,
 } from '../../checkRequiredFields';
 import { IAppliedUser, Review, Team, Travel, User, UserRating } from '../../db/schema';
-import { checkIsValidImage, validObjectId } from '../../validChecker';
+import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
 
 const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
   const reviews = await Review.find({ travelId }).lean();
@@ -245,13 +245,22 @@ travelRouter.get('/', async (_req, res) => {
  * 여행 목록 조회, 여행자 구해요.
  */
 travelRouter.get('/travel-list', async (req, res) => {
-  const { userId, page = 1, size = 10 } = req.query;
+  const { userId, page = 1, size = 10, tag = '' } = req.query;
+  if (!checkPageAndSize(parseInt(page as string), parseInt(size as string), tag as string)) {
+    res.status(400).json(ResponseDTO.fail('Invalid page or size'));
+    return;
+  }
   const page_ = parseInt(page as string, 10);
   const size_ = parseInt(size as string, 10);
   const skip = (page_ - 1) * size_;
+  const tagArray = [tag];
 
   try {
-    const travels = await Travel.find().sort({ createdAt: -1 }).skip(skip).limit(size_).lean();
+    const travels = await Travel.find({ tag: { $in: tagArray } })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(size_)
+      .lean();
 
     let user: any;
     if (userId === 'null') {
@@ -288,7 +297,7 @@ travelRouter.get('/travel-list', async (req, res) => {
       }),
     );
 
-    const totalElements = await Travel.countDocuments();
+    const totalElements = await Travel.countDocuments({ tag: { $in: tagArray } });
     const totalPages = Math.ceil(totalElements / size_);
     const currentPage = page_;
     const pageSize = size_;

@@ -61,6 +61,21 @@ const MBTI_TYPES = [
   'ENFJ',
   'ENTJ',
 ] as const;
+
 export const checkIsValidMBTI = (mbti: (typeof MBTI_TYPES)[number]): boolean => {
   return MBTI_TYPES.includes(mbti);
+};
+
+export const isValidNumber = (value: Number): boolean => {
+  if (typeof value !== 'number') return false;
+  if (!isFinite(value)) return false;
+  return true;
+};
+
+export const checkPageAndSize = (page: number, size: number, tag: string): boolean => {
+  const isValidPage = isValidNumber(page);
+  const isValidSize = isValidNumber(size);
+  if (!isValidPage || !isValidSize) return false;
+  if (!tag && typeof tag !== 'string') return false;
+  return true;
 };
