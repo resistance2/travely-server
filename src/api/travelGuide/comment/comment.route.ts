@@ -27,7 +27,7 @@ travelGuideCommentRouter.post(
       }
       const data = await TravelGuideComment.create({
         userId: user._id,
-        travelId: travel._id,
+        findGuideId: travel._id,
         comment,
       });
       res.status(200).json(ResponseDTO.success(data));
