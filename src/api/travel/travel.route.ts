@@ -253,14 +253,14 @@ travelRouter.get('/travel-list', async (req, res) => {
   const page_ = parseInt(page as string, 10);
   const size_ = parseInt(size as string, 10);
   const skip = (page_ - 1) * size_;
-  const tagArray = [tag];
+
+  let query: any = {};
+  if (tag !== 'all') {
+    query = { tag: { $in: [tag] } };
+  }
 
   try {
-    const travels = await Travel.find({ tag: { $in: tagArray } })
-      .sort({ createdAt: -1 })
-      .skip(skip)
-      .limit(size_)
-      .lean();
+    const travels = await Travel.find(query).sort({ createdAt: -1 }).skip(skip).limit(size_).lean();
 
     let user: any;
     if (userId === 'null') {
@@ -297,7 +297,7 @@ travelRouter.get('/travel-list', async (req, res) => {
       }),
     );
 
-    const totalElements = await Travel.countDocuments({ tag: { $in: tagArray } });
+    const totalElements = await Travel.countDocuments(query);
     const totalPages = Math.ceil(totalElements / size_);
     const currentPage = page_;
     const pageSize = size_;
