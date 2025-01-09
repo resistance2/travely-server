@@ -113,6 +113,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
         return {
           id: travel._id,
           travelTitle: travel.travelTitle,
+          thumbnail: travel.thumbnail,
           userId: travel.userId,
           createdBy: {
             userId: createdByUser?._id,
