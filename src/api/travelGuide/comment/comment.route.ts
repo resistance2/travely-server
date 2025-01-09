@@ -25,12 +25,25 @@ travelGuideCommentRouter.post(
         res.status(404).json(ResponseDTO.fail('User or Travel not found'));
         return;
       }
+
       const data = await TravelGuideComment.create({
         userId: user._id,
         travelId: travel._id,
+        commentId: comment._id,
         comment,
       });
-      res.status(200).json(ResponseDTO.success(data));
+      res.status(200).json(
+        ResponseDTO.success({
+          commentId: data._id,
+          _id: data._id,
+          comment: data.comment,
+          userId: data.userId,
+          travelId: data.travelId,
+          updatedAt: data.updatedAt,
+          createdAt: data.createdAt,
+          isDeleted: data.isDeleted,
+        }),
+      );
       await session.commitTransaction();
       await session.endSession();
     } catch (error) {
@@ -56,6 +69,15 @@ travelGuideCommentRouter.patch(
         res.status(404).json(ResponseDTO.fail('User not found'));
         return;
       }
+
+      const isComment = await TravelGuideComment.findOne({
+        _id: commentId,
+        userId: user._id,
+      });
+      if (!isComment) {
+        res.status(400).json(ResponseDTO.fail('Comment not found, Invalid userId or commentId'));
+        return;
+      }
       const data = await TravelGuideComment.findOneAndUpdate(
         { _id: commentId, userId: user._id },
         { comment, userId: user._id },
@@ -76,10 +98,16 @@ travelGuideCommentRouter.patch(
 travelGuideCommentRouter.delete('/', async (req, res) => {
   const { commentId, userId } = req.body;
   const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     const user = await User.findById(userId);
     if (!user) {
       res.status(404).json(ResponseDTO.fail('User not found'));
+      return;
+    }
+    const comment = await TravelGuideComment.findOne({ _id: commentId, userId: user._id });
+    if (!comment) {
+      res.status(400).json(ResponseDTO.fail('Comment not found, Invalid userId or commentId'));
       return;
     }
     await TravelGuideComment.findOneAndUpdate(
@@ -88,8 +116,8 @@ travelGuideCommentRouter.delete('/', async (req, res) => {
       { new: true, runValidators: true, session },
     );
     await session.commitTransaction();
-    const updatedData = await TravelGuideComment.findById(commentId).lean();
-    res.status(200).json(ResponseDTO.success(updatedData));
+
+    res.status(200).json(ResponseDTO.success({ commentId, isDeleted: true }));
     await session.endSession();
   } catch (error) {
     console.error(error);
