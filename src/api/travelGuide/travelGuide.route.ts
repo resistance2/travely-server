@@ -115,7 +115,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
             ...user,
           })) || null;
 
-        //TODO 실제 이미지의 개수를 넣기, 20개가 아니라
+        const commentCnt = await TravelGuideComment.countDocuments({ travelId: travel._id });
         return {
           id: travel._id,
           travelTitle: travel.travelTitle,
@@ -130,7 +130,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
             mbti: appliedUsers,
           },
           createdAt: travel.createdAt,
-          commentCnt: 20,
+          commentCnt: commentCnt,
         };
       }),
     );
