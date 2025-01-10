@@ -87,6 +87,7 @@ travelGuideRouter.post(
 /**
  * 여행 목록 조회, 가이드 구해요
  */
+
 travelGuideRouter.get('/travel-list', async (req, res) => {
   const { page = 1, size = 10 } = req.query;
   if (!checkPageAndSize(parseInt(page as string), parseInt(size as string))) {
@@ -114,6 +115,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
             ...user,
           })) || null;
 
+        //TODO 실제 이미지의 개수를 넣기, 20개가 아니라
         return {
           id: travel._id,
           travelTitle: travel.travelTitle,

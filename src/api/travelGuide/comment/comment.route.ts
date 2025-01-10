@@ -6,11 +6,12 @@ import { TravelGuide, TravelGuideComment, User } from '../../../db/schema';
 
 const travelGuideCommentRouter = Router();
 
+//TODO: travelId - > guidePostId
 travelGuideCommentRouter.post(
   '/',
-  checkRequiredFieldsBody(['userId', 'travelId', 'comment']),
+  checkRequiredFieldsBody(['userId', 'guidePostId', 'comment']),
   async (req, res) => {
-    const { userId, travelId, comment } = req.body;
+    const { userId, guidePostId: travelId, comment } = req.body;
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
@@ -29,16 +30,14 @@ travelGuideCommentRouter.post(
       const data = await TravelGuideComment.create({
         userId: user._id,
         travelId: travel._id,
-        commentId: comment._id,
         comment,
       });
       res.status(200).json(
         ResponseDTO.success({
           commentId: data._id,
-          _id: data._id,
           comment: data.comment,
           userId: data.userId,
-          travelId: data.travelId,
+          guidePostId: data.travelId,
           updatedAt: data.updatedAt,
           createdAt: data.createdAt,
           isDeleted: data.isDeleted,
@@ -83,7 +82,17 @@ travelGuideCommentRouter.patch(
         { comment, userId: user._id },
         { new: true, runValidators: true, session },
       );
-      res.status(200).json(ResponseDTO.success(data));
+      res.status(200).json(
+        ResponseDTO.success({
+          commentId: data?._id,
+          comment: data?.comment,
+          userId: data?.userId,
+          guidePostId: data?.travelId,
+          updatedAt: data?.updatedAt,
+          createdAt: data?.createdAt,
+          isDeleted: data?.isDeleted,
+        }),
+      );
       await session.commitTransaction();
       await session.endSession();
     } catch (error) {
