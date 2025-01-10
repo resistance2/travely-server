@@ -183,19 +183,19 @@ travelGuideRouter.get(
         return;
       }
 
-      const comment = await TravelGuideComment.find({ travelId: travel._id })
-        .populate('userId')
-        .lean();
+      // const comment = await TravelGuideComment.find({ travelId: travel._id })
+      //   .populate('userId')
+      //   .lean();
 
       //TODO: commentList 삭제 필요
-      const commentList = comment.map((comment) => ({
-        userId: comment.userId._id,
-        commentId: comment._id,
-        socialName: (comment.userId as any).socialName,
-        userProfileImage: (comment.userId as any).userProfileImage,
-        updatedAt: comment.updatedAt,
-        comment: comment.comment,
-      }));
+      // const commentList = comment.map((comment) => ({
+      //   userId: comment.userId._id,
+      //   commentId: comment._id,
+      //   socialName: (comment.userId as any).socialName,
+      //   userProfileImage: (comment.userId as any).userProfileImage,
+      //   updatedAt: comment.updatedAt,
+      //   comment: comment.comment,
+      // }));
 
       const travelDetail = {
         author: {
@@ -216,7 +216,7 @@ travelGuideRouter.get(
         })),
         createdAt: travel.createdAt,
         updatedAt: travel.updatedAt,
-        commentList: commentList || null,
+        // commentList: commentList || null,
       };
       res.json(ResponseDTO.success(travelDetail));
     } catch (error) {
