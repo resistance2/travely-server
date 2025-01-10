@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import mongoose from 'mongoose';
 import { ResponseDTO } from '../../../ResponseDTO';
-import { checkRequiredFieldsBody } from '../../../checkRequiredFields';
+import { checkRequiredFieldsBody, checkRequiredFieldsParams } from '../../../checkRequiredFields';
 import { TravelGuide, TravelGuideComment, User } from '../../../db/schema';
 
 const travelGuideCommentRouter = Router();
@@ -104,36 +104,35 @@ travelGuideCommentRouter.patch(
   },
 );
 
-travelGuideCommentRouter.delete('/', async (req, res) => {
-  const { commentId, userId } = req.body;
-  const session = await mongoose.startSession();
-  session.startTransaction();
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      res.status(404).json(ResponseDTO.fail('User not found'));
-      return;
-    }
-    const comment = await TravelGuideComment.findOne({ _id: commentId, userId: user._id });
-    if (!comment) {
-      res.status(400).json(ResponseDTO.fail('Comment not found, Invalid userId or commentId'));
-      return;
-    }
-    await TravelGuideComment.findOneAndUpdate(
-      { _id: commentId, userId: user._id },
-      { isDeleted: true },
-      { new: true, runValidators: true, session },
-    );
-    await session.commitTransaction();
+travelGuideCommentRouter.delete(
+  '/:commentId',
+  checkRequiredFieldsParams(['commentId']),
+  async (req, res) => {
+    const { commentId } = req.params;
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+      const comment = await TravelGuideComment.findOne({ _id: commentId });
+      if (!comment) {
+        res.status(400).json(ResponseDTO.fail('Comment not found, Invalid userId or commentId'));
+        return;
+      }
+      await TravelGuideComment.findOneAndUpdate(
+        { _id: commentId },
+        { isDeleted: true },
+        { new: true, runValidators: true, session },
+      );
+      await session.commitTransaction();
 
-    res.status(200).json(ResponseDTO.success({ commentId, isDeleted: true }));
-    await session.endSession();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(ResponseDTO.fail((error as Error).message));
-    await session.abortTransaction();
-    await session.endSession();
-  }
-});
+      res.status(200).json(ResponseDTO.success({ commentId, isDeleted: true }));
+      await session.endSession();
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+      await session.abortTransaction();
+      await session.endSession();
+    }
+  },
+);
 
 export { travelGuideCommentRouter };
