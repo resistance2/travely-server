@@ -167,7 +167,6 @@ travelGuideRouter.get(
   checkRequiredFieldsParams(['travelId']),
   async (req, res) => {
     const { travelId } = req.params;
-    // const { userId } = req.query;
 
     try {
       if (!validObjectId(travelId)) {
@@ -178,7 +177,7 @@ travelGuideRouter.get(
         .populate('teamId')
         .populate('userId')
         .lean();
-      // const user = userId ? await User.findById(userId).lean() : null;
+
       if (!travel) {
         res.status(404).json(ResponseDTO.fail('Travel not found'));
         return;
@@ -188,6 +187,7 @@ travelGuideRouter.get(
         .populate('userId')
         .lean();
 
+      //TODO: commentList 삭제 필요
       const commentList = comment.map((comment) => ({
         userId: comment.userId._id,
         commentId: comment._id,
@@ -216,8 +216,6 @@ travelGuideRouter.get(
         })),
         createdAt: travel.createdAt,
         updatedAt: travel.updatedAt,
-        // bookmark: travel.bookmark.length,
-        // isbookmark: user ? await checkIsBookmarkedInGuide(user._id, travel._id) : false,
         commentList: commentList || null,
       };
       res.json(ResponseDTO.success(travelDetail));

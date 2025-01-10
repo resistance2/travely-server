@@ -104,6 +104,67 @@ travelGuideCommentRouter.patch(
   },
 );
 
+travelGuideCommentRouter.get(
+  '/:travelId',
+  checkRequiredFieldsParams(['travelId']),
+  async (req, res) => {
+    const { travelId } = req.params;
+    const page = parseInt(req.query.page as string) || 1;
+    const size = parseInt(req.query.size as string) || 10;
+    const skip = (page - 1) * size;
+
+    try {
+      const travel = await TravelGuide.findById(travelId);
+      if (!travel) {
+        res.status(404).json(ResponseDTO.fail('Travel guide not found'));
+        return;
+      }
+
+      const totalComments = await TravelGuideComment.countDocuments({
+        travelId: travel._id,
+        isDeleted: false,
+      });
+
+      const comments = await TravelGuideComment.find({
+        travelId: travel._id,
+        isDeleted: false,
+      })
+        .sort({
+          createdAt: -1,
+        })
+        .skip(skip)
+        .limit(size)
+        .populate('userId', 'socialName userProfileImage');
+
+      const totalPages = Math.ceil(totalComments / size);
+
+      res.status(200).json(
+        ResponseDTO.success({
+          guidePostId: travelId,
+          commentList: comments.map((comment) => ({
+            userId: (comment.userId as any)._id,
+            socialName: (comment.userId as any).socialName,
+            commentId: comment._id,
+            comment: comment.comment,
+            userProfileImage: (comment.userId as any).userProfileImage,
+            updatedAt: comment.updatedAt,
+            createdAt: comment.createdAt,
+          })),
+          pageInfo: {
+            currentPage: page,
+            totalPages,
+            totalComments,
+            hasNext: page < totalPages,
+          },
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
+
 travelGuideCommentRouter.delete(
   '/:commentId',
   checkRequiredFieldsParams(['commentId']),
