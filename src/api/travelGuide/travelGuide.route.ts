@@ -115,7 +115,10 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
             ...user,
           })) || null;
 
-        const commentCnt = await TravelGuideComment.countDocuments({ travelId: travel._id });
+        const commentCnt = await TravelGuideComment.countDocuments({
+          travelId: travel._id,
+          isDeleted: false,
+        });
         return {
           id: travel._id,
           travelTitle: travel.travelTitle,
@@ -135,7 +138,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
       }),
     );
 
-    const totalElements = await TravelGuide.countDocuments();
+    const totalElements = await TravelGuide.countDocuments({ isDeleted: false });
     const totalPages = Math.ceil(totalElements / size_);
     const currentPage = page_;
     const pageSize = size_;
