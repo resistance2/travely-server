@@ -205,6 +205,7 @@ travelGuideRouter.get(
           userId: travel.userId._id,
           userName: (travel.userId as any).userName,
           socialName: (travel.userId as any).socialName,
+          userEmail: (travel.userId as any).userEmail || null,
           userProfileImage: (travel.userId as any).userProfileImage,
           userScore: (travel.userId as any).userScore,
         },
