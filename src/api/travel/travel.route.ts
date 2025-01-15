@@ -151,7 +151,7 @@ travelRouter.get(
       reviews: reviewWithUser,
       totalRating: await getReviewAverage(travel._id),
       bookmark: travel.bookmark.length,
-      isbookmark: userId_
+      isBookmark: userId_
         ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id)
         : false,
     };
