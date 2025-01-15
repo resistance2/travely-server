@@ -69,93 +69,108 @@ travelRouter.get(
   async (req, res) => {
     const { travelId } = req.params;
     const { userId } = req.query;
-    const travel = await Travel.findOne({
-      _id: travelId,
-    })
-      .populate('userId')
-      .populate({
-        path: 'teamId',
-        populate: {
-          path: 'appliedUsers.userId',
-          select: 'userName socialName userEmail phoneNumber mbti userId',
-        },
-      })
-      .lean();
 
-    if (!travel) {
-      res.status(404).json(ResponseDTO.fail('Travel not found'));
-      return;
+    let userId_: any;
+    if (userId === 'null') {
+      userId_ = null;
+    } else {
+      userId_ = await User.findById(userId).lean();
+      if (!userId_) {
+        res.status(404).json(ResponseDTO.fail('User not found'));
+        return;
+      }
     }
 
-    const userId_ = userId ? await User.findById(userId).lean() : null;
+    try {
+      const travel = await Travel.findOne({
+        _id: travelId,
+      })
+        .populate('userId')
+        .populate({
+          path: 'teamId',
+          populate: {
+            path: 'appliedUsers.userId',
+            select: 'userName socialName userEmail phoneNumber mbti userId',
+          },
+        })
+        .lean();
 
-    const review = await getReviews(travel._id);
-    const reviewWithUser = await Promise.all(
-      review.map(async (review) => {
-        const user = await User.findById(review.userId).lean();
-        return {
-          ...review,
-          userId: (user as any).userId,
-          isVerifiedUser: (user as any).isVerifiedUser,
-          socialName: (user as any).socialName || null,
-          userEmail: (user as any).userEmail || null,
-          userProfileImage: (user as any).userProfileImage,
-        };
-      }),
-    );
+      if (!travel) {
+        res.status(404).json(ResponseDTO.fail('Travel not found'));
+        return;
+      }
 
-    //TODO: 일단 가이드 별점은 목데이터로 넣자. 나중에 가이드 별점 넣기
-    //전체 별점도 일다 목데이터를 넣음.
-    // 북마크도 일단은 목데이터로 넣음
+      const review = await getReviews(travel._id);
+      const reviewWithUser = await Promise.all(
+        review.map(async (review) => {
+          const user = await User.findById(review.userId).lean();
+          return {
+            ...review,
+            userId: (user as any).userId,
+            isVerifiedUser: (user as any).isVerifiedUser,
+            socialName: (user as any).socialName || null,
+            userEmail: (user as any).userEmail || null,
+            userProfileImage: (user as any).userProfileImage,
+          };
+        }),
+      );
 
-    // 승인된 유저만 보내기
-    // isBookmark: 북마크 여부
-    // bookmark: 북마크수
-    const travelDetailData = {
-      guide: {
-        userId: (travel.userId as any)._id,
-        userProfileImage: (travel.userId as any).userProfileImage,
-        socialName: (travel.userId as any).socialName,
-        userEmail: (travel.userId as any).userEmail,
-        guideTotalRating: 4.5,
-      },
-      title: travel.travelTitle,
-      content: travel.travelContent,
-      price: travel.travelPrice,
-      thumbnail: travel.thumbnail,
-      tag: travel.tag,
-      travelCourse: travel.travelCourse?.length ? travel.travelCourse : null,
-      includedItems: travel.includedItems?.length ? travel.includedItems : null,
-      excludedItems: travel.excludedItems?.length ? travel.excludedItems : null,
-      meetingTime: travel.meetingTime?.length ? travel.meetingTime : null,
-      meetingPlace: travel.meetingPlace?.length ? travel.meetingPlace : null,
-      FAQ: travel.travelFAQ?.length ? travel.travelFAQ : null,
-      team: travel.teamId.map((team) => ({
-        teamId: (team as any)._id,
-        personLimit: (team as any).personLimit,
-        travelStartDate: (team as any).travelStartDate,
-        travelEndDate: (team as any).travelEndDate,
-        approvedUsers: ((team as any).appliedUsers as any)
-          .filter((user: any) => user.status === 'approved')
-          .map((user: any) => ({
-            userName: user.userId.userName,
-            socialName: user.userId.socialName,
-            userEmail: user.userId.userEmail,
-            phoneNumber: user.userId.phoneNumber,
-            mbti: user.userId.mbti,
-            status: user.status,
-            appliedAt: user.appliedAt,
-            userId: (user.userId as any)._id,
-          })),
-      })),
-      reviews: reviewWithUser,
-      totalRating: await getReviewAverage(travel._id),
-      bookmark: travel.bookmark.length,
-      isBookmark: userId_
-        ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id)
-        : false,
-    };
-    res.json(ResponseDTO.success(travelDetailData));
+      //TODO: 일단 가이드 별점은 목데이터로 넣자. 나중에 가이드 별점 넣기
+      //전체 별점도 일다 목데이터를 넣음.
+      // 북마크도 일단은 목데이터로 넣음
+
+      // 승인된 유저만 보내기
+      // isBookmark: 북마크 여부
+      // bookmark: 북마크수
+      const travelDetailData = {
+        guide: {
+          userId: (travel.userId as any)._id,
+          userProfileImage: (travel.userId as any).userProfileImage,
+          socialName: (travel.userId as any).socialName,
+          userEmail: (travel.userId as any).userEmail,
+          guideTotalRating: 4.5,
+        },
+        title: travel.travelTitle,
+        content: travel.travelContent,
+        price: travel.travelPrice,
+        thumbnail: travel.thumbnail,
+        tag: travel.tag,
+        travelCourse: travel.travelCourse?.length ? travel.travelCourse : null,
+        includedItems: travel.includedItems?.length ? travel.includedItems : null,
+        excludedItems: travel.excludedItems?.length ? travel.excludedItems : null,
+        meetingTime: travel.meetingTime?.length ? travel.meetingTime : null,
+        meetingPlace: travel.meetingPlace?.length ? travel.meetingPlace : null,
+        FAQ: travel.travelFAQ?.length ? travel.travelFAQ : null,
+        team: travel.teamId.map((team) => ({
+          teamId: (team as any)._id,
+          personLimit: (team as any).personLimit,
+          travelStartDate: (team as any).travelStartDate,
+          travelEndDate: (team as any).travelEndDate,
+          approvedUsers: ((team as any).appliedUsers as any)
+            .filter((user: any) => user.status === 'approved')
+            .map((user: any) => ({
+              userName: user.userId.userName,
+              socialName: user.userId.socialName,
+              userEmail: user.userId.userEmail,
+              phoneNumber: user.userId.phoneNumber,
+              mbti: user.userId.mbti,
+              status: user.status,
+              appliedAt: user.appliedAt,
+              userId: (user.userId as any)._id,
+            })),
+        })),
+        reviews: reviewWithUser,
+        totalRating: await getReviewAverage(travel._id),
+        bookmark: travel.bookmark.length,
+        isBookmark: userId_
+          ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id)
+          : false,
+      };
+      res.json(ResponseDTO.success(travelDetailData));
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
   },
 );
 
