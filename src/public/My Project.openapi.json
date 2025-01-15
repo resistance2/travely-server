@@ -34,9 +34,7 @@
         "summary": "로그인 및 유저 생성",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/users"
-        ],
+        "tags": ["travely-server/users"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -120,9 +118,7 @@
         "summary": "유저 전화번호 변경",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/users"
-        ],
+        "tags": ["travely-server/users"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -139,10 +135,7 @@
                     "description": "전화번호"
                   }
                 },
-                "required": [
-                  "userId",
-                  "phoneNumber"
-                ]
+                "required": ["userId", "phoneNumber"]
               },
               "example": {
                 "userId": "675fc04e097ae2625fde9d75",
@@ -184,9 +177,7 @@
         "summary": "유저 mbti 변경",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/users"
-        ],
+        "tags": ["travely-server/users"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -201,10 +192,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "userId",
-                  "mbti"
-                ]
+                "required": ["userId", "mbti"]
               },
               "example": {
                 "userId": "675fc04e097ae2625fde9d75",
@@ -246,9 +234,7 @@
         "summary": "유저 정보 수정(프로필이미지, 전화번호, mbti)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/users"
-        ],
+        "tags": ["travely-server/users"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -336,9 +322,7 @@
         "summary": "유저 계좌번호 등록/수정",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/users"
-        ],
+        "tags": ["travely-server/users"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -391,9 +375,7 @@
         "summary": "여행 리뷰 작성",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/reviews"
-        ],
+        "tags": ["travely-server/reviews"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -405,9 +387,7 @@
               "example": {
                 "userId": "65fd1234a1b2c3d4e5f61112",
                 "travelId": "672905e83f52cfeef7356cc3",
-                "reviewImg": [
-                  "https://i.imgur.com/GAdReeB.jpeg"
-                ],
+                "reviewImg": ["https://i.imgur.com/GAdReeB.jpeg"],
                 "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
                 "title": "제주도 여행",
                 "travelScore": 4.5,
@@ -439,9 +419,7 @@
                           "reviewId": "67788b12a87c4cd72b03eac6",
                           "userId": "65fd1234a1b2c3d4e5f61112",
                           "travelId": "672905e83f52cfeef7356cc3",
-                          "reviewImg": [
-                            "https://i.imgur.com/GAdReeB.jpeg"
-                          ],
+                          "reviewImg": ["https://i.imgur.com/GAdReeB.jpeg"],
                           "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
                           "travelScore": 4.5,
                           "createdDate": "2025-01-04T01:12:50.385Z",
@@ -466,9 +444,7 @@
         "summary": "리뷰 조회( 해당 여행 리뷰 조회)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/reviews"
-        ],
+        "tags": ["travely-server/reviews"],
         "parameters": [
           {
             "name": "travelId",
@@ -521,9 +497,7 @@
                             {
                               "id": "6774bbe4bdec1e26356a494e",
                               "travelId": "672905e83f52cfeef7356cc3",
-                              "reviewImg": [
-                                "https://i.imgur.com/GAdReeB.jpeg"
-                              ],
+                              "reviewImg": ["https://i.imgur.com/GAdReeB.jpeg"],
                               "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
                               "travelScore": 4.5,
                               "createdDate": "2025-01-01T03:52:04.319Z",
@@ -532,9 +506,7 @@
                             {
                               "id": "6774ba725f55097059f3373c",
                               "travelId": "672905e83f52cfeef7356cc3",
-                              "reviewImg": [
-                                "https://i.imgur.com/GAdReeB.jpeg"
-                              ],
+                              "reviewImg": ["https://i.imgur.com/GAdReeB.jpeg"],
                               "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
                               "travelScore": 4.5,
                               "createdDate": "2025-01-01T03:45:54.023Z",
@@ -561,9 +533,7 @@
                             {
                               "id": "6774bbe4bdec1e26356a494e",
                               "travelId": "672905e83f52cfeef7356cc3",
-                              "reviewImg": [
-                                "https://i.imgur.com/GAdReeB.jpeg"
-                              ],
+                              "reviewImg": ["https://i.imgur.com/GAdReeB.jpeg"],
                               "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
                               "travelScore": 4.5,
                               "createdDate": "2025-01-01T03:52:04.319Z",
@@ -576,9 +546,7 @@
                             {
                               "id": "6774ba725f55097059f3373c",
                               "travelId": "672905e83f52cfeef7356cc3",
-                              "reviewImg": [
-                                "https://i.imgur.com/GAdReeB.jpeg"
-                              ],
+                              "reviewImg": ["https://i.imgur.com/GAdReeB.jpeg"],
                               "content": "제주도 여행이 정말 좋았습니다. 특히 성산일출봉의 일출이 인상적이었어요.",
                               "travelScore": 4.5,
                               "createdDate": "2025-01-01T03:45:54.023Z",
@@ -613,9 +581,7 @@
         "summary": "새로운 여행 계획하기(가이드 구해요 글)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels-guide"
-        ],
+        "tags": ["travely-server/travels-guide"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -726,9 +692,7 @@
         "summary": "여행 목록 조회(가이드 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels-guide"
-        ],
+        "tags": ["travely-server/travels-guide"],
         "parameters": [
           {
             "name": "userId",
@@ -1162,9 +1126,7 @@
         "summary": "여행 상세 조회(가이드 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels-guide"
-        ],
+        "tags": ["travely-server/travels-guide"],
         "parameters": [
           {
             "name": "traveId",
@@ -1283,9 +1245,7 @@
         "summary": "새로운 여행 계획하기(여행자 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -1299,16 +1259,8 @@
                 "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                 "travelTitle": "부산 여행4",
                 "travelContent": "부산의 해변과 명소를 둘러보는 여행",
-                "travelCourse": [
-                  "해운대",
-                  "광안리",
-                  "감천문화마을"
-                ],
-                "tag": [
-                  "부산",
-                  "바다",
-                  "문화"
-                ],
+                "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                "tag": ["부산", "바다", "문화"],
                 "team": [
                   {
                     "personLimit": 3,
@@ -1316,25 +1268,11 @@
                     "travelEndDate": "2024-07-18"
                   }
                 ],
-                "travelFAQ": [
-                  "질문적음",
-                  "피자"
-                ],
+                "travelFAQ": ["질문적음", "피자"],
                 "travelPrice": 350000,
-                "includedItems": [
-                  "숙박",
-                  "가이드",
-                  "해변 액티비티"
-                ],
-                "excludedItems": [
-                  "식사",
-                  "교통비",
-                  "개인 경비"
-                ],
-                "meetingTime": [
-                  "10:00",
-                  "15:00"
-                ],
+                "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                "excludedItems": ["식사", "교통비", "개인 경비"],
+                "meetingTime": ["10:00", "15:00"],
                 "meetingPlace": "광화문 광장"
               }
             }
@@ -1361,39 +1299,15 @@
                           "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                           "travelTitle": "부산 여행",
                           "travelContent": "부산의 해변과 명소를 둘러보는 여행",
-                          "tag": [
-                            "부산",
-                            "바다",
-                            "문화"
-                          ],
-                          "travelCourse": [
-                            "해운대",
-                            "광안리",
-                            "감천문화마을"
-                          ],
-                          "includedItems": [
-                            "숙박",
-                            "가이드",
-                            "해변 액티비티"
-                          ],
-                          "excludedItems": [
-                            "식사",
-                            "교통비",
-                            "개인 경비"
-                          ],
-                          "meetingTime": [
-                            "10:00",
-                            "15:00"
-                          ],
+                          "tag": ["부산", "바다", "문화"],
+                          "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                          "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                          "excludedItems": ["식사", "교통비", "개인 경비"],
+                          "meetingTime": ["10:00", "15:00"],
                           "travelPrice": 350000,
                           "travelFAQ": [],
-                          "reviews": [
-                            "65fd1234a1b2c3d4e5f65555"
-                          ],
-                          "bookmark": [
-                            "672901f5f3339eca4777fc11",
-                            "672901f5f3339eca4777fc12"
-                          ],
+                          "reviews": ["65fd1234a1b2c3d4e5f65555"],
+                          "bookmark": ["672901f5f3339eca4777fc11", "672901f5f3339eca4777fc12"],
                           "createdAt": "2024-11-04T17:35:36.014Z",
                           "updatedAt": "2024-11-05T15:33:36.862Z",
                           "teamId": [
@@ -1572,39 +1486,13 @@
                           "travelTitle": "제주도 3박 4일 힐링여행",
                           "travelContent": {
                             "description": "제주의 아름다운 자연과 함께하는 힐링 여행",
-                            "highlights": [
-                              "성산일출봉",
-                              "우도",
-                              "한라산"
-                            ]
+                            "highlights": ["성산일출봉", "우도", "한라산"]
                           },
-                          "tag": [
-                            "제주도",
-                            "힐링",
-                            "자연",
-                            "섬"
-                          ],
-                          "travelCourse": [
-                            "성산일출봉",
-                            "우도",
-                            "한라산",
-                            "중문관광단지"
-                          ],
-                          "includedItems": [
-                            "숙박",
-                            "조식",
-                            "입장료",
-                            "차량"
-                          ],
-                          "excludedItems": [
-                            "중식",
-                            "석식",
-                            "개인경비"
-                          ],
-                          "meetingTime": [
-                            "오전 9시",
-                            "오후 2시"
-                          ],
+                          "tag": ["제주도", "힐링", "자연", "섬"],
+                          "travelCourse": ["성산일출봉", "우도", "한라산", "중문관광단지"],
+                          "includedItems": ["숙박", "조식", "입장료", "차량"],
+                          "excludedItems": ["중식", "석식", "개인경비"],
+                          "meetingTime": ["오전 9시", "오후 2시"],
                           "meetingLocation": {
                             "place": "제주공항",
                             "address": "제주특별자치도 제주시 공항로 2",
@@ -1620,12 +1508,8 @@
                               "answer": "최소 4명부터 출발 가능합니다."
                             }
                           ],
-                          "reviews": [
-                            "65fd1234a1b2c3d4e5f65555"
-                          ],
-                          "bookmark": [
-                            "65fd1234a1b2c3d4e5f61112"
-                          ],
+                          "reviews": ["65fd1234a1b2c3d4e5f65555"],
+                          "bookmark": ["65fd1234a1b2c3d4e5f61112"],
                           "teamId": [
                             {
                               "_id": "65fd1234a1b2c3d4e5f63333",
@@ -1673,37 +1557,13 @@
                           "travelTitle": "부산 2박 3일 맛집 투어",
                           "travelContent": {
                             "description": "부산의 유명 맛집을 탐방하는 미식 여행",
-                            "highlights": [
-                              "자갈치시장",
-                              "광안리",
-                              "해운대"
-                            ]
+                            "highlights": ["자갈치시장", "광안리", "해운대"]
                           },
-                          "tag": [
-                            "부산",
-                            "맛집",
-                            "미식",
-                            "바다"
-                          ],
-                          "travelCourse": [
-                            "자갈치시장",
-                            "광안리",
-                            "해운대",
-                            "감천문화마을"
-                          ],
-                          "includedItems": [
-                            "숙박",
-                            "조식",
-                            "입장료"
-                          ],
-                          "excludedItems": [
-                            "중식",
-                            "석식",
-                            "교통비"
-                          ],
-                          "meetingTime": [
-                            "오전 10시"
-                          ],
+                          "tag": ["부산", "맛집", "미식", "바다"],
+                          "travelCourse": ["자갈치시장", "광안리", "해운대", "감천문화마을"],
+                          "includedItems": ["숙박", "조식", "입장료"],
+                          "excludedItems": ["중식", "석식", "교통비"],
+                          "meetingTime": ["오전 10시"],
                           "meetingLocation": {
                             "place": "부산역",
                             "address": "부산광역시 동구 중앙대로 206",
@@ -1763,34 +1623,11 @@
                           "thumbnail": null,
                           "travelTitle": "제주도 3일 힐링여행",
                           "travelContent": "제주도의 아름다운 자연과 맛있는 음식을 즐기는 힐링 여행. 올레길 트래킹과 맛집 탐방이 포함되어 있습니다.",
-                          "tag": [
-                            "제주도",
-                            "올레길",
-                            "힐링",
-                            "맛집"
-                          ],
-                          "travelCourse": [
-                            "성산일출봉",
-                            "우도",
-                            "만장굴",
-                            "카페거리"
-                          ],
-                          "includedItems": [
-                            "숙박(2박)",
-                            "조식",
-                            "렌터카",
-                            "입장료"
-                          ],
-                          "excludedItems": [
-                            "항공권",
-                            "중석식",
-                            "개인경비",
-                            "여행자보험"
-                          ],
-                          "meetingTime": [
-                            "09:00",
-                            "14:00"
-                          ],
+                          "tag": ["제주도", "올레길", "힐링", "맛집"],
+                          "travelCourse": ["성산일출봉", "우도", "만장굴", "카페거리"],
+                          "includedItems": ["숙박(2박)", "조식", "렌터카", "입장료"],
+                          "excludedItems": ["항공권", "중석식", "개인경비", "여행자보험"],
+                          "meetingTime": ["09:00", "14:00"],
                           "meetingLocation": {
                             "name": "제주국제공항 1층 출구",
                             "address": "제주특별자치도 제주시 공항로 2",
@@ -1810,9 +1647,7 @@
                               "answer": "기상악화시 일정이 일부 변경될 수 있습니다."
                             }
                           ],
-                          "bookmark": [
-                            "672901f5f3339eca4777fc14"
-                          ],
+                          "bookmark": ["672901f5f3339eca4777fc14"],
                           "createdAt": "2024-12-01T08:30:00.000Z",
                           "updatedAt": "2024-12-01T08:30:00.000Z",
                           "teamId": [],
@@ -1826,33 +1661,11 @@
                           "thumbnail": null,
                           "travelTitle": "서울 야간 투어",
                           "travelContent": "서울의 화려한 야경과 현대적인 문화를 체험하는 특별한 야간 투어입니다.",
-                          "tag": [
-                            "서울",
-                            "야경",
-                            "문화체험",
-                            "도심투어"
-                          ],
-                          "travelCourse": [
-                            "남산타워",
-                            "청계천",
-                            "DDP",
-                            "홍대거리"
-                          ],
-                          "includedItems": [
-                            "전문가이드",
-                            "입장권",
-                            "포토서비스",
-                            "간식"
-                          ],
-                          "excludedItems": [
-                            "저녁식사",
-                            "교통비",
-                            "개인경비"
-                          ],
-                          "meetingTime": [
-                            "17:00",
-                            "18:00"
-                          ],
+                          "tag": ["서울", "야경", "문화체험", "도심투어"],
+                          "travelCourse": ["남산타워", "청계천", "DDP", "홍대거리"],
+                          "includedItems": ["전문가이드", "입장권", "포토서비스", "간식"],
+                          "excludedItems": ["저녁식사", "교통비", "개인경비"],
+                          "meetingTime": ["17:00", "18:00"],
                           "meetingLocation": {
                             "name": "명동역 4번 출구",
                             "address": "서울특별시 중구 명동길 74",
@@ -1882,32 +1695,11 @@
                           "thumbnail": null,
                           "travelTitle": "전주 한옥마을 당일치기",
                           "travelContent": "전통과 현대가 공존하는 전주 한옥마을에서 즐기는 문화 체험과 맛집 투어",
-                          "tag": [
-                            "전주",
-                            "한옥마을",
-                            "전통문화",
-                            "맛집투어"
-                          ],
-                          "travelCourse": [
-                            "경기전",
-                            "오목대",
-                            "한옥마을",
-                            "남부시장"
-                          ],
-                          "includedItems": [
-                            "한복체험",
-                            "전통공예체험",
-                            "인생사진촬영"
-                          ],
-                          "excludedItems": [
-                            "식사비",
-                            "교통비",
-                            "기념품"
-                          ],
-                          "meetingTime": [
-                            "09:30",
-                            "10:30"
-                          ],
+                          "tag": ["전주", "한옥마을", "전통문화", "맛집투어"],
+                          "travelCourse": ["경기전", "오목대", "한옥마을", "남부시장"],
+                          "includedItems": ["한복체험", "전통공예체험", "인생사진촬영"],
+                          "excludedItems": ["식사비", "교통비", "기념품"],
+                          "meetingTime": ["09:30", "10:30"],
                           "meetingLocation": {
                             "name": "전주역 광장",
                             "address": "전라북도 전주시 덕진구 동부대로 680",
@@ -1927,10 +1719,7 @@
                               "answer": "소규모 우산 제공으로 진행됩니다."
                             }
                           ],
-                          "bookmark": [
-                            "672901f5f3339eca4777fc17",
-                            "672901f5f3339eca4777fc18"
-                          ],
+                          "bookmark": ["672901f5f3339eca4777fc17", "672901f5f3339eca4777fc18"],
                           "createdAt": "2024-12-18T09:15:00.000Z",
                           "updatedAt": "2024-12-18T09:15:00.000Z",
                           "teamId": [],
@@ -1944,19 +1733,8 @@
                           "thumbnail": null,
                           "travelTitle": "경주 역사 탐방 2일",
                           "travelContent": "천년 고도 경주의 역사 유적지를 둘러보고 신라 문화를 체험하는 특별한 여행입니다.",
-                          "tag": [
-                            "경주",
-                            "역사",
-                            "문화유산",
-                            "불교문화"
-                          ],
-                          "travelCourse": [
-                            "불국사",
-                            "석굴암",
-                            "첨성대",
-                            "대릉원",
-                            "안압지"
-                          ],
+                          "tag": ["경주", "역사", "문화유산", "불교문화"],
+                          "travelCourse": ["불국사", "석굴암", "첨성대", "대릉원", "안압지"],
                           "includedItems": [
                             "숙박(1박)",
                             "조식",
@@ -1964,16 +1742,8 @@
                             "전문 역사 해설사",
                             "여행자보험"
                           ],
-                          "excludedItems": [
-                            "중석식",
-                            "교통비",
-                            "개인경비",
-                            "선택관광"
-                          ],
-                          "meetingTime": [
-                            "09:00",
-                            "10:00"
-                          ],
+                          "excludedItems": ["중석식", "교통비", "개인경비", "선택관광"],
+                          "meetingTime": ["09:00", "10:00"],
                           "meetingLocation": {
                             "name": "경주역 동문",
                             "address": "경상북도 경주시 철도로 30",
@@ -1993,9 +1763,7 @@
                               "answer": "경주 한옥호텔에서 묵게 됩니다."
                             }
                           ],
-                          "bookmark": [
-                            "672901f5f3339eca4777fc20"
-                          ],
+                          "bookmark": ["672901f5f3339eca4777fc20"],
                           "createdAt": "2024-12-16T11:20:00.000Z",
                           "updatedAt": "2024-12-16T11:20:00.000Z",
                           "teamId": [],
@@ -2009,33 +1777,11 @@
                           "thumbnail": null,
                           "travelTitle": "설악산 단풍 트레킹",
                           "travelContent": "가을의 절정, 설악산의 화려한 단풍을 감상하며 트레킹을 즐기는 당일 산행 프로그램입니다.",
-                          "tag": [
-                            "설악산",
-                            "트레킹",
-                            "단풍",
-                            "자연"
-                          ],
-                          "travelCourse": [
-                            "비선대",
-                            "천불동계곡",
-                            "귀때기청봉",
-                            "대청봉"
-                          ],
-                          "includedItems": [
-                            "전문 산행가이드",
-                            "간식",
-                            "등산용품 대여",
-                            "안전교육"
-                          ],
-                          "excludedItems": [
-                            "중식",
-                            "교통비",
-                            "개인장비"
-                          ],
-                          "meetingTime": [
-                            "07:00",
-                            "07:30"
-                          ],
+                          "tag": ["설악산", "트레킹", "단풍", "자연"],
+                          "travelCourse": ["비선대", "천불동계곡", "귀때기청봉", "대청봉"],
+                          "includedItems": ["전문 산행가이드", "간식", "등산용품 대여", "안전교육"],
+                          "excludedItems": ["중식", "교통비", "개인장비"],
+                          "meetingTime": ["07:00", "07:30"],
                           "meetingLocation": {
                             "name": "설악산국립공원 소공원 주차장",
                             "address": "강원도 속초시 설악동 산1",
@@ -2051,10 +1797,7 @@
                               "answer": "중급 이상의 체력이 필요한 코스입니다. 정기적인 등산 경험이 있으신 분들께 추천드립니다."
                             }
                           ],
-                          "bookmark": [
-                            "672901f5f3339eca4777fc22",
-                            "672901f5f3339eca4777fc23"
-                          ],
+                          "bookmark": ["672901f5f3339eca4777fc22", "672901f5f3339eca4777fc23"],
                           "createdAt": "2024-12-17T13:45:00.000Z",
                           "updatedAt": "2024-12-17T13:45:00.000Z",
                           "teamId": [],
@@ -2068,33 +1811,16 @@
                           "thumbnail": null,
                           "travelTitle": "강릉 커피투어",
                           "travelContent": "커피의 도시 강릉에서 즐기는 특별한 커피 여행. 유명 로스터리 카페 투어와 바리스타 체험이 포함됩니다.",
-                          "tag": [
-                            "강릉",
-                            "커피",
-                            "카페",
-                            "바다"
-                          ],
-                          "travelCourse": [
-                            "안목커피거리",
-                            "테라로사",
-                            "커피체험관",
-                            "정동진"
-                          ],
+                          "tag": ["강릉", "커피", "카페", "바다"],
+                          "travelCourse": ["안목커피거리", "테라로사", "커피체험관", "정동진"],
                           "includedItems": [
                             "전문 바리스타 가이드",
                             "커피 시음",
                             "원두 로스팅 체험",
                             "기념품"
                           ],
-                          "excludedItems": [
-                            "중식",
-                            "교통비",
-                            "개인지출"
-                          ],
-                          "meetingTime": [
-                            "10:00",
-                            "11:00"
-                          ],
+                          "excludedItems": ["중식", "교통비", "개인지출"],
+                          "meetingTime": ["10:00", "11:00"],
                           "meetingLocation": {
                             "name": "강릉역 1번 출구",
                             "address": "강원도 강릉시 교동 961-1",
@@ -2128,33 +1854,16 @@
                           "thumbnail": null,
                           "travelTitle": "여수 밤바다 투어",
                           "travelContent": "아름다운 여수 밤바다와 낭만적인 야경을 즐기는 특별한 야간 투어 프로그램입니다.",
-                          "tag": [
-                            "여수",
-                            "밤바다",
-                            "야경",
-                            "로맨틱"
-                          ],
+                          "tag": ["여수", "밤바다", "야경", "로맨틱"],
                           "travelCourse": [
                             "돌산대교",
                             "종포해양공원",
                             "여수해상케이블카",
                             "낭만포차거리"
                           ],
-                          "includedItems": [
-                            "케이블카 티켓",
-                            "웰컴드링크",
-                            "인생사진촬영",
-                            "야식"
-                          ],
-                          "excludedItems": [
-                            "저녁식사",
-                            "교통비",
-                            "기념품"
-                          ],
-                          "meetingTime": [
-                            "16:00",
-                            "17:00"
-                          ],
+                          "includedItems": ["케이블카 티켓", "웰컴드링크", "인생사진촬영", "야식"],
+                          "excludedItems": ["저녁식사", "교통비", "기념품"],
+                          "meetingTime": ["16:00", "17:00"],
                           "meetingLocation": {
                             "name": "여수엑스포역 정문",
                             "address": "전라남도 여수시 박람회길 1",
@@ -2170,9 +1879,7 @@
                               "answer": "누구나 참여 가능합니다. 솔로, 친구, 가족 모두 환영합니다."
                             }
                           ],
-                          "bookmark": [
-                            "672901f5f3339eca4777fc26"
-                          ],
+                          "bookmark": ["672901f5f3339eca4777fc26"],
                           "createdAt": "2024-12-19T15:20:00.000Z",
                           "updatedAt": "2024-12-19T15:20:00.000Z",
                           "teamId": [],
@@ -2186,33 +1893,16 @@
                           "thumbnail": null,
                           "travelTitle": "안동 전통문화 체험",
                           "travelContent": "한국의 전통문화의 중심지 안동에서 즐기는 다양한 전통문화 체험 프로그램입니다.",
-                          "tag": [
-                            "안동",
-                            "전통문화",
-                            "하회마을",
-                            "체험"
-                          ],
-                          "travelCourse": [
-                            "하회마을",
-                            "도산서원",
-                            "안동민속촌",
-                            "월영교"
-                          ],
+                          "tag": ["안동", "전통문화", "하회마을", "체험"],
+                          "travelCourse": ["하회마을", "도산서원", "안동민속촌", "월영교"],
                           "includedItems": [
                             "전통의상체험",
                             "하회탈 만들기",
                             "전통음식 시식",
                             "입장료"
                           ],
-                          "excludedItems": [
-                            "중식",
-                            "교통비",
-                            "기념품"
-                          ],
-                          "meetingTime": [
-                            "09:30",
-                            "10:30"
-                          ],
+                          "excludedItems": ["중식", "교통비", "기념품"],
+                          "meetingTime": ["09:30", "10:30"],
                           "meetingLocation": {
                             "name": "안동역 버스정류장",
                             "address": "경상북도 안동시 송천동 368",
@@ -2232,9 +1922,7 @@
                               "answer": "가족 단위 참여를 환영합니다. 어린이를 위한 특별 체험도 준비되어 있습니다."
                             }
                           ],
-                          "bookmark": [
-                            "672901f5f3339eca4777fc28"
-                          ],
+                          "bookmark": ["672901f5f3339eca4777fc28"],
                           "createdAt": "2024-12-19T16:15:00.000Z",
                           "updatedAt": "2024-12-19T16:15:00.000Z",
                           "teamId": [],
@@ -2248,30 +1936,11 @@
                           "thumbnail": null,
                           "travelTitle": "부산 여행2",
                           "travelContent": "부산의 해변과 명소를 둘러보는 여행",
-                          "tag": [
-                            "부산",
-                            "바다",
-                            "문화"
-                          ],
-                          "travelCourse": [
-                            "해운대",
-                            "광안리",
-                            "감천문화마을"
-                          ],
-                          "includedItems": [
-                            "숙박",
-                            "가이드",
-                            "해변 액티비티"
-                          ],
-                          "excludedItems": [
-                            "식사",
-                            "교통비",
-                            "개인 경비"
-                          ],
-                          "meetingTime": [
-                            "10:00",
-                            "15:00"
-                          ],
+                          "tag": ["부산", "바다", "문화"],
+                          "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                          "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                          "excludedItems": ["식사", "교통비", "개인 경비"],
+                          "meetingTime": ["10:00", "15:00"],
                           "travelPrice": 350000,
                           "travelFAQ": [],
                           "bookmark": [],
@@ -2301,35 +1970,13 @@
                           "thumbnail": null,
                           "travelTitle": "부산 여행2",
                           "travelContent": "부산의 해변과 명소를 둘러보는 여행",
-                          "tag": [
-                            "부산",
-                            "바다",
-                            "문화"
-                          ],
-                          "travelCourse": [
-                            "해운대",
-                            "광안리",
-                            "감천문화마을"
-                          ],
-                          "includedItems": [
-                            "숙박",
-                            "가이드",
-                            "해변 액티비티"
-                          ],
-                          "excludedItems": [
-                            "식사",
-                            "교통비",
-                            "개인 경비"
-                          ],
-                          "meetingTime": [
-                            "10:00",
-                            "15:00"
-                          ],
+                          "tag": ["부산", "바다", "문화"],
+                          "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                          "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                          "excludedItems": ["식사", "교통비", "개인 경비"],
+                          "meetingTime": ["10:00", "15:00"],
                           "travelPrice": 350000,
-                          "travelFAQ": [
-                            "질문적음",
-                            "피자"
-                          ],
+                          "travelFAQ": ["질문적음", "피자"],
                           "bookmark": [],
                           "createdAt": "2024-12-20T13:02:55.078Z",
                           "updatedAt": "2024-12-20T13:02:55.117Z",
@@ -2364,35 +2011,13 @@
                         "thumbnail": "https://example.com/busan-image.jpg",
                         "travelTitle": "부산 여행2",
                         "travelContent": "부산의 해변과 명소를 둘러보는 여행",
-                        "tag": [
-                          "부산",
-                          "바다",
-                          "문화"
-                        ],
-                        "travelCourse": [
-                          "해운대",
-                          "광안리",
-                          "감천문화마을"
-                        ],
-                        "includedItems": [
-                          "숙박",
-                          "가이드",
-                          "해변 액티비티"
-                        ],
-                        "excludedItems": [
-                          "식사",
-                          "교통비",
-                          "개인 경비"
-                        ],
-                        "meetingTime": [
-                          "10:00",
-                          "15:00"
-                        ],
+                        "tag": ["부산", "바다", "문화"],
+                        "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                        "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                        "excludedItems": ["식사", "교통비", "개인 경비"],
+                        "meetingTime": ["10:00", "15:00"],
                         "travelPrice": 350000,
-                        "travelFAQ": [
-                          "질문적음",
-                          "피자"
-                        ],
+                        "travelFAQ": ["질문적음", "피자"],
                         "bookmark": [],
                         "createdAt": "2024-12-27T16:10:20.854Z",
                         "updatedAt": "2024-12-27T16:10:20.861Z",
@@ -2427,35 +2052,13 @@
                         "thumbnail": "https://example.com/busan-image.jpg",
                         "travelTitle": "부산 여행2",
                         "travelContent": "부산의 해변과 명소를 둘러보는 여행",
-                        "tag": [
-                          "부산",
-                          "바다",
-                          "문화"
-                        ],
-                        "travelCourse": [
-                          "해운대",
-                          "광안리",
-                          "감천문화마을"
-                        ],
-                        "includedItems": [
-                          "숙박",
-                          "가이드",
-                          "해변 액티비티"
-                        ],
-                        "excludedItems": [
-                          "식사",
-                          "교통비",
-                          "개인 경비"
-                        ],
-                        "meetingTime": [
-                          "10:00",
-                          "15:00"
-                        ],
+                        "tag": ["부산", "바다", "문화"],
+                        "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                        "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                        "excludedItems": ["식사", "교통비", "개인 경비"],
+                        "meetingTime": ["10:00", "15:00"],
                         "travelPrice": 350000,
-                        "travelFAQ": [
-                          "질문적음",
-                          "피자"
-                        ],
+                        "travelFAQ": ["질문적음", "피자"],
                         "bookmark": [],
                         "createdAt": "2024-12-27T16:10:20.854Z",
                         "updatedAt": "2024-12-27T16:10:20.861Z",
@@ -2490,35 +2093,13 @@
                         "thumbnail": "https://example.com/busan-image.jpg",
                         "travelTitle": "부산 여행4",
                         "travelContent": "부산의 해변과 명소를 둘러보는 여행",
-                        "tag": [
-                          "부산",
-                          "바다",
-                          "문화"
-                        ],
-                        "travelCourse": [
-                          "해운대",
-                          "광안리",
-                          "감천문화마을"
-                        ],
-                        "includedItems": [
-                          "숙박",
-                          "가이드",
-                          "해변 액티비티"
-                        ],
-                        "excludedItems": [
-                          "식사",
-                          "교통비",
-                          "개인 경비"
-                        ],
-                        "meetingTime": [
-                          "10:00",
-                          "15:00"
-                        ],
+                        "tag": ["부산", "바다", "문화"],
+                        "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                        "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                        "excludedItems": ["식사", "교통비", "개인 경비"],
+                        "meetingTime": ["10:00", "15:00"],
                         "travelPrice": 350000,
-                        "travelFAQ": [
-                          "질문적음",
-                          "피자"
-                        ],
+                        "travelFAQ": ["질문적음", "피자"],
                         "bookmark": [],
                         "createdAt": "2024-12-27T16:16:00.379Z",
                         "updatedAt": "2024-12-27T16:16:00.394Z",
@@ -2553,35 +2134,13 @@
                         "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
                         "travelTitle": "부산 여행2",
                         "travelContent": "부산의 해변과 명소를 둘러보는 여행",
-                        "tag": [
-                          "부산",
-                          "바다",
-                          "문화"
-                        ],
-                        "travelCourse": [
-                          "해운대",
-                          "광안리",
-                          "감천문화마을"
-                        ],
-                        "includedItems": [
-                          "숙박",
-                          "가이드",
-                          "해변 액티비티"
-                        ],
-                        "excludedItems": [
-                          "식사",
-                          "교통비",
-                          "개인 경비"
-                        ],
-                        "meetingTime": [
-                          "10:00",
-                          "15:00"
-                        ],
+                        "tag": ["부산", "바다", "문화"],
+                        "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                        "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                        "excludedItems": ["식사", "교통비", "개인 경비"],
+                        "meetingTime": ["10:00", "15:00"],
                         "travelPrice": 350000,
-                        "travelFAQ": [
-                          "질문적음",
-                          "피자"
-                        ],
+                        "travelFAQ": ["질문적음", "피자"],
                         "bookmark": [],
                         "createdAt": "2024-12-30T02:03:18.820Z",
                         "updatedAt": "2024-12-30T02:03:18.856Z",
@@ -2620,9 +2179,7 @@
         "summary": "여행 목록 조회(여행자 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "userId",
@@ -2694,11 +2251,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2024-11-04T17:35:36.014Z",
                             "bookmark": true
                           },
@@ -2715,12 +2268,7 @@
                               "userId": "65fd1234a1b2c3d4e5f61111",
                               "userName": "김여행"
                             },
-                            "tag": [
-                              "제주도",
-                              "힐링",
-                              "자연",
-                              "섬"
-                            ],
+                            "tag": ["제주도", "힐링", "자연", "섬"],
                             "createdAt": "2024-03-21T09:00:00.000Z",
                             "bookmark": false
                           },
@@ -2737,12 +2285,7 @@
                               "userId": "65fd1234a1b2c3d4e5f61111",
                               "userName": "김여행"
                             },
-                            "tag": [
-                              "부산",
-                              "맛집",
-                              "미식",
-                              "바다"
-                            ],
+                            "tag": ["부산", "맛집", "미식", "바다"],
                             "createdAt": "2024-03-22T09:00:00.000Z",
                             "bookmark": false
                           },
@@ -2759,12 +2302,7 @@
                               "userId": "672901f5f3339eca4777fc13",
                               "userName": "nakyenko17"
                             },
-                            "tag": [
-                              "제주도",
-                              "올레길",
-                              "힐링",
-                              "맛집"
-                            ],
+                            "tag": ["제주도", "올레길", "힐링", "맛집"],
                             "createdAt": "2024-12-01T08:30:00.000Z",
                             "bookmark": false
                           },
@@ -2781,12 +2319,7 @@
                               "userId": "672901f5f3339eca4777fc15",
                               "userName": "nakyenko14"
                             },
-                            "tag": [
-                              "서울",
-                              "야경",
-                              "문화체험",
-                              "도심투어"
-                            ],
+                            "tag": ["서울", "야경", "문화체험", "도심투어"],
                             "createdAt": "2024-12-15T10:20:00.000Z",
                             "bookmark": false
                           },
@@ -2803,12 +2336,7 @@
                               "userId": "672901f5f3339eca4777fc16",
                               "userName": "nakyenko256"
                             },
-                            "tag": [
-                              "전주",
-                              "한옥마을",
-                              "전통문화",
-                              "맛집투어"
-                            ],
+                            "tag": ["전주", "한옥마을", "전통문화", "맛집투어"],
                             "createdAt": "2024-12-18T09:15:00.000Z",
                             "bookmark": false
                           },
@@ -2825,12 +2353,7 @@
                               "userId": "672901f5f3339eca4777fc19",
                               "userName": "nakyenko13"
                             },
-                            "tag": [
-                              "경주",
-                              "역사",
-                              "문화유산",
-                              "불교문화"
-                            ],
+                            "tag": ["경주", "역사", "문화유산", "불교문화"],
                             "createdAt": "2024-12-16T11:20:00.000Z",
                             "bookmark": false
                           },
@@ -2847,12 +2370,7 @@
                               "userId": "672901f5f3339eca4777fc21",
                               "userName": "nakyenko2567"
                             },
-                            "tag": [
-                              "설악산",
-                              "트레킹",
-                              "단풍",
-                              "자연"
-                            ],
+                            "tag": ["설악산", "트레킹", "단풍", "자연"],
                             "createdAt": "2024-12-17T13:45:00.000Z",
                             "bookmark": false
                           },
@@ -2869,12 +2387,7 @@
                               "userId": "672901f5f3339eca4777fc24",
                               "userName": "nakyenko25"
                             },
-                            "tag": [
-                              "강릉",
-                              "커피",
-                              "카페",
-                              "바다"
-                            ],
+                            "tag": ["강릉", "커피", "카페", "바다"],
                             "createdAt": "2024-12-18T14:30:00.000Z",
                             "bookmark": false
                           },
@@ -2891,12 +2404,7 @@
                               "userId": "672901f5f3339eca4777fc25",
                               "userName": "nakyenko12"
                             },
-                            "tag": [
-                              "여수",
-                              "밤바다",
-                              "야경",
-                              "로맨틱"
-                            ],
+                            "tag": ["여수", "밤바다", "야경", "로맨틱"],
                             "createdAt": "2024-12-19T15:20:00.000Z",
                             "bookmark": false
                           }
@@ -2930,11 +2438,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2025-01-06T09:57:03.091Z",
                             "bookmark": false
                           },
@@ -2951,11 +2455,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2025-01-06T09:35:14.201Z",
                             "bookmark": false
                           },
@@ -2972,11 +2472,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2025-01-02T08:54:06.671Z",
                             "bookmark": false
                           },
@@ -2993,11 +2489,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2024-12-30T04:17:29.635Z",
                             "bookmark": false
                           },
@@ -3014,11 +2506,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2024-12-27T16:16:00.379Z",
                             "bookmark": false
                           },
@@ -3035,11 +2523,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2024-12-27T16:12:36.060Z",
                             "bookmark": false
                           },
@@ -3056,11 +2540,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2024-12-27T16:10:20.854Z",
                             "bookmark": false
                           },
@@ -3077,11 +2557,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2024-12-27T16:08:57.162Z",
                             "bookmark": false
                           },
@@ -3098,11 +2574,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2024-12-27T16:06:24.394Z",
                             "bookmark": false
                           },
@@ -3119,11 +2591,7 @@
                               "userId": "672901f5f3339eca4777fc11",
                               "userName": "nakyenko4"
                             },
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
                             "createdAt": "2024-12-27T16:03:31.499Z",
                             "bookmark": false
                           }
@@ -3152,9 +2620,7 @@
         "summary": "북마크 리스트 조회",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "userId",
@@ -3189,45 +2655,18 @@
                             "thumbnail": null,
                             "travelTitle": "부산 여행",
                             "travelContent": "부산의 해변과 명소를 둘러보는 여행",
-                            "tag": [
-                              "부산",
-                              "바다",
-                              "문화"
-                            ],
-                            "travelCourse": [
-                              "해운대",
-                              "광안리",
-                              "감천문화마을"
-                            ],
-                            "includedItems": [
-                              "숙박",
-                              "가이드",
-                              "해변 액티비티"
-                            ],
-                            "excludedItems": [
-                              "식사",
-                              "교통비",
-                              "개인 경비"
-                            ],
-                            "meetingTime": [
-                              "10:00",
-                              "15:00"
-                            ],
+                            "tag": ["부산", "바다", "문화"],
+                            "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                            "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                            "excludedItems": ["식사", "교통비", "개인 경비"],
+                            "meetingTime": ["10:00", "15:00"],
                             "travelPrice": 350000,
                             "travelFAQ": [],
-                            "reviews": [
-                              "65fd1234a1b2c3d4e5f65555"
-                            ],
-                            "bookmark": [
-                              "672901f5f3339eca4777fc11",
-                              "672901f5f3339eca4777fc12"
-                            ],
+                            "reviews": ["65fd1234a1b2c3d4e5f65555"],
+                            "bookmark": ["672901f5f3339eca4777fc11", "672901f5f3339eca4777fc12"],
                             "createdAt": "2024-11-04T17:35:36.014Z",
                             "updatedAt": "2024-11-05T15:33:36.862Z",
-                            "teamId": [
-                              "65fd1234a1b2c3d4e5f63336",
-                              "65fd1234a1b2c3d4e5f63333"
-                            ],
+                            "teamId": ["65fd1234a1b2c3d4e5f63336", "65fd1234a1b2c3d4e5f63333"],
                             "travelActive": true,
                             "reviewWrite": false,
                             "isDeleted": false,
@@ -3251,9 +2690,7 @@
         "summary": "북마크 추가/삭제",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -3326,9 +2763,7 @@
         "summary": "내여행 -내가 참여한 여행",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "userId",
@@ -3371,12 +2806,7 @@
                               "travelEndDate": "2024-04-04T00:00:00.000Z",
                               "personLimit": 7,
                               "approvedMembersMbti": {
-                                "mbti": [
-                                  "ISTJ",
-                                  "INTP",
-                                  "INFJ",
-                                  null
-                                ]
+                                "mbti": ["ISTJ", "INTP", "INFJ", null]
                               }
                             },
                             "currentUserStatus": {
@@ -3409,14 +2839,7 @@
                               "travelEndDate": "2024-04-04T00:00:00.000Z",
                               "personLimit": 7,
                               "approvedMembersMbti": {
-                                "mbti": [
-                                  "ISTJ",
-                                  "INTP",
-                                  "INFJ",
-                                  "ENTJ",
-                                  null,
-                                  null
-                                ]
+                                "mbti": ["ISTJ", "INTP", "INFJ", "ENTJ", null, null]
                               }
                             },
                             "currentUserStatus": {
@@ -3442,9 +2865,7 @@
         "summary": "내 여행 관리 페이지( 해당 유저 대기중인 상태에서 approverd, rejected로 변경)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -3520,9 +2941,7 @@
         "summary": "여행 활성화 비활성화",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -3560,9 +2979,7 @@
         "summary": "내여행-내가 만든 여행",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "userId",
@@ -3699,9 +3116,7 @@
         "summary": "여행 관리 페이지 - 해당 여행의 팀과 팀에 있는 유저 목록 조회",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "traveId",
@@ -4130,9 +3545,7 @@
         "summary": "여행 팀 조회 - 여행 아이디로 팀 조회",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "travelId",
@@ -4165,10 +3578,7 @@
                         "createdAt": "2024-11-04T17:35:36.014Z",
                         "updateAt": "2024-12-28T03:53:04.364Z",
                         "travelActive": true,
-                        "teamTeams": [
-                          "65fd1234a1b2c3d4e5f63333",
-                          "65fd1234a1b2c3d4e5f63336"
-                        ]
+                        "teamTeams": ["65fd1234a1b2c3d4e5f63333", "65fd1234a1b2c3d4e5f63336"]
                       }
                     }
                   },
@@ -4182,10 +3592,7 @@
                         "createdAt": "2024-11-04T17:35:36.014Z",
                         "updateAt": "2024-12-28T03:53:04.364Z",
                         "travelActive": true,
-                        "teamTeams": [
-                          "65fd1234a1b2c3d4e5f63333",
-                          "65fd1234a1b2c3d4e5f63336"
-                        ]
+                        "teamTeams": ["65fd1234a1b2c3d4e5f63333", "65fd1234a1b2c3d4e5f63336"]
                       }
                     }
                   }
@@ -4203,9 +3610,7 @@
         "summary": "여행 상세 조회(여행자 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "travelId",
@@ -4254,30 +3659,11 @@
                         "content": "부산의 해변과 명소를 둘러보는 여행",
                         "price": 350000,
                         "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
-                        "tag": [
-                          "부산",
-                          "바다",
-                          "문화"
-                        ],
-                        "travelCourse": [
-                          "해운대",
-                          "광안리",
-                          "감천문화마을"
-                        ],
-                        "includedItems": [
-                          "숙박",
-                          "가이드",
-                          "해변 액티비티"
-                        ],
-                        "excludedItems": [
-                          "식사",
-                          "교통비",
-                          "개인 경비"
-                        ],
-                        "meetingTime": [
-                          "10:00",
-                          "15:00"
-                        ],
+                        "tag": ["부산", "바다", "문화"],
+                        "travelCourse": ["해운대", "광안리", "감천문화마을"],
+                        "includedItems": ["숙박", "가이드", "해변 액티비티"],
+                        "excludedItems": ["식사", "교통비", "개인 경비"],
+                        "meetingTime": ["10:00", "15:00"],
                         "FAQ": null,
                         "team": [
                           {
@@ -4430,9 +3816,7 @@
         "summary": "여행 팀에 유저 등록(여행 신청하기)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/travels"
-        ],
+        "tags": ["travely-server/travels"],
         "parameters": [
           {
             "name": "teamId",
@@ -4455,9 +3839,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "userId"
-                ]
+                "required": ["userId"]
               },
               "example": {
                 "userId": "65fd1234a1b2c3d4e5f61013"
@@ -4511,9 +3893,7 @@
         "summary": "이미지 업로드(여러 파일)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/images"
-        ],
+        "tags": ["travely-server/images"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -4579,9 +3959,7 @@
         "summary": "이미지 업로드(단일 파일)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/images"
-        ],
+        "tags": ["travely-server/images"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -4632,9 +4010,7 @@
         "summary": "댓글 추가(가이드 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/comment(가이드 구해요)"
-        ],
+        "tags": ["travely-server/comment(가이드 구해요)"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -4652,11 +4028,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "userId",
-                  "guidePostId",
-                  "comment"
-                ]
+                "required": ["userId", "guidePostId", "comment"]
               },
               "example": {
                 "userId": "672901f5f3339eca4777fc11",
@@ -4703,9 +4075,7 @@
         "summary": "댓글 수정(가이드 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/comment(가이드 구해요)"
-        ],
+        "tags": ["travely-server/comment(가이드 구해요)"],
         "parameters": [],
         "requestBody": {
           "content": {
@@ -4723,11 +4093,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "commentId",
-                  "userId",
-                  "comment"
-                ]
+                "required": ["commentId", "userId", "comment"]
               },
               "example": {
                 "commentId": "677f775db36802a45ad2883b",
@@ -4776,9 +4142,7 @@
         "summary": "댓글 삭제(가이드 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/comment(가이드 구해요)"
-        ],
+        "tags": ["travely-server/comment(가이드 구해요)"],
         "parameters": [
           {
             "name": "commentId",
@@ -4835,9 +4199,7 @@
         "summary": "댓글 조회(가이드 구해요)",
         "deprecated": false,
         "description": "",
-        "tags": [
-          "travely-server/comment(가이드 구해요)"
-        ],
+        "tags": ["travely-server/comment(가이드 구해요)"],
         "parameters": [
           {
             "name": "guidePostId",
@@ -4928,14 +4290,7 @@
   "components": {
     "schemas": {
       "Pet": {
-        "required": [
-          "name",
-          "photoUrls",
-          "id",
-          "category",
-          "tags",
-          "status"
-        ],
+        "required": ["name", "photoUrls", "id", "category", "tags", "status"],
         "type": "object",
         "properties": {
           "id": {
@@ -4951,9 +4306,7 @@
           "name": {
             "type": "string",
             "description": "name",
-            "examples": [
-              "doggie"
-            ]
+            "examples": ["doggie"]
           },
           "photoUrls": {
             "type": "array",
@@ -4972,11 +4325,7 @@
           "status": {
             "type": "string",
             "description": "Pet Sales Status",
-            "enum": [
-              "available",
-              "pending",
-              "sold"
-            ]
+            "enum": ["available", "pending", "sold"]
           }
         }
       },
