@@ -6,6 +6,7 @@ import {
   checkRequiredFieldsParams,
   checkRequiredFieldsQuery,
 } from '../../checkRequiredFields';
+import { tagPathToTagType, tagTypeToTagPath } from '../../convert';
 import { IAppliedUser, Review, Team, Travel, User, UserRating } from '../../db/schema';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
 
@@ -383,7 +384,7 @@ travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (
           id: travel._id,
           thumbnail: travel.thumbnail,
           travelTitle: travel.travelTitle,
-          tag: travel.tag,
+          tag: travel.tag.map((tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType]),
           bookmark: await checkIsBookmarked(user?._id as mongoose.Types.ObjectId, travel._id),
           createdBy: {
             userId: createdByUser?._id,
