@@ -117,77 +117,77 @@ reviewRouter.post(
   async (req, res) => {
     const { userId, travelId, reviewImg, content, travelScore, title, userReview } = req.body;
 
-    const user = await User.findById(userId);
-
-    if (!user) {
-      res.status(404).json(ResponseDTO.fail('사용자를 찾을 수 없습니다'));
-      return;
-    }
-
-    const travel = await Travel.findById(travelId);
-    if (!travel) {
-      res.status(404).json(ResponseDTO.fail('여행을 찾을 수 없습니다'));
-      return;
-    }
-
-    // req.body에 이미지가 있을 때만
-    if (reviewImg) {
-      //문자열 배열인지 검사
-      if (!Array.isArray(reviewImg)) {
-        res.status(400).json(ResponseDTO.fail('reviewImg must be an array'));
-        return;
-      }
-
-      //이미지의 유효성 검사
-      const IsValidImages = await Promise.all(
-        reviewImg.map(async (image) => {
-          return await checkIsValidImage(image);
-        }),
-      );
-      if (!IsValidImages.every((isValid) => isValid)) {
-        res.status(400).json(ResponseDTO.fail('Invalid image URL'));
-        return;
-      }
-    }
-
-    // userReview가 있을때만
-    if (userReview) {
-      //userReview.toUserId와 userReview.ratingScore를 검사
-      if (
-        !userReview.toUserId ||
-        !userReview.userScore ||
-        typeof Number(userReview.userScore) !== 'number' ||
-        typeof userReview.toUserId !== 'string'
-      ) {
-        res.status(400).json(ResponseDTO.fail('Invalid userReview'));
-        return;
-      }
-
-      if (!checkIsValidScore(userReview.userScore)) {
-        res.status(400).json(ResponseDTO.fail('Invalid userScore'));
-        return;
-      }
-
-      await UserRating.create({
-        fromUserId: user._id,
-        toUserId: userReview.toUserId,
-        userScore: userReview.userScore,
-      });
-    }
-
-    if (!checkIsValidScore(travelScore)) {
-      res.status(400).json(ResponseDTO.fail('Invalid travel score'));
-      return;
-    }
-
-    // TODO: 리뷰 유효성 검증 로직,ただ이번에는 유저가 실제로 여행을 다녀오고 여행을 다녀오고 리뷰를 작성하는지 체크 필요
-
-    if (!(await checkUserInTravel(travelId, userId))) {
-      res.status(400).json(ResponseDTO.fail('User is not in the travel'));
-      return;
-    }
-
     try {
+      const user = await User.findById(userId);
+
+      if (!user) {
+        res.status(404).json(ResponseDTO.fail('사용자를 찾을 수 없습니다'));
+        return;
+      }
+
+      const travel = await Travel.findById(travelId);
+      if (!travel) {
+        res.status(404).json(ResponseDTO.fail('여행을 찾을 수 없습니다'));
+        return;
+      }
+
+      // req.body에 이미지가 있을 때만
+      if (reviewImg) {
+        //문자열 배열인지 검사
+        if (!Array.isArray(reviewImg)) {
+          res.status(400).json(ResponseDTO.fail('reviewImg must be an array'));
+          return;
+        }
+
+        //이미지의 유효성 검사
+        const IsValidImages = await Promise.all(
+          reviewImg.map(async (image) => {
+            return await checkIsValidImage(image);
+          }),
+        );
+        if (!IsValidImages.every((isValid) => isValid)) {
+          res.status(400).json(ResponseDTO.fail('Invalid image URL'));
+          return;
+        }
+      }
+
+      // userReview가 있을때만
+      if (userReview) {
+        //userReview.toUserId와 userReview.ratingScore를 검사
+        if (
+          !userReview.toUserId ||
+          !userReview.userScore ||
+          typeof Number(userReview.userScore) !== 'number' ||
+          typeof userReview.toUserId !== 'string'
+        ) {
+          res.status(400).json(ResponseDTO.fail('Invalid userReview'));
+          return;
+        }
+
+        if (!checkIsValidScore(userReview.userScore)) {
+          res.status(400).json(ResponseDTO.fail('Invalid userScore'));
+          return;
+        }
+
+        await UserRating.create({
+          fromUserId: user._id,
+          toUserId: userReview.toUserId,
+          userScore: userReview.userScore,
+        });
+      }
+
+      if (!checkIsValidScore(travelScore)) {
+        res.status(400).json(ResponseDTO.fail('Invalid travel score'));
+        return;
+      }
+
+      // TODO: 리뷰 유효성 검증 로직,ただ이번에는 유저가 실제로 여행을 다녀오고 여행을 다녀오고 리뷰를 작성하는지 체크 필요
+
+      if (!(await checkUserInTravel(travelId, userId))) {
+        res.status(400).json(ResponseDTO.fail('User is not in the travel'));
+        return;
+      }
+
       const newReview = new Review({
         userId: user._id,
         travelId: travel._id,
