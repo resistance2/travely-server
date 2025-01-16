@@ -237,7 +237,12 @@ travelRouter.post(
       await Travel.findByIdAndUpdate(travelId, { $push: { teamId: team[0]._id } }, { session });
       await session.commitTransaction();
       const newTravel = await Travel.findById(travelId).populate('teamId').lean();
-      res.json(ResponseDTO.success(newTravel));
+      res.json(
+        ResponseDTO.success({
+          ...newTravel,
+          tag: newTravel?.tag.map((tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType]),
+        }),
+      );
     } catch (error) {
       console.error(error);
       await session.abortTransaction();
