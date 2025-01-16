@@ -135,7 +135,7 @@ travelRouter.get(
         content: travel.travelContent,
         price: travel.travelPrice,
         thumbnail: travel.thumbnail,
-        tag: travel.tag,
+        tag: travel.tag.map((tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType]),
         travelCourse: travel.travelCourse?.length ? travel.travelCourse : null,
         includedItems: travel.includedItems?.length ? travel.includedItems : null,
         excludedItems: travel.excludedItems?.length ? travel.excludedItems : null,
@@ -211,6 +211,7 @@ travelRouter.post(
         [
           {
             ...req.body,
+            tag: tagTypeToTagPath[req.body.tag as keyof typeof tagTypeToTagPath],
             userId: userId?._id,
             createdAt: new Date(),
             updatedAt: new Date(),
@@ -306,7 +307,7 @@ travelRouter.get('/travel-list', async (req, res) => {
             userId: createdByUser?._id,
             userName: createdByUser?.userName || createdByUser?.socialName,
           },
-          tag: travel.tag,
+          tag: travel.tag.map((tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType]),
           createdAt: travel.createdAt,
           bookmark: await checkIsBookmarked(user?._id as mongoose.Types.ObjectId, travel._id),
         };
@@ -384,7 +385,7 @@ travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (
           id: travel._id,
           thumbnail: travel.thumbnail,
           travelTitle: travel.travelTitle,
-          tag: travel.tag,
+          tag: travel.tag.map((tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType]),
           bookmark: await checkIsBookmarked(user?._id as mongoose.Types.ObjectId, travel._id),
           createdBy: {
             userId: createdByUser?._id,
