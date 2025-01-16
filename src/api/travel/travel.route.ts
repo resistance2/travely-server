@@ -384,7 +384,7 @@ travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (
           id: travel._id,
           thumbnail: travel.thumbnail,
           travelTitle: travel.travelTitle,
-          tag: travel.tag.map((tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType]),
+          tag: travel.tag,
           bookmark: await checkIsBookmarked(user?._id as mongoose.Types.ObjectId, travel._id),
           createdBy: {
             userId: createdByUser?._id,
