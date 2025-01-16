@@ -336,6 +336,25 @@ travelRouter.get('/travel-list', async (req, res) => {
   }
 });
 
+// interface ITravelCard {
+//   readonly id: string; //여행고유 아이디
+//   readonly thumbnail: string; // 이미지 경로
+//   readonly travelTitle: string; // 카드의 제목
+//   readonly tag: TagType[]; // 태그 목록
+//   readonly bookmark: boolean; // 북마크 여부
+//   readonly createdBy: {
+//     // 작성자
+//     readonly userId: string;
+//     readonly userName: string;
+//   };
+//   readonly price: number; //가격
+//   readonly review: {
+//     //리뷰
+//     readonly travelScore: number;
+//     readonly reviewCnt: number;
+//   };
+// }
+
 /**
  * 북마크 리스트 조회
  * GET /api/v1/travels/bookmark-list
@@ -353,10 +372,34 @@ travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (
       res.status(404).json(ResponseDTO.fail('User not found'));
       return;
     }
-    const travels = await Travel.find({ bookmark: { $in: [user?._id] } });
+    const travels = await Travel.find({ bookmark: { $in: [user?._id] } }).lean();
+
+    const userBookmarkTravels = await Promise.all(
+      travels.map(async (travel) => {
+        const reviewCnt = await getReviewCount(travel._id);
+        const travelScore = await getReviewAverage(travel._id);
+        const createdByUser = await User.findById(travel.userId).lean();
+        return {
+          id: travel._id,
+          thumbnail: travel.thumbnail,
+          travelTitle: travel.travelTitle,
+          tag: travel.tag,
+          bookmark: await checkIsBookmarked(user?._id as mongoose.Types.ObjectId, travel._id),
+          createdBy: {
+            userId: createdByUser?._id,
+            userName: createdByUser?.userName || createdByUser?.socialName,
+          },
+          review: {
+            travelScore,
+            reviewCnt,
+          },
+          createdAt: travel.createdAt,
+        };
+      }),
+    );
     res.json(
       ResponseDTO.success({
-        bookmarks: travels,
+        bookmarks: userBookmarkTravels,
       }),
     );
   } catch (error) {
