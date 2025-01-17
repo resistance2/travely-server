@@ -9,6 +9,7 @@ const reviewRouter = Router();
 interface QueryType {
   userId?: string;
   travelId?: string;
+  isDeleted?: boolean;
 }
 
 reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
@@ -21,7 +22,7 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
     return;
   }
 
-  const findQuery: QueryType = {};
+  const findQuery: QueryType = { isDeleted: false };
   if (userId) findQuery.userId = String(userId);
   if (travelId) findQuery.travelId = String(travelId);
 

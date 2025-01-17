@@ -230,4 +230,39 @@ travelGuideRouter.get(
   },
 );
 
+// DELETE /api/travels-guide/:travelId
+travelGuideRouter.delete(
+  '/:travelId',
+  checkRequiredFieldsParams(['travelId']),
+  async (req, res) => {
+    const { travelId } = req.params;
+    try {
+      const travel = await TravelGuide.findOne({ _id: travelId });
+      if (!travel) {
+        res.status(404).json(ResponseDTO.fail('Travel not found'));
+        return;
+      }
+      const deletedTravel = await TravelGuide.findByIdAndUpdate(
+        travelId,
+        { isDeleted: true },
+        { new: true },
+      );
+      const deletedTeam = await Team.deleteMany({ travelId: travel._id });
+      if (deletedTeam.deletedCount === 0) {
+        res.status(404).json(ResponseDTO.fail('Team not found'));
+        return;
+      }
+      res.json(
+        ResponseDTO.success({
+          travelId: deletedTravel?._id,
+          isDeleted: deletedTravel?.isDeleted,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
+
 export { travelGuideRouter };
