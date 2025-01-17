@@ -396,6 +396,7 @@ travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (
             userId: createdByUser?._id,
             userName: createdByUser?.userName || createdByUser?.socialName,
           },
+          price: travel.travelPrice,
           review: {
             travelScore,
             reviewCnt,
