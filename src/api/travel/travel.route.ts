@@ -276,9 +276,9 @@ travelRouter.get('/travel-list', async (req, res) => {
   const size_ = parseInt(size as string, 10);
   const skip = (page_ - 1) * size_;
 
-  let query: any = {};
+  let query: any = { isDeleted: false };
   if (tag !== 'all' && tag !== '') {
-    query = { tag: { $in: [tag] } };
+    query = { tag: { $in: [tag] }, isDeleted: false };
   }
 
   try {
@@ -859,5 +859,37 @@ travelRouter.post(
     }
   },
 );
+
+// DELETE /api/travels/:travelId
+travelRouter.delete('/:travelId', checkRequiredFieldsParams(['travelId']), async (req, res) => {
+  const { travelId } = req.params;
+  try {
+    const travel = await Travel.findOne({ _id: travelId });
+    if (!travel) {
+      res.status(404).json(ResponseDTO.fail('Travel not found'));
+      return;
+    }
+    const deletedTeam = await Team.deleteMany({ travelId: travel._id });
+    if (deletedTeam.deletedCount === 0) {
+      res.status(404).json(ResponseDTO.fail('Team not found'));
+      return;
+    }
+    const deletedTravel = await Travel.findByIdAndUpdate(
+      travelId,
+      { isDeleted: true },
+      { new: true },
+    );
+
+    res.json(
+      ResponseDTO.success({
+        travelId: deletedTravel?._id,
+        isDeleted: deletedTravel?.isDeleted,
+      }),
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseDTO.fail((error as Error).message));
+  }
+});
 
 export { travelRouter };
