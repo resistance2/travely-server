@@ -4304,7 +4304,8 @@
                         "reviews": [],
                         "totalRating": null,
                         "bookmark": 1,
-                        "isBookmark": true
+                        "isBookmark": false,
+                        "isTraveler": true
                       }
                     }
                   }
