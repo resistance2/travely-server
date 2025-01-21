@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.1.0",
   "info": {
     "title": "My Project",
     "description": "",
@@ -2854,19 +2854,42 @@
                       "data": {
                         "travels": [
                           {
-                            "id": "2025-01-21T11:41:49.774Z",
-                            "travelTitle": "새로운 여행 수정 버전",
+                            "id": "2025-01-21T11:18:34.653Z",
+                            "travelTitle": "부산 여행2",
                             "guideInfo": {
-                              "socialName": "하루우얌",
-                              "userProfileImg": "https://lh3.googleusercontent.com/a/ACg8ocKwuUUE7EQ7jKwNk99fNxtyQLpA_F97iInmG6dQq_YQ4Y0-Tw=s96-c",
-                              "userEmail": "haruyam15@gmail.com",
-                              "userId": "6731c71d08295816dc516576",
+                              "socialName": "nakyenko4",
+                              "userProfileImg": "https://d2epmqt9moz4ga.cloudfront.net/a196999b-72d8-4b70-9dab-600dcae7f2d9.png",
+                              "userEmail": "badclock@gmail.com",
+                              "userId": "672901f5f3339eca4777fc11",
                               "userRating": null
                             },
                             "travelTeam": {
-                              "travelStartDate": "2025-01-23T00:00:00.000Z",
-                              "travelEndDate": "2025-01-25T00:00:00.000Z",
-                              "personLimit": 5,
+                              "travelStartDate": "2024-07-15T00:00:00.000Z",
+                              "travelEndDate": "2024-07-18T00:00:00.000Z",
+                              "personLimit": 7,
+                              "approvedMembersMbti": {
+                                "mbti": [null, "INFP"]
+                              }
+                            },
+                            "currentUserStatus": {
+                              "status": "waiting"
+                            },
+                            "reviewWritten": false
+                          },
+                          {
+                            "id": "2025-01-21T11:18:50.600Z",
+                            "travelTitle": "부산 여행2",
+                            "guideInfo": {
+                              "socialName": "nakyenko4",
+                              "userProfileImg": "https://d2epmqt9moz4ga.cloudfront.net/a196999b-72d8-4b70-9dab-600dcae7f2d9.png",
+                              "userEmail": "badclock@gmail.com",
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userRating": null
+                            },
+                            "travelTeam": {
+                              "travelStartDate": "2024-07-15T00:00:00.000Z",
+                              "travelEndDate": "2024-07-18T00:00:00.000Z",
+                              "personLimit": 7,
                               "approvedMembersMbti": {
                                 "mbti": ["INFP"]
                               }
@@ -2877,19 +2900,19 @@
                             "reviewWritten": false
                           },
                           {
-                            "id": "2025-01-21T11:43:00.432Z",
-                            "travelTitle": "리셋 테스트",
+                            "id": "2025-01-21T11:18:58.917Z",
+                            "travelTitle": "부산 여행2",
                             "guideInfo": {
-                              "socialName": "하루우얌",
-                              "userProfileImg": "https://lh3.googleusercontent.com/a/ACg8ocKwuUUE7EQ7jKwNk99fNxtyQLpA_F97iInmG6dQq_YQ4Y0-Tw=s96-c",
-                              "userEmail": "haruyam15@gmail.com",
-                              "userId": "6731c71d08295816dc516576",
+                              "socialName": "nakyenko4",
+                              "userProfileImg": "https://d2epmqt9moz4ga.cloudfront.net/a196999b-72d8-4b70-9dab-600dcae7f2d9.png",
+                              "userEmail": "badclock@gmail.com",
+                              "userId": "672901f5f3339eca4777fc11",
                               "userRating": null
                             },
                             "travelTeam": {
-                              "travelStartDate": "2025-01-28T00:00:00.000Z",
-                              "travelEndDate": "2025-01-31T00:00:00.000Z",
-                              "personLimit": 6,
+                              "travelStartDate": "2024-07-15T00:00:00.000Z",
+                              "travelEndDate": "2024-07-18T00:00:00.000Z",
+                              "personLimit": 7,
                               "approvedMembersMbti": {
                                 "mbti": ["INFP"]
                               }
@@ -2900,8 +2923,148 @@
                             "reviewWritten": false
                           },
                           {
-                            "id": "2025-01-21T11:43:07.114Z",
-                            "travelTitle": "리셋 테스트2",
+                            "id": "2025-01-21T11:19:07.563Z",
+                            "travelTitle": "부산 여행4",
+                            "guideInfo": {
+                              "socialName": "nakyenko4",
+                              "userProfileImg": "https://d2epmqt9moz4ga.cloudfront.net/a196999b-72d8-4b70-9dab-600dcae7f2d9.png",
+                              "userEmail": "badclock@gmail.com",
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userRating": null
+                            },
+                            "travelTeam": {
+                              "travelStartDate": "2024-07-14T00:00:00.000Z",
+                              "travelEndDate": "2024-07-18T00:00:00.000Z",
+                              "personLimit": 3,
+                              "approvedMembersMbti": {
+                                "mbti": ["INFP"]
+                              }
+                            },
+                            "currentUserStatus": {
+                              "status": "waiting"
+                            },
+                            "reviewWritten": false
+                          },
+                          {
+                            "id": "2025-01-21T11:19:15.282Z",
+                            "travelTitle": "부산 여행2",
+                            "guideInfo": {
+                              "socialName": "nakyenko4",
+                              "userProfileImg": "https://d2epmqt9moz4ga.cloudfront.net/a196999b-72d8-4b70-9dab-600dcae7f2d9.png",
+                              "userEmail": "badclock@gmail.com",
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userRating": null
+                            },
+                            "travelTeam": {
+                              "travelStartDate": "2024-07-15T00:00:00.000Z",
+                              "travelEndDate": "2024-07-18T00:00:00.000Z",
+                              "personLimit": 7,
+                              "approvedMembersMbti": {
+                                "mbti": ["INFP"]
+                              }
+                            },
+                            "currentUserStatus": {
+                              "status": "waiting"
+                            },
+                            "reviewWritten": false
+                          },
+                          {
+                            "id": "2025-01-02T01:40:56.693Z",
+                            "travelTitle": "부산 여행",
+                            "guideInfo": {
+                              "socialName": "nakyenko4",
+                              "userProfileImg": "https://d2epmqt9moz4ga.cloudfront.net/a196999b-72d8-4b70-9dab-600dcae7f2d9.png",
+                              "userEmail": "badclock@gmail.com",
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userRating": null
+                            },
+                            "travelTeam": {
+                              "travelStartDate": "2024-04-01T00:00:00.000Z",
+                              "travelEndDate": "2024-04-04T00:00:00.000Z",
+                              "personLimit": 7,
+                              "approvedMembersMbti": {
+                                "mbti": ["ISTJ", "INTP", "INFJ", "ENTJ", "INTP", "INTP", "INFP"]
+                              }
+                            },
+                            "currentUserStatus": {
+                              "status": "waiting"
+                            },
+                            "reviewWritten": false
+                          },
+                          {
+                            "id": "2025-01-21T11:19:31.148Z",
+                            "travelTitle": "부산 여행",
+                            "guideInfo": {
+                              "socialName": "nakyenko4",
+                              "userProfileImg": "https://d2epmqt9moz4ga.cloudfront.net/a196999b-72d8-4b70-9dab-600dcae7f2d9.png",
+                              "userEmail": "badclock@gmail.com",
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userRating": null
+                            },
+                            "travelTeam": {
+                              "travelStartDate": "2024-04-15T00:00:00.000Z",
+                              "travelEndDate": "2024-04-17T00:00:00.000Z",
+                              "personLimit": 7,
+                              "approvedMembersMbti": {
+                                "mbti": [
+                                  "ENFP",
+                                  "ISTJ",
+                                  "INTP",
+                                  "ENTJ",
+                                  "ISFP",
+                                  "ESFJ",
+                                  "INFJ",
+                                  "ENTP",
+                                  "INFP",
+                                  "INTJ",
+                                  "INFJ",
+                                  "ESFP",
+                                  "ISTP",
+                                  "ENFJ",
+                                  "ENTJ",
+                                  "ISFP",
+                                  "ENTP",
+                                  "ISFJ",
+                                  "ESFP",
+                                  "INFJ",
+                                  "ENTJ",
+                                  "INTP",
+                                  null,
+                                  "INFP"
+                                ]
+                              }
+                            },
+                            "currentUserStatus": {
+                              "status": "waiting"
+                            },
+                            "reviewWritten": false
+                          },
+                          {
+                            "id": "2025-01-21T11:19:39.715Z",
+                            "travelTitle": "부산 여행2",
+                            "guideInfo": {
+                              "socialName": "nakyenko4",
+                              "userProfileImg": "https://d2epmqt9moz4ga.cloudfront.net/a196999b-72d8-4b70-9dab-600dcae7f2d9.png",
+                              "userEmail": "badclock@gmail.com",
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userRating": null
+                            },
+                            "travelTeam": {
+                              "travelStartDate": "2024-07-15T00:00:00.000Z",
+                              "travelEndDate": "2024-07-18T00:00:00.000Z",
+                              "personLimit": 7,
+                              "approvedMembersMbti": {
+                                "mbti": ["INFP"]
+                              }
+                            },
+                            "currentUserStatus": {
+                              "status": "waiting"
+                            },
+                            "reviewWritten": false
+                          },
+                          {
+                            "id": "2025-01-21T11:41:34.399Z",
+                            "travelTitle": "제목",
                             "guideInfo": {
                               "socialName": "하루우얌",
                               "userProfileImg": "https://lh3.googleusercontent.com/a/ACg8ocKwuUUE7EQ7jKwNk99fNxtyQLpA_F97iInmG6dQq_YQ4Y0-Tw=s96-c",
@@ -2910,9 +3073,32 @@
                               "userRating": null
                             },
                             "travelTeam": {
-                              "travelStartDate": "2025-01-13T00:00:00.000Z",
-                              "travelEndDate": "2025-01-17T00:00:00.000Z",
-                              "personLimit": 6,
+                              "travelStartDate": "2025-01-08T00:00:00.000Z",
+                              "travelEndDate": "2025-01-10T00:00:00.000Z",
+                              "personLimit": 3,
+                              "approvedMembersMbti": {
+                                "mbti": ["INFP"]
+                              }
+                            },
+                            "currentUserStatus": {
+                              "status": "waiting"
+                            },
+                            "reviewWritten": false
+                          },
+                          {
+                            "id": "2025-01-21T11:41:41.893Z",
+                            "travelTitle": "제목",
+                            "guideInfo": {
+                              "socialName": "하루우얌",
+                              "userProfileImg": "https://lh3.googleusercontent.com/a/ACg8ocKwuUUE7EQ7jKwNk99fNxtyQLpA_F97iInmG6dQq_YQ4Y0-Tw=s96-c",
+                              "userEmail": "haruyam15@gmail.com",
+                              "userId": "6731c71d08295816dc516576",
+                              "userRating": null
+                            },
+                            "travelTeam": {
+                              "travelStartDate": "2025-01-08T00:00:00.000Z",
+                              "travelEndDate": "2025-01-10T00:00:00.000Z",
+                              "personLimit": 3,
                               "approvedMembersMbti": {
                                 "mbti": ["INFP"]
                               }
@@ -2925,9 +3111,10 @@
                         ],
                         "pageInfo": {
                           "totalElements": 13,
-                          "currentPage": 2,
+                          "totalPages": 2,
+                          "currentPage": 1,
                           "pageSize": 10,
-                          "hasNext": false
+                          "hasNext": true
                         }
                       }
                     }
@@ -3104,6 +3291,26 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "",
+            "required": true,
+            "example": "10",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3126,31 +3333,31 @@
                             "travelId": "672905e83f52cfeef7356cc3",
                             "travelTitle": "부산 여행",
                             "travelPrice": 350000,
-                            "travelReviewCount": 1,
+                            "travelReviewCount": 2,
                             "travelActive": true,
-                            "updatedAt": "2024-12-28T03:53:04.364Z",
+                            "updatedAt": "2025-01-15T02:11:58.352Z",
                             "reviewAverage": 4.5,
-                            "approveWaitngCount": 18
+                            "approveWaitngCount": 9
                           },
                           {
-                            "travelId": "6764c9931aff3d14597f71f4",
+                            "travelId": "676ed2c015008c763cf33c82",
+                            "travelTitle": "부산 여행4",
+                            "travelPrice": 350000,
+                            "travelReviewCount": 0,
+                            "travelActive": true,
+                            "updatedAt": "2024-12-27T16:16:00.394Z",
+                            "reviewAverage": null,
+                            "approveWaitngCount": 1
+                          },
+                          {
+                            "travelId": "67721ed9ccd5e8436384bc22",
                             "travelTitle": "부산 여행2",
                             "travelPrice": 350000,
                             "travelReviewCount": 0,
                             "travelActive": true,
-                            "updatedAt": "2024-12-20T01:34:11.599Z",
+                            "updatedAt": "2024-12-30T04:17:29.662Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 0
-                          },
-                          {
-                            "travelId": "67656affcb7684fe77b0d2a5",
-                            "travelTitle": "부산 여행2",
-                            "travelPrice": 350000,
-                            "travelReviewCount": 0,
-                            "travelActive": true,
-                            "updatedAt": "2024-12-20T13:02:55.117Z",
-                            "reviewAverage": null,
-                            "approveWaitngCount": 0
+                            "approveWaitngCount": 1
                           },
                           {
                             "travelId": "676ecfd315008c763cf33c58",
@@ -3160,7 +3367,7 @@
                             "travelActive": true,
                             "updatedAt": "2024-12-27T16:03:31.519Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 0
+                            "approveWaitngCount": 1
                           },
                           {
                             "travelId": "676ed08015008c763cf33c60",
@@ -3180,7 +3387,7 @@
                             "travelActive": true,
                             "updatedAt": "2024-12-27T16:08:57.173Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 0
+                            "approveWaitngCount": 1
                           },
                           {
                             "travelId": "676ed16c15008c763cf33c70",
@@ -3203,16 +3410,33 @@
                             "approveWaitngCount": 0
                           },
                           {
-                            "travelId": "676ed2c015008c763cf33c82",
-                            "travelTitle": "부산 여행4",
+                            "travelId": "6764c9931aff3d14597f71f4",
+                            "travelTitle": "부산 여행2",
                             "travelPrice": 350000,
                             "travelReviewCount": 0,
                             "travelActive": true,
-                            "updatedAt": "2024-12-27T16:16:00.394Z",
+                            "updatedAt": "2024-12-20T01:34:11.599Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 0
+                            "approveWaitngCount": 1
+                          },
+                          {
+                            "travelId": "67656affcb7684fe77b0d2a5",
+                            "travelTitle": "부산 여행2",
+                            "travelPrice": 350000,
+                            "travelReviewCount": 0,
+                            "travelActive": true,
+                            "updatedAt": "2024-12-20T13:02:55.117Z",
+                            "reviewAverage": null,
+                            "approveWaitngCount": 1
                           }
-                        ]
+                        ],
+                        "pageInfo": {
+                          "totalElements": 13,
+                          "currentPage": 1,
+                          "pageSize": 10,
+                          "totalPages": 2,
+                          "hasNext": true
+                        }
                       }
                     }
                   }
