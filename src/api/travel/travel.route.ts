@@ -903,4 +903,48 @@ travelRouter.delete('/:travelId', checkRequiredFieldsParams(['travelId']), async
   }
 });
 
+travelRouter.get('/travelers/waiting-count', async (req, res) => {
+  const { userId } = req.query;
+  try {
+    const user = await User.findById(userId).lean();
+    if (!user) {
+      res.status(404).json(ResponseDTO.fail('User not found'));
+      return;
+    }
+
+    const travels = await Travel.find({ userId: user._id }).populate('teamId').lean();
+    // 여기 가격, 제목, 별점, 리뷰수 ,업데이트 날짜, 활성화비활성화 여부,해당 여행에 미승인 상태인수
+    const waitings = await Promise.all(
+      travels.map(async (travel) => {
+        const populatedTravel = await Travel.findById(travel._id).populate('teamId').lean();
+        return {
+          waitingCount: (Array.isArray(populatedTravel?.teamId)
+            ? (populatedTravel.teamId as unknown as {
+                appliedUsers: { status: string }[];
+              }[])
+            : []
+          ).reduce((acc, team) => {
+            return (
+              acc +
+              team.appliedUsers.filter((user: { status: string }) => user.status === 'waiting')
+                .length
+            );
+          }, 0),
+        };
+      }),
+    );
+
+    const allWaitings = waitings.reduce((acc, waiting) => {
+      return acc + waiting.waitingCount;
+    }, 0);
+    res.json(
+      ResponseDTO.success({
+        waitings: allWaitings,
+      }),
+    );
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseDTO.fail((error as Error).message));
+  }
+});
 export { travelRouter };
