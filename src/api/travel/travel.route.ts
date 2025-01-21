@@ -515,14 +515,16 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
         },
       },
     });
-    const page = Math.ceil(totalElements / size_);
-    const hasNext = page - page_ > 0;
+
+    const totalPages = Math.ceil(totalElements / size_);
+    const hasNext = totalPages - page_ > 0;
 
     res.json(
       ResponseDTO.success({
         travels: travels,
         pageInfo: {
           totalElements,
+          totalPages,
           currentPage: page_,
           pageSize: size_,
           hasNext,
@@ -653,6 +655,16 @@ travelRouter.patch('/delete-travel', checkRequiredFieldsBody(['travelId']), asyn
 // 내가 만든 여행 목록 조회
 travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), async (req, res) => {
   const { userId } = req.query;
+  const { page = 1, size = 10 } = req.query;
+
+  if (page && size && !checkPageAndSize(parseInt(page as string), parseInt(size as string))) {
+    res.status(400).json(ResponseDTO.fail('Invalid page or size'));
+    return;
+  }
+  const page_ = parseInt(page as string, 10);
+  const size_ = parseInt(size as string, 10);
+  const skip = (page_ - 1) * size_;
+
   try {
     const user = await User.findById(userId).lean();
     if (!user) {
@@ -660,12 +672,15 @@ travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), as
       return;
     }
 
-    const travels = await Travel.find({ userId: user._id }).populate('teamId').lean();
+    const travels = await Travel.find({ userId: user._id, isDeleted: false })
+      .skip(skip)
+      .limit(size_)
+      .populate('teamId')
+      .lean();
     // 여기 가격, 제목, 별점, 리뷰수 ,업데이트 날짜, 활성화비활성화 여부,해당 여행에 미승인 상태인수
     const userTravelDetails = await Promise.all(
       travels.map(async (travel) => {
         const populatedTravel = await Travel.findById(travel._id).populate('teamId').lean();
-
         return {
           travelId: populatedTravel?._id,
           travelTitle: populatedTravel?.travelTitle,
@@ -689,9 +704,21 @@ travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), as
         };
       }),
     );
+
+    const totalElements = await Travel.countDocuments({ userId: user._id, isDeleted: false });
+    const currentPage = page_;
+    const totalPages = Math.ceil(totalElements / size_);
+    const hasNext = totalPages > currentPage;
     res.json(
       ResponseDTO.success({
         travels: userTravelDetails,
+        pageInfo: {
+          totalElements,
+          currentPage,
+          pageSize: size_,
+          totalPages,
+          hasNext,
+        },
       }),
     );
   } catch (error) {
