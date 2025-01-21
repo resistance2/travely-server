@@ -433,6 +433,15 @@ travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (
  */
 travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req, res) => {
   const { userId } = req.query;
+  const { page = 1, size = 10 } = req.query;
+  if (page && size && !checkPageAndSize(parseInt(page as string), parseInt(size as string))) {
+    res.status(400).json(ResponseDTO.fail('Invalid page or size'));
+    return;
+  }
+  const page_ = parseInt(page as string, 10);
+  const size_ = parseInt(size as string, 10);
+  const skip = (page_ - 1) * size_;
+
   try {
     const user = await User.findById(userId).lean();
     if (!user) {
@@ -447,6 +456,8 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
         },
       },
     })
+      .skip(skip)
+      .limit(size_)
       .populate({
         path: 'travelId',
         select: 'travelTitle userId',
@@ -468,6 +479,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
 
     const travels = await Promise.all(
       teams.map(async (team) => {
+        // console.log('travel team', team);
         return {
           id: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))
             ?.appliedAt,
@@ -496,9 +508,25 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
       }),
     );
 
+    const totalElements = await Team.countDocuments({
+      appliedUsers: {
+        $elemMatch: {
+          userId: user._id,
+        },
+      },
+    });
+    const page = Math.ceil(totalElements / size_);
+    const hasNext = page - page_ > 0;
+
     res.json(
       ResponseDTO.success({
         travels: travels,
+        pageInfo: {
+          totalElements,
+          currentPage: page_,
+          pageSize: size_,
+          hasNext,
+        },
       }),
     );
   } catch (error) {
