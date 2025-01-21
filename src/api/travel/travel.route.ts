@@ -123,6 +123,16 @@ travelRouter.get(
       // 승인된 유저만 보내기
       // isBookmark: 북마크 여부
       // bookmark: 북마크수
+
+      const isUserIsTraveler = (userId: mongoose.Types.ObjectId) => {
+        return travel.teamId.some((team) => ({
+          approvedUsers: ((team as any).appliedUsers as any).some(
+            (user: any) =>
+              userId.equals(user._id) && (user.status === 'approved' || user.status === 'waiting'),
+          ),
+        }));
+      };
+
       const travelDetailData = {
         guide: {
           userId: (travel.userId as any)._id,
@@ -166,6 +176,7 @@ travelRouter.get(
         isBookmark: userId_
           ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id)
           : false,
+        isTraveler: userId_ ? isUserIsTraveler(userId_._id) : false,
       };
       res.json(ResponseDTO.success(travelDetailData));
     } catch (error) {
