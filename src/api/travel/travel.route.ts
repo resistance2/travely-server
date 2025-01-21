@@ -72,7 +72,7 @@ travelRouter.get(
     const { userId } = req.query;
 
     let userId_: any;
-    if (userId === 'null') {
+    if (userId === 'null' || userId === undefined) {
       userId_ = null;
     } else {
       userId_ = await User.findById(userId).lean();
