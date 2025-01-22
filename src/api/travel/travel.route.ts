@@ -1002,4 +1002,88 @@ travelRouter.get('/travelers/waiting-count', async (req, res) => {
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
+
+export interface ITravel {
+  thumbnail: string | null;
+  travelTitle: string;
+  travelContent: string;
+  tag: string[];
+  travelCourse: string[];
+  includedItems: string[];
+  excludedItems: string[];
+  meetingTime: string[];
+  travelPrice: number;
+  travelFAQ: string[];
+  updatedAt: Date;
+  meetingPlace: string | null;
+}
+
+//여행 글 수정
+travelRouter.patch('/:travelId', checkRequiredFieldsParams(['travelId']), async (req, res) => {
+  const { travelId } = req.params;
+  const {
+    title,
+    content,
+    price,
+    startDate,
+    endDate,
+    thumbnail,
+    tag,
+    travelCourse,
+    includedItems,
+    excludedItems,
+    meetingTime,
+    travelFAQ,
+    meetingPlace,
+  } = req.body;
+  const updateData: { [key: string]: any } = {};
+  if (title) updateData.travelTitle = title;
+  if (content) updateData.travelContent = content;
+  if (price) updateData.travelPrice = price;
+  if (startDate) updateData.travelStartDate = startDate;
+  if (endDate) updateData.travelEndDate = endDate;
+
+  if (tag) {
+    if (tagPathToTagType[tag as keyof typeof tagPathToTagType]) {
+      updateData.tag = [tagPathToTagType[tag as keyof typeof tagPathToTagType]];
+    } else {
+      res.status(400).json(ResponseDTO.fail('Invalid tag'));
+      return;
+    }
+  }
+  if (travelCourse) updateData.travelCourse = travelCourse;
+  if (includedItems) updateData.includedItems = includedItems;
+  if (excludedItems) updateData.excludedItems = excludedItems;
+  if (meetingTime) updateData.meetingTime = meetingTime;
+  if (travelFAQ) updateData.travelFAQ = travelFAQ;
+  if (meetingPlace) updateData.meetingPlace = meetingPlace;
+
+  if (thumbnail) {
+    const isValid = await checkIsValidImage(thumbnail);
+    if (isValid) updateData.thumbnail = thumbnail;
+    else {
+      res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
+      return;
+    }
+  }
+
+  try {
+    const travel = await Travel.findById(travelId);
+    if (!travel) {
+      res.status(404).json(ResponseDTO.fail('Travel not found'));
+      return;
+    }
+    const updatedTravel = await Travel.findByIdAndUpdate(
+      travelId,
+      {
+        $set: updateData,
+      },
+      { new: true },
+    );
+    res.json(ResponseDTO.success(updatedTravel));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseDTO.fail((error as Error).message));
+  }
+});
 export { travelRouter };

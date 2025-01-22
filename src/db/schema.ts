@@ -12,7 +12,7 @@ export interface ITravel {
   meetingTime: string[];
   meetingLocation: object;
   travelPrice: number;
-  travelFAQ: string[];
+  travelFAQ: { question: string; answer: string }[] | null;
   bookmark: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
@@ -33,7 +33,6 @@ export interface ITravelGuide {
   updatedAt: Date; // 게시글 수정 일시
   teamId: Types.ObjectId[]; // 연관된 팀 정보들의 ID 배열 (1:N 관계)
   isDeleted: boolean; // 게시글 삭제 여부 플래그
-  tag: string[];
 }
 
 export interface ITeam {
@@ -135,7 +134,7 @@ const TravelSchema: Schema<ITravel> = new Schema(
     meetingTime: { type: [String], default: [] },
     meetingLocation: { type: Object },
     travelPrice: { type: Number, required: true },
-    travelFAQ: { type: [String], default: [] },
+    travelFAQ: { type: [{ question: String, answer: String }], default: [] },
     bookmark: [{ type: Schema.Types.ObjectId, default: [] }],
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
@@ -173,7 +172,6 @@ const TravelGuideSchema: Schema<ITravelGuide> = new Schema(
     updatedAt: { type: Date, default: Date.now, required: true },
     teamId: [{ type: Schema.Types.ObjectId, ref: 'Team', default: [] }],
     isDeleted: { type: Boolean, default: false },
-    tag: { type: [String], default: [] },
   },
   {
     timestamps: true,
