@@ -265,4 +265,46 @@ travelGuideRouter.delete(
   },
 );
 
+// export interface ITravelGuide {
+//   userId: Types.ObjectId; // 글 작성자의 고유 ID (MongoDB ObjectId)
+//   thumbnail: string | null; // 게시글 썸네일 이미지 URL
+//   travelTitle: string; // 여행 게시글 제목
+//   travelContent: string; // 여행 게시글 본문 내용 (rich text 등 다양한 형식 지원)
+//   bookmark: Types.ObjectId[]; // 북마크한 사용자들의 ID 배열
+//   createdAt: Date; // 게시글 생성 일시
+//   updatedAt: Date; // 게시글 수정 일시
+//   teamId: Types.ObjectId[]; // 연관된 팀 정보들의 ID 배열 (1:N 관계)
+//   isDeleted: boolean; // 게시글 삭제 여부 플래그
+// }
+
+travelGuideRouter.patch('/:travelId', async (req, res) => {
+  const { travelId } = req.params;
+  const { title: travelTitle, content: travelContent, thumbnail } = req.body;
+
+  const updateData: { [key: string]: any } = {};
+  if (travelTitle) updateData.travelTitle = travelTitle;
+  if (travelContent) updateData.travelContent = travelContent;
+  if (thumbnail) {
+    const isValid = await checkIsValidImage(thumbnail);
+    if (isValid) updateData.thumbnail = thumbnail;
+    else {
+      res.status(400).json(ResponseDTO.fail('Invalid thumbnail URL'));
+      return;
+    }
+  }
+  try {
+    const travel = await TravelGuide.findByIdAndUpdate(
+      travelId,
+      {
+        $set: updateData,
+      },
+      { new: true },
+    );
+    res.json(ResponseDTO.success(travel));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseDTO.fail((error as Error).message));
+  }
+});
+
 export { travelGuideRouter };

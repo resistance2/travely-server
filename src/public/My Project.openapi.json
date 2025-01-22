@@ -1,5 +1,5 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.1",
   "info": {
     "title": "My Project",
     "description": "",
@@ -1286,6 +1286,74 @@
           }
         },
         "security": []
+      },
+      "patch": {
+        "summary": "여행 글 수정(가이드 구해요)",
+        "deprecated": false,
+        "description": "",
+        "tags": ["travely-server/travels-guide"],
+        "parameters": [
+          {
+            "name": "travelId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "6764124c8f9dc0a592ab1b61",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "example": {
+                "title": "부산 문화 탐방 가이드",
+                "content": "부산의 역사와 문화를 깊이 있게 탐험하는 여행 가이드",
+                "thumbnail": "https://i.imgur.com/P7yb6md.png"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "_id": "6764124c8f9dc0a592ab1b61",
+                        "userId": "672901f5f3339eca4777fc11",
+                        "thumbnail": "https://i.imgur.com/P7yb6md.png",
+                        "travelTitle": "부산 문화 탐방 가이드",
+                        "travelContent": "부산의 역사와 문화를 깊이 있게 탐험하는 여행 가이드",
+                        "bookmark": ["672901f5f3339eca4777fc11"],
+                        "createdAt": "2024-01-15T09:00:00.000Z",
+                        "updatedAt": "2025-01-22T01:37:07.729Z",
+                        "teamId": ["677f4186b3cbb5548c3c0766"],
+                        "isDeleted": false
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
       }
     },
     "/v1/travels/add-travel": {
@@ -1316,7 +1384,12 @@
                     "travelEndDate": "2024-07-18"
                   }
                 ],
-                "travelFAQ": ["질문적음", "피자"],
+                "travelFAQ": [
+                  {
+                    "question": "여행 질문",
+                    "answer": "여행 답"
+                  }
+                ],
                 "travelPrice": 350000,
                 "includedItems": ["숙박", "가이드", "해변 액티비티"],
                 "excludedItems": ["식사", "교통비", "개인 경비"],
@@ -4142,6 +4215,158 @@
                       "data": {
                         "travelId": "65fd1234a1b2c3d4e5f62222",
                         "isDeleted": true
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "patch": {
+        "summary": "여행 글 수정",
+        "deprecated": false,
+        "description": "여행 글 수정",
+        "tags": ["travely-server/travels"],
+        "parameters": [
+          {
+            "name": "travelId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "672905e83f52cfeef7356cc3",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "startDate": {
+                    "type": "string"
+                  },
+                  "endDate": {
+                    "type": "string"
+                  },
+                  "tag": {
+                    "type": "string"
+                  },
+                  "travelCourse": {
+                    "type": "string"
+                  },
+                  "includedItems": {
+                    "type": "string"
+                  },
+                  "excludedItems": {
+                    "type": "string"
+                  },
+                  "meetingTime": {
+                    "type": "string"
+                  },
+                  "travelFAQ": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "meetingPlace": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "tag",
+                  "travelCourse",
+                  "includedItems",
+                  "excludedItems",
+                  "meetingTime",
+                  "travelFAQ",
+                  "meetingPlace"
+                ]
+              },
+              "example": {
+                "title": "부산 해변 힐링 여행",
+                "content": "부산의 아름다운 해변과 문화 명소를 깊이 있게 탐방하는 여행",
+                "price": 380000,
+                "startDate": "2025-02-15",
+                "endDate": "2025-02-18",
+                "thumbnail": "https://i.imgur.com/newBusanImage.jpeg",
+                "tag": "culture",
+                "travelCourse": ["해운대 해수욕장", "광안리 해변", "감천문화마을", "자갈치 시장"],
+                "includedItems": ["숙박", "가이드", "문화 체험", "해변 액티비티"],
+                "excludedItems": ["개인 식사", "교통비", "개인 경비"],
+                "meetingTime": ["09:00", "14:00"],
+                "travelFAQ": [
+                  {
+                    "question": "준비물은 무엇인가요?",
+                    "answer": "편한 신발, 카메라, 여분의 옷"
+                  }
+                ],
+                "meetingPlace": "부산역 1층 정보센터 앞"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "_id": "672905e83f52cfeef7356cc3",
+                        "userId": "672901f5f3339eca4777fc11",
+                        "thumbnail": "https://i.imgur.com/newBusanImage.jpeg",
+                        "travelTitle": "부산 해변 힐링 여행",
+                        "travelContent": "부산의 아름다운 해변과 문화 명소를 깊이 있게 탐방하는 여행",
+                        "tag": ["Culture"],
+                        "travelCourse": [
+                          "해운대 해수욕장",
+                          "광안리 해변",
+                          "감천문화마을",
+                          "자갈치 시장"
+                        ],
+                        "includedItems": ["숙박", "가이드", "문화 체험", "해변 액티비티"],
+                        "excludedItems": ["개인 식사", "교통비", "개인 경비"],
+                        "meetingTime": ["09:00", "14:00"],
+                        "travelPrice": 380000,
+                        "travelFAQ": [
+                          {
+                            "question": "준비물은 무엇인가요?",
+                            "answer": "편한 신발, 카메라, 여분의 옷",
+                            "_id": "679048128fe8e2cc8750e131"
+                          }
+                        ],
+                        "reviews": ["65fd1234a1b2c3d4e5f65555"],
+                        "bookmark": ["672901f5f3339eca4777fc12", "672901f5f3339eca4777fc11"],
+                        "createdAt": "2024-11-04T17:35:36.014Z",
+                        "updatedAt": "2025-01-22T01:21:22.722Z",
+                        "teamId": ["65fd1234a1b2c3d4e5f63336", "65fd1234a1b2c3d4e5f63333"],
+                        "travelActive": true,
+                        "reviewWrite": false,
+                        "isDeleted": false,
+                        "__v": 0,
+                        "meetingPlace": "부산역 1층 정보센터 앞"
                       }
                     }
                   }
