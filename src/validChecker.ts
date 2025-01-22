@@ -6,15 +6,20 @@ export const validObjectId = (id: string): boolean => {
   return mongoose.Types.ObjectId.isValid(id);
 };
 
-export const checkIsValidImage = async (image: string) => {
+export const checkIsValidImage = async (imageURL: string) => {
   try {
-    if (!image.startsWith('http://') && !image.startsWith('https://')) {
+    if (!imageURL.startsWith('http://') && !imageURL.startsWith('https://')) {
       return false;
-    } else if (!image.endsWith('.jpg') && !image.endsWith('.jpeg') && !image.endsWith('.png')) {
+    } else if (
+      !imageURL.endsWith('.jpg') &&
+      !imageURL.endsWith('.jpeg') &&
+      !imageURL.endsWith('.png')
+    ) {
       return false;
     }
-    const response = await fetch(image);
-    if (!response.ok) {
+    const response = await fetch(imageURL, { method: 'HEAD' });
+    console.log(response);
+    if (!response.ok || response.headers.get('Content-Type')?.indexOf('image/') === -1) {
       throw new Error('Invalid image URL');
     }
     return true;
