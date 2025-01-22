@@ -479,7 +479,6 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
 
     const travels = await Promise.all(
       teams.map(async (team) => {
-        // console.log('travel team', team);
         return {
           id: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))
             ?.appliedAt,
@@ -498,6 +497,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
             approvedMembersMbti: {
               mbti: team.appliedUsers.map((user) => (user.userId as any).mbti),
             },
+            thumbnail: (team.travelId as any).thumbnail,
           },
           currentUserStatus: {
             status: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))
