@@ -136,70 +136,70 @@ userRouter.patch('/phone', checkRequiredFieldsBody(['userId', 'phoneNumber']), a
 // 프로필 이미지 업로드는 선택적
 const upload = multer({ storage: memoryStorage() });
 
-userRouter.patch('/profile', upload.single('profileImage'), async (req, res) => {
-  const { userId, phoneNumber, mbti } = req.body;
-  const profileImage = req.file;
+userRouter.patch(
+  '/profile',
+  upload.single('profileImage'),
+  checkRequiredFieldsBody(['userId']),
+  async (req, res) => {
+    const { userId, phoneNumber, mbti } = req.body;
+    const profileImage = req.file;
+    const user = await User.findById(userId);
 
-  const user = await User.findById(userId);
-  if (!userId) {
-    res.status(400).json(ResponseDTO.fail('userId is required'));
-    return;
-  }
-
-  if (!user) {
-    res.status(404).json(ResponseDTO.fail('User not found'));
-    return;
-  }
-
-  try {
-    const updateData: any = {};
-
-    if (profileImage) {
-      const imageUrl = await uploadImage(profileImage);
-      updateData.userProfileImage = imageUrl;
-    }
-
-    if (phoneNumber) {
-      // if (!checkIsValidPhoneNumber(phoneNumber)) {
-      //   res.status(400).json(ResponseDTO.fail('Invalid phone number'));
-      //   return;
-      // }
-      updateData.phoneNumber = phoneNumber;
-    }
-    if (mbti) {
-      if (!checkIsValidMBTI(mbti)) {
-        res.status(400).json(ResponseDTO.fail('Invalid MBTI'));
-        return;
-      }
-      updateData.mbti = mbti;
-    }
-
-    //유저 프로필 업데이트
-    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).lean();
-    if (!updatedUser) {
-      res.status(500).json(ResponseDTO.fail('Failed to update user'));
+    if (!user) {
+      res.status(404).json(ResponseDTO.fail('User not found'));
       return;
     }
 
-    res.status(200).json(
-      ResponseDTO.success({
-        user: {
-          userId: updatedUser._id,
-          userProfileImage: updatedUser.userProfileImage,
-          socialName: updatedUser.socialName,
-          userEmail: updatedUser.userEmail,
-          phoneNumber: updatedUser.phoneNumber,
-          mbti: updatedUser.mbti,
-          userScore: 0, // TODO: Implement user rating calculation
-        },
-      }),
-    );
-  } catch (error) {
-    console.error(error);
-    res.status(500).json(ResponseDTO.fail((error as Error).message));
-    return;
-  }
-});
+    try {
+      const updateData: any = {};
+
+      if (profileImage) {
+        const imageUrl = await uploadImage(profileImage);
+        updateData.userProfileImage = imageUrl;
+      }
+
+      if (phoneNumber) {
+        // if (!checkIsValidPhoneNumber(phoneNumber)) {
+        //   res.status(400).json(ResponseDTO.fail('Invalid phone number'));
+        //   return;
+        // }
+        updateData.phoneNumber = phoneNumber;
+      }
+      if (mbti) {
+        if (!checkIsValidMBTI(mbti)) {
+          res.status(400).json(ResponseDTO.fail('Invalid MBTI'));
+          return;
+        }
+        updateData.mbti = mbti;
+      }
+
+      //유저 프로필 업데이트
+      const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).lean();
+      if (!updatedUser) {
+        res.status(500).json(ResponseDTO.fail('Failed to update user'));
+        return;
+      }
+
+      res.status(200).json(
+        ResponseDTO.success({
+          user: {
+            userId: updatedUser._id,
+            userProfileImage: updatedUser.userProfileImage,
+            socialName: updatedUser.socialName,
+            userEmail: updatedUser.userEmail,
+            phoneNumber: updatedUser.phoneNumber,
+            mbti: updatedUser.mbti,
+            userScore: UserService.getUserReviewAverage(updatedUser._id),
+          },
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+      return;
+    }
+  },
+);
 
 /**
  * Update user's bank account information

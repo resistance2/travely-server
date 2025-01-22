@@ -9,6 +9,7 @@ import {
 import { tagPathToTagType, tagTypeToTagPath } from '../../convert';
 import { IAppliedUser, Review, Team, Travel, User, UserRating } from '../../db/schema';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
+import { UserService } from '../user/user.service';
 
 const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
   const reviews = await Review.find({ travelId }).lean();
@@ -472,11 +473,6 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
       })
       .lean();
 
-    const getUserReviewAverage = async (userId: mongoose.Types.ObjectId) => {
-      const userRating = await UserRating.findOne({ toUserId: userId }).lean();
-      return userRating?.userScore || null;
-    };
-
     const travels = await Promise.all(
       teams.map(async (team) => {
         return {
@@ -488,7 +484,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
             userProfileImg: (team.travelId as any).userId.userProfileImage,
             userEmail: (team.travelId as any).userId.userEmail,
             userId: (team.travelId as any).userId._id,
-            userRating: await getUserReviewAverage((team.travelId as any).userId._id),
+            userRating: await UserService.getUserReviewAverage((team.travelId as any).userId._id),
           },
           travelTeam: {
             travelStartDate: team.travelStartDate,

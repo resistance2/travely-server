@@ -4,6 +4,7 @@ import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFieldsBody, checkRequiredFieldsParams } from '../../checkRequiredFields';
 import { Team, TravelGuide, TravelGuideComment, User } from '../../db/schema';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
+import { UserService } from '../user/user.service';
 
 const travelGuideRouter = Router();
 
@@ -207,7 +208,7 @@ travelGuideRouter.get(
           socialName: (travel.userId as any).socialName,
           userEmail: (travel.userId as any).userEmail || null,
           userProfileImage: (travel.userId as any).userProfileImage,
-          userScore: (travel.userId as any).userScore,
+          userScore: UserService.getUserReviewAverage(travel.userId._id),
         },
         title: travel.travelTitle,
         content: travel.travelContent,
