@@ -461,7 +461,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
       .limit(size_)
       .populate({
         path: 'travelId',
-        select: 'travelTitle userId',
+        select: 'travelTitle userId thumbnail',
         populate: {
           path: 'userId',
           select: 'socialName userEmail userProfileImage',
@@ -493,13 +493,13 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
             approvedMembersMbti: {
               mbti: team.appliedUsers.map((user) => (user.userId as any).mbti),
             },
-            thumbnail: (team.travelId as any).thumbnail,
           },
           currentUserStatus: {
             status: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))
               ?.status,
           },
           reviewWritten: await isReviewWritten(user._id, team.travelId._id),
+          thumbnail: (team.travelId as any).thumbnail,
         };
       }),
     );
