@@ -51,6 +51,7 @@ export interface IReview {
   reviewImg: string[];
   createdDate: Date;
   travelScore: number;
+  isDeleted?: boolean;
 }
 
 export interface IAppliedUser {
@@ -199,6 +200,7 @@ const ReviewSchema: Schema<IReview> = new Schema(
     content: { type: String, required: true },
     travelScore: { type: Number, required: true },
     title: { type: String, required: true },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true },
 );

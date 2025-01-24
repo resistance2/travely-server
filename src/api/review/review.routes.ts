@@ -11,6 +11,7 @@ const reviewRouter = Router();
 interface QueryType {
   userId?: string;
   travelId?: string;
+  isDeleted?: boolean;
 }
 
 reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
@@ -23,7 +24,9 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
     return;
   }
 
-  const findQuery: QueryType = {};
+  const findQuery: QueryType = {
+    isDeleted: false,
+  };
   if (userId) findQuery.userId = String(userId);
   if (travelId) findQuery.travelId = String(travelId);
 
@@ -241,5 +244,26 @@ reviewRouter.post(
     }
   },
 );
+
+reviewRouter.delete('/:reviewId', async (req, res) => {
+  const { reviewId } = req.params;
+
+  try {
+    const review = await Review.findOne({ _id: reviewId, isDeleted: false });
+
+    if (!review) {
+      res.status(404).json(ResponseDTO.fail('Review not found'));
+      return;
+    }
+
+    review.isDeleted = true;
+    await review.save();
+
+    res.json(ResponseDTO.success({ deletedId: reviewId, message: 'success' }));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseDTO.fail((error as Error).message));
+  }
+});
 
 export { reviewRouter };
