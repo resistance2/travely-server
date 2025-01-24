@@ -34,6 +34,7 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
 
     const reviews = await Review.find(findQuery)
       .sort({ createdDate: -1 })
+      .populate('userId', 'socialName userProfileImage userEmail isVerifiedUser')
       .skip(skip)
       .limit(pageSize_)
       .lean();
@@ -41,21 +42,19 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
     const reviewsWithTravelInfo = await Promise.all(
       reviews.map(async (review) => {
         const travel = await Travel.findOne({ id: review.travelId }).lean();
-        const user = await User.findById(review.userId).lean();
+        // const user = await User.findById(review.userId).lean();
         return {
-          id: review._id,
+          reviewId: review._id,
           travelId: review.travelId,
-          reviewImg: review.reviewImg,
+          title: travel?.travelTitle || '',
           content: review.content,
-          travelScore: review.travelScore,
+          imgSrc: review.reviewImg,
+          rating: review.travelScore,
           createdDate: review.createdDate,
-          travelTitle: travel?.travelTitle || '',
-          userName: user?.userName,
-          socialName: user?.socialName,
-          userProfileImage: user?.userProfileImage,
-          userEmail: user?.userEmail,
-          isVerifiedUser: user?.isVerifiedUser,
-          mbti: user?.mbti,
+          user: {
+            userId: review.userId._id,
+            ...review.userId,
+          },
         };
       }),
     );
