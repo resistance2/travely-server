@@ -41,12 +41,12 @@ reviewRouter.get('/', checkRequiredFieldsQuery(['page']), async (req, res) => {
 
     const reviewsWithTravelInfo = await Promise.all(
       reviews.map(async (review) => {
-        const travel = await Travel.findOne({ id: review.travelId }).lean();
+        // const travel = await Travel.findOne({ id: review.travelId }).lean();
         // const user = await User.findById(review.userId).lean();
         return {
           reviewId: review._id,
           travelId: review.travelId,
-          title: travel?.travelTitle || '',
+          title: review.title || '',
           content: review.content,
           imgSrc: review.reviewImg,
           rating: review.travelScore,
