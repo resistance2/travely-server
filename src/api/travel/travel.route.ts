@@ -108,11 +108,13 @@ travelRouter.get(
           const user = await User.findById(review.userId).lean();
           return {
             ...review,
-            userId: (user as any).userId,
-            isVerifiedUser: (user as any).isVerifiedUser,
-            socialName: (user as any).socialName || null,
-            userEmail: (user as any).userEmail || null,
-            userProfileImage: (user as any).userProfileImage,
+            user: {
+              userId: (user as any).userId,
+              isVerifiedUser: (user as any).isVerifiedUser,
+              socialName: (user as any).socialName || null,
+              userEmail: (user as any).userEmail || null,
+              userProfileImage: (user as any).userProfileImage,
+            },
           };
         }),
       );
