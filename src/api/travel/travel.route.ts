@@ -478,6 +478,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
         return {
           id: team.appliedUsers.find((currentUser) => currentUser.userId._id.equals(user._id))
             ?.appliedAt,
+          travelId: (team.travelId as any)._id,
           travelTitle: (team.travelId as any).travelTitle,
           guideInfo: {
             socialName: (team.travelId as any).userId.socialName,
