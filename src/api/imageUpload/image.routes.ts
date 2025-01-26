@@ -1,11 +1,17 @@
 import { Request, Response, Router } from 'express';
 import { Express } from 'express';
-import multer, { memoryStorage } from 'multer';
+import multer, { memoryStorage, MulterError } from 'multer';
 import { ResponseDTO } from '../../ResponseDTO';
 import { uploadImage, uploadImages } from './imageUpload';
 
 const imageRouter = Router();
-const upload = multer({ storage: memoryStorage() });
+const upload = multer({
+  storage: memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit per file
+    files: 11, // Maximum 11 files (1 thumbnail + 5 meetingSpace + 5 introSrcs)
+  },
+});
 
 imageRouter.post(
   '/upload',
