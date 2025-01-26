@@ -1043,8 +1043,8 @@ travelRouter.patch('/:travelId', checkRequiredFieldsParams(['travelId']), async 
   if (endDate) updateData.travelEndDate = endDate;
 
   if (tag) {
-    if (tagPathToTagType[tag as keyof typeof tagPathToTagType]) {
-      updateData.tag = [tagPathToTagType[tag as keyof typeof tagPathToTagType]];
+    if (tagTypeToTagPath[tag as keyof typeof tagTypeToTagPath]) {
+      updateData.tag = [tagTypeToTagPath[tag as keyof typeof tagTypeToTagPath]];
     } else {
       res.status(400).json(ResponseDTO.fail('Invalid tag'));
       return;
