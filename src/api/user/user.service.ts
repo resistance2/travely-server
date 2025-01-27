@@ -15,17 +15,22 @@ export class UserService {
       const newUser = await User.create({
         socialName,
         userEmail,
-        userProfileImage: userProfileImage || null,
+        userProfileImage: userProfileImage,
       });
-      await newUser.save();
 
       return {
+        ...newUser,
         userId: newUser._id,
         userScore: 0,
       };
     } else {
       const userScore = await this.getUserReviewAverage(user._id);
+
+      if (userProfileImage) {
+        await User.findByIdAndUpdate(user._id, { userProfileImage }, { new: true });
+      }
       return {
+        ...user,
         userId: user._id,
         userScore,
       };
