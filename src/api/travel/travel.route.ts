@@ -299,12 +299,11 @@ travelRouter.get('/travel-list', async (req, res) => {
     const travels = await Travel.find(query).sort({ createdAt: -1 }).skip(skip).limit(size_).lean();
 
     let user: any;
-    if (userId === 'null') {
-      user = null;
-    } else {
+    if (userId !== 'null' && userId !== undefined && userId !== 'undefined') {
       user = await User.findById(userId).lean();
       if (!user) {
         res.status(404).json(ResponseDTO.fail('User not found'));
+        console.error('User not found');
         return;
       }
     }
