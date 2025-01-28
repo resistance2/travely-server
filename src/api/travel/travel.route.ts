@@ -43,12 +43,12 @@ const checkIsBookmarked = async (
   userId: mongoose.Types.ObjectId,
   travelId: mongoose.Types.ObjectId,
 ): Promise<boolean> => {
+  if (!userId || !travelId) return false;
   const travel = await Travel.findOne({ _id: travelId }).lean();
-  return travel
-    ? travel.bookmark.some((bookmarkUserId: mongoose.Types.ObjectId) =>
-        bookmarkUserId.equals(userId),
-      )
-    : false;
+  if (!travel) return false;
+  return travel.bookmark.some((bookmarkUserId: mongoose.Types.ObjectId) =>
+    bookmarkUserId.equals(userId),
+  );
 };
 
 const isReviewWritten = async (
@@ -307,6 +307,7 @@ travelRouter.get('/travel-list', async (req, res) => {
         return;
       }
     }
+
     const userBookmarkTravels = await Promise.all(
       travels.map(async (travel) => {
         const reviewCnt = await getReviewCount(travel._id);
