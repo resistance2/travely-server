@@ -67,6 +67,10 @@ const MBTI_TYPES = [
   'ENTJ',
 ] as const;
 
+export const isValidObjectId = (id: string): boolean => {
+  return mongoose.Types.ObjectId.isValid(id);
+};
+
 export const checkIsValidMBTI = (mbti: (typeof MBTI_TYPES)[number]): boolean => {
   return MBTI_TYPES.includes(mbti);
 };

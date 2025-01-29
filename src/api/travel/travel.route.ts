@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import mongoose from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import { ResponseDTO } from '../../ResponseDTO';
 import {
   checkRequiredFieldsBody,
@@ -72,8 +72,13 @@ travelRouter.get(
     const { travelId } = req.params;
     const { userId } = req.query;
 
+    if (!isValidObjectId(travelId) || !isValidObjectId(userId)) {
+      res.status(400).json(ResponseDTO.fail('Invalid travelId or userId'));
+      return;
+    }
+
     let userId_: any;
-    if (userId === 'null' || userId === undefined) {
+    if (userId === 'null' || userId === undefined || userId === 'undefined') {
       userId_ = null;
     } else {
       userId_ = await User.findById(userId).lean();
@@ -282,6 +287,11 @@ travelRouter.get('/', async (_req, res) => {
  */
 travelRouter.get('/travel-list', async (req, res) => {
   const { userId, page = 1, size = 10, tag = '' } = req.query;
+
+  if (!isValidObjectId(userId)) {
+    res.status(400).json(ResponseDTO.fail('Invalid user id'));
+    return;
+  }
   if (!checkPageAndSize(parseInt(page as string), parseInt(size as string))) {
     res.status(400).json(ResponseDTO.fail('Invalid page or size'));
     return;
@@ -1036,6 +1046,10 @@ travelRouter.patch('/:travelId', checkRequiredFieldsParams(['travelId']), async 
     meetingPlace,
   } = req.body;
   const updateData: { [key: string]: any } = {};
+  if (!isValidObjectId(travelId)) {
+    res.status(400).json(ResponseDTO.fail('Invalid travelId'));
+    return;
+  }
   if (title) updateData.travelTitle = title;
   if (content) updateData.travelContent = content;
   if (price) updateData.travelPrice = price;
