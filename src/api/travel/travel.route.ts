@@ -72,8 +72,8 @@ travelRouter.get(
     const { travelId } = req.params;
     const { userId } = req.query;
 
-    if (!isValidObjectId(travelId) || !isValidObjectId(userId)) {
-      res.status(400).json(ResponseDTO.fail('Invalid travelId or userId'));
+    if (!isValidObjectId(travelId)) {
+      res.status(400).json(ResponseDTO.fail('Invalid travelId'));
       return;
     }
 
@@ -81,7 +81,12 @@ travelRouter.get(
     if (userId === 'null' || userId === undefined || userId === 'undefined') {
       userId_ = null;
     } else {
+      if (!isValidObjectId(userId)) {
+        res.status(400).json(ResponseDTO.fail('Invalid userId'));
+        return;
+      }
       userId_ = await User.findById(userId).lean();
+
       if (!userId_) {
         res.status(404).json(ResponseDTO.fail('User not found'));
         return;
