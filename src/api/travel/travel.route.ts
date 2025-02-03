@@ -293,10 +293,6 @@ travelRouter.get('/', async (_req, res) => {
 travelRouter.get('/travel-list', async (req, res) => {
   const { userId, page = 1, size = 10, tag = '' } = req.query;
 
-  if (!isValidObjectId(userId)) {
-    res.status(400).json(ResponseDTO.fail('Invalid user id'));
-    return;
-  }
   if (!checkPageAndSize(parseInt(page as string), parseInt(size as string))) {
     res.status(400).json(ResponseDTO.fail('Invalid page or size'));
     return;
@@ -315,6 +311,10 @@ travelRouter.get('/travel-list', async (req, res) => {
 
     let user: any;
     if (userId !== 'null' && userId !== undefined && userId !== 'undefined') {
+      if (!isValidObjectId(userId)) {
+        res.status(400).json(ResponseDTO.fail('Invalid user id'));
+        return;
+      }
       user = await User.findById(userId).lean();
       if (!user) {
         res.status(404).json(ResponseDTO.fail('User not found'));
