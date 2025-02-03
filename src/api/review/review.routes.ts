@@ -161,15 +161,15 @@ reviewRouter.post(
 
       // userReview가 있을때만
       if (guideScore) {
-        const userReview = await UserRating.findOne({
-          fromUserId: user._id,
-          toUserId: travel.userId,
-        });
+        // const userReview = await UserRating.findOne({
+        //   fromUserId: user._id,
+        //   toUserId: travel.userId,
+        // });
 
-        if (userReview) {
-          res.status(400).json(ResponseDTO.fail('is already reviewed'));
-          return;
-        }
+        // if (userReview) {
+        //   res.status(400).json(ResponseDTO.fail('is already reviewed'));
+        //   return;
+        // }
         const guideScore_ = Number(guideScore);
         if (typeof guideScore_ !== 'number') {
           res.status(400).json(ResponseDTO.fail('Invalid userReview'));
