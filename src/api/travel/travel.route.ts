@@ -25,7 +25,7 @@ const getReviewCount = async (travelId: mongoose.Types.ObjectId) => {
 };
 
 const getReviews = async (travelId: mongoose.Types.ObjectId) => {
-  const reviews = await Review.find({ travelId }).lean();
+  const reviews = await Review.find({ travelId, isDeleted: false }).lean();
   return reviews.map((review) => {
     return {
       reviewId: review._id,

@@ -123,7 +123,6 @@ reviewRouter.post(
   async (req, res) => {
     const { userId, travelId, content, travelScore, title, guideScore } = req.body;
 
-    console.log(userId, travelId, content, travelScore, title, guideScore);
     try {
       const user = await User.findById(userId);
 
