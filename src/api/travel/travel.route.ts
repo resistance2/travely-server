@@ -138,12 +138,13 @@ travelRouter.get(
       // bookmark: 북마크수
 
       const isUserIsTraveler = (userId: mongoose.Types.ObjectId) => {
-        return travel.teamId.some((team) => ({
-          approvedUsers: ((team as any).appliedUsers as any).some(
+        return travel.teamId.some((team) => {
+          return ((team as any).appliedUsers as any).some(
             (user: any) =>
-              userId.equals(user._id) && (user.status === 'approved' || user.status === 'waiting'),
-          ),
-        }));
+              user.userId._id.equals(userId) &&
+              (user.status === 'approved' || user.status === 'waiting'),
+          );
+        });
       };
 
       const travelDetailData = {
@@ -862,7 +863,7 @@ travelRouter.get(
   async (req, res) => {
     const { travelId } = req.params;
     try {
-      const travel = await Travel.findById(travelId).lean();
+      const travel = await Travel.findById(travelId).populate('userId').lean();
       if (!travel) {
         res.status(404).json(ResponseDTO.fail('Travel not found'));
         return;
@@ -877,6 +878,7 @@ travelRouter.get(
           updateAt: travel.updatedAt,
           travelActive: travel.travelActive,
           teamTeams: teams,
+          bankAccount: (travel.userId as any).backAccount,
         }),
       );
     } catch (error) {
