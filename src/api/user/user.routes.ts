@@ -189,7 +189,7 @@ userRouter.patch(
             userEmail: updatedUser.userEmail,
             phoneNumber: updatedUser.phoneNumber,
             mbti: updatedUser.mbti,
-            userScore: UserService.getUserReviewAverage(updatedUser._id),
+            userScore: await UserService.getUserReviewAverage(updatedUser._id),
           },
         }),
       );
