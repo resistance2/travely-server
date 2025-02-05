@@ -208,7 +208,7 @@ travelGuideRouter.get(
           socialName: (travel.userId as any).socialName,
           userEmail: (travel.userId as any).userEmail || null,
           userProfileImage: (travel.userId as any).userProfileImage,
-          userScore: UserService.getUserReviewAverage(travel.userId._id),
+          userScore: await UserService.getUserReviewAverage(travel.userId._id),
         },
         title: travel.travelTitle,
         content: travel.travelContent,
