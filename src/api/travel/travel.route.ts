@@ -7,7 +7,7 @@ import {
   checkRequiredFieldsQuery,
 } from '../../checkRequiredFields';
 import { tagPathToTagType, tagTypeToTagPath } from '../../convert';
-import { IAppliedUser, Review, Team, Travel, User, UserRating } from '../../db/schema';
+import { IAppliedUser, ITeam, Review, Team, Travel, User, UserRating } from '../../db/schema';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
 import { UserService } from '../user/user.service';
 
@@ -987,14 +987,17 @@ travelRouter.get('/travelers/waiting-count', async (req, res) => {
     // 여기 가격, 제목, 별점, 리뷰수 ,업데이트 날짜, 활성화비활성화 여부,해당 여행에 미승인 상태인수
     const waitings = await Promise.all(
       travels.map(async (travel) => {
-        const populatedTravel = await Travel.findById(travel._id).populate('teamId').lean();
+        const populatedTravel = await Travel.findOne({ _id: travel._id, isDeleted: false })
+          .populate('teamId')
+          .lean();
+        if (!populatedTravel) return;
+
+        const travelTeam = ((populatedTravel as any)?.teamId as ITeam[]).filter(
+          (team) => team.travelEndDate > new Date(),
+        );
+
         return {
-          waitingCount: (Array.isArray(populatedTravel?.teamId)
-            ? (populatedTravel.teamId as unknown as {
-                appliedUsers: { status: string }[];
-              }[])
-            : []
-          ).reduce((acc, team) => {
+          waitingCount: travelTeam.reduce((acc, team) => {
             return (
               acc +
               team.appliedUsers.filter((user: { status: string }) => user.status === 'waiting')
@@ -1006,7 +1009,7 @@ travelRouter.get('/travelers/waiting-count', async (req, res) => {
     );
 
     const allWaitings = waitings.reduce((acc, waiting) => {
-      return acc + waiting.waitingCount;
+      return acc + (waiting?.waitingCount || 0);
     }, 0);
     res.json(
       ResponseDTO.success({
