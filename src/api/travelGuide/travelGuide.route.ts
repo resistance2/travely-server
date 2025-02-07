@@ -101,7 +101,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
 
   try {
     const travelsGuides = await TravelGuide.find().sort({ createdAt: -1 }).skip(skip).limit(size_);
-    const userBookmarkTravels = await Promise.all(
+    const travelList = await Promise.all(
       travelsGuides.map(async (travel) => {
         const createdByUser = await User.findById(travel.userId).lean();
         const teams = await Team.findOne({ travelId: travel._id, _id: travel.teamId[0] })
@@ -147,7 +147,7 @@ travelGuideRouter.get('/travel-list', async (req, res) => {
 
     res.json(
       ResponseDTO.success({
-        travels: userBookmarkTravels,
+        travels: travelList,
         pageInfo: {
           totalElements,
           totalPages,
@@ -271,7 +271,6 @@ travelGuideRouter.delete(
 //   thumbnail: string | null; // 게시글 썸네일 이미지 URL
 //   travelTitle: string; // 여행 게시글 제목
 //   travelContent: string; // 여행 게시글 본문 내용 (rich text 등 다양한 형식 지원)
-//   bookmark: Types.ObjectId[]; // 북마크한 사용자들의 ID 배열
 //   createdAt: Date; // 게시글 생성 일시
 //   updatedAt: Date; // 게시글 수정 일시
 //   teamId: Types.ObjectId[]; // 연관된 팀 정보들의 ID 배열 (1:N 관계)
