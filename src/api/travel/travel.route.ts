@@ -62,6 +62,9 @@ const isReviewWritten = async (
   return false;
 };
 
+const filteredApprovedUsers = (team: any) =>
+  (team.appliedUsers as any).filter((user: any) => user.status === 'approved');
+
 const travelRouter = Router();
 
 // 여행 상세 조회
@@ -171,18 +174,16 @@ travelRouter.get(
           personLimit: (team as any).personLimit,
           travelStartDate: (team as any).travelStartDate,
           travelEndDate: (team as any).travelEndDate,
-          approvedUsers: ((team as any).appliedUsers as any)
-            .filter((user: any) => user.status === 'approved')
-            .map((user: any) => ({
-              userName: user.userId.userName,
-              socialName: user.userId.socialName,
-              userEmail: user.userId.userEmail,
-              phoneNumber: user.userId.phoneNumber,
-              mbti: user.userId.mbti,
-              status: user.status,
-              appliedAt: user.appliedAt,
-              userId: (user.userId as any)._id,
-            })),
+          approvedUsers: filteredApprovedUsers(team).map((user: any) => ({
+            userName: user.userId.userName,
+            socialName: user.userId.socialName,
+            userEmail: user.userId.userEmail,
+            phoneNumber: user.userId.phoneNumber,
+            mbti: user.userId.mbti,
+            status: user.status,
+            appliedAt: user.appliedAt,
+            userId: (user.userId as any)._id,
+          })),
         })),
         reviews: reviewWithUser,
         totalRating: await getReviewAverage(travel._id),
@@ -232,7 +233,6 @@ travelRouter.post(
         res.status(404).json(ResponseDTO.fail('User not found'));
         return;
       }
-      console.log(req.body);
       const travel = await Travel.create(
         [
           {
@@ -515,7 +515,7 @@ travelRouter.get('/my-travels', checkRequiredFieldsQuery(['userId']), async (req
             travelEndDate: team.travelEndDate,
             personLimit: team.personLimit,
             approvedMembersMbti: {
-              mbti: team.appliedUsers.map((user) => (user.userId as any).mbti),
+              mbti: filteredApprovedUsers(team).map((user: any) => user.userId.mbti),
             },
           },
           currentUserStatus: {
