@@ -919,6 +919,12 @@ travelRouter.post(
         return;
       }
 
+      console.log(team.travelStartDate < new Date());
+      if (team.travelStartDate < new Date()) {
+        res.status(400).json(ResponseDTO.fail('Travel has ended'));
+        return;
+      }
+
       team.appliedUsers.push({
         userId: user._id,
         appliedAt: new Date(),
