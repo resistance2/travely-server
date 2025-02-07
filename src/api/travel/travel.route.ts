@@ -232,10 +232,15 @@ travelRouter.post(
         res.status(404).json(ResponseDTO.fail('User not found'));
         return;
       }
+      console.log(req.body);
       const travel = await Travel.create(
         [
           {
             ...req.body,
+            travelFAQ: req.body.FAQ,
+            travelTitle: req.body.travelTitle,
+            travelContent: req.body.travelContent,
+            travelThumbnail: req.body.thumbnail,
             tag: tagTypeToTagPath[req.body.tag as keyof typeof tagTypeToTagPath],
             userId: userId?._id,
             createdAt: new Date(),
