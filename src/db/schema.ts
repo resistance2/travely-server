@@ -13,7 +13,6 @@ export interface ITravel {
   meetingLocation: object;
   travelPrice: number;
   travelFAQ: { question: string; answer: string }[] | null;
-  bookmark: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
   teamId: Types.ObjectId[];
@@ -21,6 +20,13 @@ export interface ITravel {
   reviewWrite: boolean;
   isDeleted: boolean;
   meetingPlace: string | null;
+}
+
+//북마크
+export interface IBookmark {
+  userId: Types.ObjectId;
+  travelId: Types.ObjectId;
+  bookmarkAt: Date;
 }
 
 export interface ITravelGuide {
@@ -120,6 +126,19 @@ UserRatingSchema.pre(['find', 'findOne'], function (next) {
   next();
 });
 
+const BookmarkSchema: Schema<IBookmark> = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
+    travelId: { type: Schema.Types.ObjectId, required: true, ref: 'Travel' },
+    bookmarkAt: { type: Date, default: Date.now, required: true },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+export const Bookmark = mongoose.model<IBookmark>('Bookmark', BookmarkSchema);
+
 export const UserRating = mongoose.model<IUserRating>('UserRating', UserRatingSchema);
 
 const TravelSchema: Schema<ITravel> = new Schema(
@@ -136,7 +155,6 @@ const TravelSchema: Schema<ITravel> = new Schema(
     meetingLocation: { type: Object },
     travelPrice: { type: Number, required: true },
     travelFAQ: { type: [{ question: String, answer: String }], default: [] },
-    bookmark: [{ type: Schema.Types.ObjectId, default: [] }],
     createdAt: { type: Date, default: Date.now, required: true },
     updatedAt: { type: Date, default: Date.now, required: true },
     teamId: [{ type: Schema.Types.ObjectId, ref: 'Team', default: [] }],

@@ -7,11 +7,23 @@ import {
   checkRequiredFieldsQuery,
 } from '../../checkRequiredFields';
 import { tagPathToTagType, tagTypeToTagPath } from '../../convert';
-import { IAppliedUser, ITeam, Review, Team, Travel, User, UserRating } from '../../db/schema';
+import {
+  Bookmark,
+  IAppliedUser,
+  ITeam,
+  ITravel,
+  IUser,
+  Review,
+  Team,
+  Travel,
+  User,
+  UserRating,
+} from '../../db/schema';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
 import { UserService } from '../user/user.service';
+import bookmarkService from './bookmark.service';
 
-const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
+export const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
   const reviews = await Review.find({ travelId }).lean();
   const totalScore = reviews.reduce((acc, review) => {
     return acc + review.travelScore;
@@ -19,12 +31,12 @@ const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
   return totalScore / reviews.length;
 };
 
-const getReviewCount = async (travelId: mongoose.Types.ObjectId) => {
+export const getReviewCount = async (travelId: mongoose.Types.ObjectId) => {
   const reviews = await Review.find({ travelId }).lean();
   return reviews.length;
 };
 
-const getReviews = async (travelId: mongoose.Types.ObjectId) => {
+export const getReviews = async (travelId: mongoose.Types.ObjectId) => {
   const reviews = await Review.find({ travelId, isDeleted: false }).lean();
   return reviews.map((review) => {
     return {
@@ -37,18 +49,6 @@ const getReviews = async (travelId: mongoose.Types.ObjectId) => {
       title: review.title,
     };
   });
-};
-
-const checkIsBookmarked = async (
-  userId: mongoose.Types.ObjectId,
-  travelId: mongoose.Types.ObjectId,
-): Promise<boolean> => {
-  if (!userId || !travelId) return false;
-  const travel = await Travel.findOne({ _id: travelId }).lean();
-  if (!travel) return false;
-  return travel.bookmark.some((bookmarkUserId: mongoose.Types.ObjectId) =>
-    bookmarkUserId.equals(userId),
-  );
 };
 
 const isReviewWritten = async (
@@ -187,10 +187,8 @@ travelRouter.get(
         })),
         reviews: reviewWithUser,
         totalRating: await getReviewAverage(travel._id),
-        bookmark: travel.bookmark.length,
-        isBookmark: userId_
-          ? await checkIsBookmarked(userId_._id as mongoose.Types.ObjectId, travel._id)
-          : false,
+        bookmark: await bookmarkService.getBookmarkCount(travel._id),
+        isBookmark: userId_ ? await bookmarkService.isBookmarked(userId_._id, travel._id) : false,
         isTraveler: userId_ ? isUserIsTraveler(userId_._id) : false,
       };
       res.json(ResponseDTO.success(travelDetailData));
@@ -315,8 +313,8 @@ travelRouter.get('/travel-list', async (req, res) => {
   try {
     const travels = await Travel.find(query).sort({ createdAt: -1 }).skip(skip).limit(size_).lean();
 
-    let user: any;
-    if (userId !== 'null' && userId !== undefined && userId !== 'undefined') {
+    let user: (IUser & { _id: mongoose.Types.ObjectId }) | null = null;
+    if (userId) {
       if (!isValidObjectId(userId)) {
         res.status(400).json(ResponseDTO.fail('Invalid user id'));
         return;
@@ -324,12 +322,11 @@ travelRouter.get('/travel-list', async (req, res) => {
       user = await User.findById(userId).lean();
       if (!user) {
         res.status(404).json(ResponseDTO.fail('User not found'));
-        console.error('User not found');
         return;
       }
     }
 
-    const userBookmarkTravels = await Promise.all(
+    const travelList = await Promise.all(
       travels.map(async (travel) => {
         const reviewCnt = await getReviewCount(travel._id);
         const travelScore = await getReviewAverage(travel._id);
@@ -349,7 +346,8 @@ travelRouter.get('/travel-list', async (req, res) => {
           },
           tag: travel.tag.map((tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType]),
           createdAt: travel.createdAt,
-          bookmark: await checkIsBookmarked(user?._id as mongoose.Types.ObjectId, travel._id),
+          bookmark:
+            user === null ? false : await bookmarkService.isBookmarked(user?._id, travel._id),
         };
       }),
     );
@@ -362,7 +360,7 @@ travelRouter.get('/travel-list', async (req, res) => {
 
     res.json(
       ResponseDTO.success({
-        travels: userBookmarkTravels,
+        travels: travelList,
         pageInfo: {
           totalElements,
           totalPages,
@@ -377,25 +375,6 @@ travelRouter.get('/travel-list', async (req, res) => {
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
-
-// interface ITravelCard {
-//   readonly id: string; //여행고유 아이디
-//   readonly thumbnail: string; // 이미지 경로
-//   readonly travelTitle: string; // 카드의 제목
-//   readonly tag: TagType[]; // 태그 목록
-//   readonly bookmark: boolean; // 북마크 여부
-//   readonly createdBy: {
-//     // 작성자
-//     readonly userId: string;
-//     readonly userName: string;
-//   };
-//   readonly price: number; //가격
-//   readonly review: {
-//     //리뷰
-//     readonly travelScore: number;
-//     readonly reviewCnt: number;
-//   };
-// }
 
 /**
  * 북마크 리스트 조회
@@ -414,35 +393,10 @@ travelRouter.get('/bookmark-list', checkRequiredFieldsQuery(['userId']), async (
       res.status(404).json(ResponseDTO.fail('User not found'));
       return;
     }
-    const travels = await Travel.find({ bookmark: { $in: [user?._id] } }).lean();
-
-    const userBookmarkTravels = await Promise.all(
-      travels.map(async (travel) => {
-        const reviewCnt = await getReviewCount(travel._id);
-        const travelScore = await getReviewAverage(travel._id);
-        const createdByUser = await User.findById(travel.userId).lean();
-        return {
-          id: travel._id,
-          thumbnail: travel.thumbnail,
-          travelTitle: travel.travelTitle,
-          tag: travel.tag.map((tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType]),
-          bookmark: await checkIsBookmarked(user?._id as mongoose.Types.ObjectId, travel._id),
-          createdBy: {
-            userId: createdByUser?._id,
-            userName: createdByUser?.userName || createdByUser?.socialName,
-          },
-          price: travel.travelPrice,
-          review: {
-            travelScore,
-            reviewCnt,
-          },
-          createdAt: travel.createdAt,
-        };
-      }),
-    );
+    const bookmarks = await bookmarkService.getUserBookmarks(user._id);
     res.json(
       ResponseDTO.success({
-        bookmarks: userBookmarkTravels,
+        bookmarks,
       }),
     );
   } catch (error) {
@@ -585,17 +539,35 @@ travelRouter.patch(
         return;
       }
 
-      const updatedTravel = await Travel.findByIdAndUpdate(travelId, {
-        [isBookmark ? '$addToSet' : '$pull']: { bookmark: userId },
-      }).lean();
-
-      res.json(
-        ResponseDTO.success({
-          id: updatedTravel?._id,
-          userId: updatedTravel?.userId,
-          isBookmark: await checkIsBookmarked(userId, travelId),
-        }),
-      );
+      if (isBookmark) {
+        const bookmark = await bookmarkService.createBookmark(userId, travelId);
+        if (bookmark === null) {
+          res.status(400).json(ResponseDTO.fail('Is Already Bookmarked'));
+          return;
+        }
+        res.json(
+          ResponseDTO.success({
+            id: bookmark?._id,
+            userId: bookmark?.userId,
+            isBookmark: isBookmark,
+          }),
+        );
+        return;
+      } else {
+        const bookmark = await bookmarkService.removeBookmark(userId, travelId);
+        if (bookmark === null) {
+          res.status(400).json(ResponseDTO.fail('bookmark not found'));
+          return;
+        }
+        res.json(
+          ResponseDTO.success({
+            id: bookmark?._id,
+            userId: bookmark?.userId,
+            isBookmark: isBookmark,
+          }),
+        );
+        return;
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json(ResponseDTO.fail((error as Error).message));
@@ -613,7 +585,7 @@ travelRouter.patch(
       const travel = await Travel.findByIdAndUpdate(
         travelId,
         { travelActive: isActive },
-        { new: true }, // 업데이트된 문서를 반환
+        { new: true },
       );
 
       if (!travel) {
@@ -1032,21 +1004,6 @@ travelRouter.get('/travelers/waiting-count', async (req, res) => {
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
-
-export interface ITravel {
-  thumbnail: string | null;
-  travelTitle: string;
-  travelContent: string;
-  tag: string[];
-  travelCourse: string[];
-  includedItems: string[];
-  excludedItems: string[];
-  meetingTime: string[];
-  travelPrice: number;
-  travelFAQ: string[];
-  updatedAt: Date;
-  meetingPlace: string | null;
-}
 
 //여행 글 수정
 travelRouter.patch('/:travelId', checkRequiredFieldsParams(['travelId']), async (req, res) => {
