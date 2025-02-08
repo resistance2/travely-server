@@ -19,7 +19,7 @@ export class BookmarkService {
   }
 
   async getUserBookmarks(userId: Types.ObjectId) {
-    const bookmarks = await Bookmark.find({ userId: userId })
+    const bookmarks = await Bookmark.find({ userId: userId, 'travelId.isDeleted': false })
       .populate<{ travelId: ITravel & { userId: IUser; _id: mongoose.Types.ObjectId } }>({
         path: 'travelId',
         populate: { path: 'userId' },
