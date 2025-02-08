@@ -34,7 +34,8 @@ export class BookmarkService {
         .filter((bookmark) => bookmark.travelId)
         .map(async (bookmark) => {
           return {
-            id: bookmark._id,
+            id: bookmark.travelId._id,
+            bookmarkId: bookmark._id,
             thumbnail: bookmark.travelId.thumbnail,
             travelTitle: bookmark.travelId.travelTitle,
             tag: bookmark.travelId.tag.map(
