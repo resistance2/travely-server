@@ -19,6 +19,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const VERSION = process.env.VERSION || 'v1';
+const MORGAN_FORMAT = process.env.MORGAN_FORMAT || 'combined';
 
 let server: ReturnType<typeof app.listen>;
 
@@ -37,7 +38,7 @@ async function startServer() {
       origin: '*',
     }),
   );
-  app.use(morgan('combined'));
+  app.use(morgan(MORGAN_FORMAT));
   app.use((err: Error, req: Request, res: Response, _next: NextFunction) => {
     console.error(`Error ${err.message} | URL: ${req.url} | Method: ${req.method}`);
     res.status(500).json({
