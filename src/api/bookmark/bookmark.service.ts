@@ -2,7 +2,7 @@ import mongoose, { Types } from 'mongoose';
 import { tagPathToTagType } from '../../convert';
 import { Bookmark, ITravel, IUser } from '../../db/schema';
 import { IBookmark } from '../../db/schema';
-import { getReviewAverage, getReviewCount } from './travel.route';
+import { getReviewAverage, getReviewCount } from '../travel/travel.route';
 
 export class BookmarkService {
   async createBookmark(userId: Types.ObjectId, travelId: Types.ObjectId) {
@@ -19,7 +19,7 @@ export class BookmarkService {
   }
 
   async getUserBookmarks(userId: Types.ObjectId) {
-    const bookmarks = await Bookmark.find({ userId: userId, 'travelId.isDeleted': false })
+    const bookmarks = await Bookmark.find({ userId: userId })
       .populate<{ travelId: ITravel & { userId: IUser; _id: mongoose.Types.ObjectId } }>({
         path: 'travelId',
         populate: { path: 'userId' },
@@ -30,28 +30,30 @@ export class BookmarkService {
       return [];
     }
     const userBookmarks = await Promise.all(
-      bookmarks.map(async (bookmark) => {
-        return {
-          id: bookmark._id,
-          thumbnail: bookmark.travelId.thumbnail,
-          travelTitle: bookmark.travelId.travelTitle,
-          tag: bookmark.travelId.tag.map(
-            (tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType],
-          ),
-          bookmark: true,
-          createdBy: {
-            userId: bookmark.travelId.userId._id,
-            userName: bookmark.travelId.userId.userName || bookmark.travelId.userId.socialName,
-          },
-          price: bookmark.travelId.travelPrice,
-          review: {
-            travelScore: await getReviewAverage(bookmark.travelId._id),
-            reviewCnt: await getReviewCount(bookmark.travelId._id),
-          },
-          createdAt: bookmark.travelId.createdAt,
-          bookmarkAt: bookmark.bookmarkAt,
-        };
-      }),
+      bookmarks
+        .filter((bookmark) => bookmark.travelId)
+        .map(async (bookmark) => {
+          return {
+            id: bookmark._id,
+            thumbnail: bookmark.travelId.thumbnail,
+            travelTitle: bookmark.travelId.travelTitle,
+            tag: bookmark.travelId.tag.map(
+              (tag) => tagPathToTagType[tag as keyof typeof tagPathToTagType],
+            ),
+            bookmark: true,
+            createdBy: {
+              userId: bookmark.travelId.userId._id,
+              userName: bookmark.travelId.userId.userName || bookmark.travelId.userId.socialName,
+            },
+            price: bookmark.travelId.travelPrice,
+            review: {
+              travelScore: await getReviewAverage(bookmark.travelId._id),
+              reviewCnt: await getReviewCount(bookmark.travelId._id),
+            },
+            createdAt: bookmark.travelId.createdAt,
+            bookmarkAt: bookmark.bookmarkAt,
+          };
+        }),
     );
     return userBookmarks;
   }
