@@ -12,6 +12,7 @@ import { connectDatabase, disconnectDatabase } from './db/connect';
 import swaggerUiExpress from 'swagger-ui-express';
 import swaggerSpec from './public/My Project.openapi.json';
 
+import bookmarkRouter from './api/bookmark/bookmark.route';
 import { travelGuideCommentRouter } from './api/travelGuide/comment/comment.route';
 
 dotenv.config();
@@ -52,6 +53,7 @@ async function startServer() {
   app.use(`/api/${VERSION}/reviews`, reviewRouter);
   app.use(`/api/${VERSION}/travels-guide`, travelGuideRouter);
   app.use(`/api/${VERSION}/travels-guide/comments`, travelGuideCommentRouter);
+  app.use(`/api/${VERSION}/bookmarks`, bookmarkRouter);
 
   app.get('/', (_req, res) => {
     res.send('Hello World');

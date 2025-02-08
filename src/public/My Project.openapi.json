@@ -26,6 +26,9 @@
     },
     {
       "name": "travely-server/comment(가이드 구해요)"
+    },
+    {
+      "name": "travely-server/bookmark"
     }
   ],
   "paths": {
@@ -1466,7 +1469,7 @@
                     "travelEndDate": "2024-07-18"
                   }
                 ],
-                "travelFAQ": [
+                "FAQ": [
                   {
                     "question": "여행 질문",
                     "answer": "여행 답"
@@ -1476,7 +1479,7 @@
                 "includedItems": ["숙박", "가이드", "해변 액티비티"],
                 "excludedItems": ["식사", "교통비", "개인 경비"],
                 "meetingTime": ["10:00", "15:00"],
-                "meetingPlace": "광화문 광장"
+                "meetingPlace": "https://i.imgur.com/lq4iint.png"
               }
             }
           }
@@ -2115,7 +2118,7 @@
                             }
                           },
                           "travelPrice": 85000,
-                          "travelFAQ": [
+                          "FAQ": [
                             {
                               "question": "외국인도 참여 가능한가요?",
                               "answer": "영어 가이드가 동행하여 외국인도 참여 가능합니다."
@@ -2806,142 +2809,6 @@
                           "pageSize": 10,
                           "hasNext": true
                         }
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": []
-      }
-    },
-    "/v1/travels/bookmark-list": {
-      "get": {
-        "summary": "북마크 리스트 조회",
-        "deprecated": false,
-        "description": "",
-        "tags": ["travely-server/travels"],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "query",
-            "description": "",
-            "required": false,
-            "example": "672901f5f3339eca4777fc11",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {}
-                },
-                "examples": {
-                  "1": {
-                    "summary": "Success",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "bookmarks": [
-                          {
-                            "id": "672905e83f52cfeef7356cc3",
-                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
-                            "travelTitle": "부산 여행",
-                            "tag": ["Nature"],
-                            "bookmark": true,
-                            "createdBy": {
-                              "userId": "672901f5f3339eca4777fc11",
-                              "userName": "nakyenko4"
-                            },
-                            "review": {
-                              "travelScore": 4.5,
-                              "reviewCnt": 2
-                            },
-                            "createdAt": "2024-11-04T17:35:36.014Z"
-                          }
-                        ]
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "headers": {}
-          }
-        },
-        "security": []
-      }
-    },
-    "/v1/travels/bookmark": {
-      "patch": {
-        "summary": "북마크 추가/삭제",
-        "deprecated": false,
-        "description": "",
-        "tags": ["travely-server/travels"],
-        "parameters": [],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {}
-              },
-              "example": {
-                "userId": "672901f5f3339eca4777fc11",
-                "travelId": "672905e83f52cfeef7356cc3",
-                "isBookmark": true
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {}
-                },
-                "examples": {
-                  "1": {
-                    "summary": "Success",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "id": "672905e83f52cfeef7356cc3",
-                        "userId": "672901f5f3339eca4777fc11"
-                      }
-                    }
-                  },
-                  "2": {
-                    "summary": "Success",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "id": "672905e83f52cfeef7356cc3",
-                        "userId": "672901f5f3339eca4777fc11",
-                        "isBookmark": true
-                      }
-                    }
-                  },
-                  "3": {
-                    "summary": "Success",
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "id": "672905e83f52cfeef7356cc3",
-                        "userId": "672901f5f3339eca4777fc11",
-                        "isBookmark": true
                       }
                     }
                   }
@@ -4909,6 +4776,219 @@
                           "totalComments": 6,
                           "hasNext": true
                         }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      }
+    },
+    "/v1/bookmarks": {
+      "get": {
+        "summary": "북마크 리스트 조회",
+        "deprecated": false,
+        "description": "",
+        "tags": ["travely-server/bookmark"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "672901f5f3339eca4777fc11",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "bookmarks": [
+                          {
+                            "id": "672905e83f52cfeef7356cc3",
+                            "thumbnail": "https://i.imgur.com/kMVnKYx.jpeg",
+                            "travelTitle": "부산 여행",
+                            "tag": ["Nature"],
+                            "bookmark": true,
+                            "createdBy": {
+                              "userId": "672901f5f3339eca4777fc11",
+                              "userName": "nakyenko4"
+                            },
+                            "review": {
+                              "travelScore": 4.5,
+                              "reviewCnt": 2
+                            },
+                            "createdAt": "2024-11-04T17:35:36.014Z"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "delete": {
+        "summary": "북마크 삭제",
+        "deprecated": false,
+        "description": "",
+        "tags": ["travely-server/bookmark"],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "672901f5f3339eca4777fc11",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "travelId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "672905e83f52cfeef7356cc3",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              },
+              "example": {
+                "userId": "672901f5f3339eca4777fc11",
+                "travelId": "672905e83f52cfeef7356cc3",
+                "isBookmark": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": "67a6dcf4b90693dcf3a10bde",
+                        "userId": "672901f5f3339eca4777fc11",
+                        "isBookmark": false
+                      }
+                    }
+                  },
+                  "2": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": "672905e83f52cfeef7356cc3",
+                        "userId": "672901f5f3339eca4777fc11",
+                        "isBookmark": true
+                      }
+                    }
+                  },
+                  "3": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": "672905e83f52cfeef7356cc3",
+                        "userId": "672901f5f3339eca4777fc11",
+                        "isBookmark": true
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "headers": {}
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "summary": "북마크 추가",
+        "deprecated": false,
+        "description": "",
+        "tags": ["travely-server/bookmark"],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  },
+                  "traveld": {
+                    "type": "string"
+                  }
+                },
+                "required": ["userId", "traveld"]
+              },
+              "example": {
+                "userId": "672901f5f3339eca4777fc11",
+                "travelId": "678718903d61d821c6f91ac5"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                },
+                "examples": {
+                  "1": {
+                    "summary": "Success",
+                    "value": {
+                      "success": true,
+                      "data": {
+                        "id": "67a6dcf4b90693dcf3a10bde",
+                        "userId": "672901f5f3339eca4777fc11",
+                        "isBookmark": true
                       }
                     }
                   }
