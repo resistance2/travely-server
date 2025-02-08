@@ -20,8 +20,8 @@ import {
   UserRating,
 } from '../../db/schema';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
+import bookmarkService from '../bookmark/bookmark.service';
 import { UserService } from '../user/user.service';
-import bookmarkService from './bookmark.service';
 
 export const getReviewAverage = async (travelId: mongoose.Types.ObjectId) => {
   const reviews = await Review.find({ travelId }).lean();

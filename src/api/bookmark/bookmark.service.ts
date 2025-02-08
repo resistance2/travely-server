@@ -2,7 +2,7 @@ import mongoose, { Types } from 'mongoose';
 import { tagPathToTagType } from '../../convert';
 import { Bookmark, ITravel, IUser } from '../../db/schema';
 import { IBookmark } from '../../db/schema';
-import { getReviewAverage, getReviewCount } from './travel.route';
+import { getReviewAverage, getReviewCount } from '../travel/travel.route';
 
 export class BookmarkService {
   async createBookmark(userId: Types.ObjectId, travelId: Types.ObjectId) {
