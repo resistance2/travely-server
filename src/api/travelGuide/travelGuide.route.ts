@@ -2,7 +2,7 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFieldsBody, checkRequiredFieldsParams } from '../../checkRequiredFields';
-import { Team, TravelGuide, TravelGuideComment, User } from '../../db/schema';
+import { ITeam, Team, TravelGuide, TravelGuideComment, User } from '../../db/schema';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
 import { UserService } from '../user/user.service';
 
@@ -301,6 +301,77 @@ travelGuideRouter.patch('/:travelId', async (req, res) => {
       { new: true },
     );
     res.json(ResponseDTO.success(travel));
+  } catch (error) {
+    console.error(error);
+    res.status(500).json(ResponseDTO.fail((error as Error).message));
+  }
+});
+
+// 내가 만든 여행 조회
+// /api/v1/travel-guides/my-travel-guides
+travelGuideRouter.get('/my-travel-guides/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { page = 1, size = 10 } = req.query;
+  const page_ = parseInt(page as string, 10);
+  const size_ = parseInt(size as string, 10);
+  const skip = (page_ - 1) * size_;
+
+  if (isNaN(page_) || isNaN(size_)) {
+    res.status(400).json(ResponseDTO.fail('Invalid page or size'));
+    return;
+  }
+  try {
+    const user = await User.findById(userId).lean();
+    if (!user) {
+      res.status(404).json(ResponseDTO.fail('User not found'));
+      return;
+    }
+
+    const travels = await TravelGuide.find({ userId: user._id, isDeleted: false })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(size_)
+      .lean();
+
+    const travelDetails = await Promise.all(
+      travels.map(async (travel) => {
+        const team = await Team.findOne({ travelId: travel._id, _id: travel.teamId[0] })
+          .populate({ path: 'appliedUsers', populate: { path: 'userId' } })
+          .lean();
+        return {
+          id: travel._id,
+          travelTitle: travel.travelTitle,
+          teamId: team?._id,
+          appliedUsers: team?.appliedUsers.map((user) => ({
+            userId: user.userId._id,
+            status: user.status,
+            mbti: (user.userId as any).mbti,
+          })),
+          personLimit: team?.personLimit,
+          commentCount: await TravelGuideComment.countDocuments({
+            travelId: travel._id,
+            isDeleted: false,
+          }),
+        };
+      }),
+    );
+
+    const travelCount = await TravelGuide.countDocuments({ userId: user._id, isDeleted: false });
+    const totalPages = Math.ceil(travelCount / size_);
+    const hasNext = totalPages - page_ > 0;
+
+    res.json(
+      ResponseDTO.success({
+        travels: travelDetails,
+        pageInfo: {
+          totalElements: travelCount,
+          totalPages,
+          currentPage: page_,
+          pageSize: size_,
+          hasNext,
+        },
+      }),
+    );
   } catch (error) {
     console.error(error);
     res.status(500).json(ResponseDTO.fail((error as Error).message));
