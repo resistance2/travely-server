@@ -681,7 +681,7 @@ travelRouter.get('/my-created-travels', checkRequiredFieldsQuery(['userId']), as
           travelActive: populatedTravel?.travelActive,
           updatedAt: populatedTravel?.updatedAt,
           reviewAverage: populatedTravel?._id ? await getReviewAverage(populatedTravel._id) : 0,
-          approveWaitngCount: (Array.isArray(populatedTravel?.teamId)
+          approveWaitingCount: (Array.isArray(populatedTravel?.teamId)
             ? (populatedTravel.teamId as unknown as {
                 appliedUsers: { status: string }[];
               }[])
