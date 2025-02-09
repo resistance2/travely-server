@@ -1,5 +1,5 @@
 {
-  "openapi": "3.1.0",
+  "openapi": "3.0.1",
   "info": {
     "title": "My Project",
     "description": "",
@@ -3373,13 +3373,13 @@
                         "travels": [
                           {
                             "travelId": "672905e83f52cfeef7356cc3",
-                            "travelTitle": "부산 여행",
-                            "travelPrice": 350000,
+                            "travelTitle": "부산 해변 힐링 여행2",
+                            "travelPrice": 380000,
                             "travelReviewCount": 2,
                             "travelActive": true,
-                            "updatedAt": "2025-01-15T02:11:58.352Z",
-                            "reviewAverage": 4.5,
-                            "approveWaitngCount": 9
+                            "updatedAt": "2025-02-06T08:23:40.517Z",
+                            "reviewAverage": 3.25,
+                            "approveWaitingCount": 10
                           },
                           {
                             "travelId": "676ed2c015008c763cf33c82",
@@ -3389,7 +3389,7 @@
                             "travelActive": true,
                             "updatedAt": "2024-12-27T16:16:00.394Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 1
+                            "approveWaitingCount": 1
                           },
                           {
                             "travelId": "67721ed9ccd5e8436384bc22",
@@ -3399,7 +3399,7 @@
                             "travelActive": true,
                             "updatedAt": "2024-12-30T04:17:29.662Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 1
+                            "approveWaitingCount": 1
                           },
                           {
                             "travelId": "676ecfd315008c763cf33c58",
@@ -3409,7 +3409,7 @@
                             "travelActive": true,
                             "updatedAt": "2024-12-27T16:03:31.519Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 1
+                            "approveWaitingCount": 1
                           },
                           {
                             "travelId": "676ed08015008c763cf33c60",
@@ -3417,9 +3417,9 @@
                             "travelPrice": 350000,
                             "travelReviewCount": 0,
                             "travelActive": true,
-                            "updatedAt": "2024-12-27T16:06:24.406Z",
+                            "updatedAt": "2025-02-03T01:45:06.803Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 0
+                            "approveWaitingCount": 0
                           },
                           {
                             "travelId": "676ed11915008c763cf33c68",
@@ -3429,7 +3429,7 @@
                             "travelActive": true,
                             "updatedAt": "2024-12-27T16:08:57.173Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 1
+                            "approveWaitingCount": 1
                           },
                           {
                             "travelId": "676ed16c15008c763cf33c70",
@@ -3439,7 +3439,7 @@
                             "travelActive": true,
                             "updatedAt": "2024-12-27T16:10:20.861Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 0
+                            "approveWaitingCount": 0
                           },
                           {
                             "travelId": "676ed1f415008c763cf33c78",
@@ -3449,17 +3449,17 @@
                             "travelActive": true,
                             "updatedAt": "2024-12-27T16:12:36.075Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 0
+                            "approveWaitingCount": 0
                           },
                           {
                             "travelId": "6764c9931aff3d14597f71f4",
-                            "travelTitle": "부산 여행2",
+                            "travelTitle": "부산 여행244",
                             "travelPrice": 350000,
-                            "travelReviewCount": 0,
+                            "travelReviewCount": 14,
                             "travelActive": true,
                             "updatedAt": "2024-12-20T01:34:11.599Z",
-                            "reviewAverage": null,
-                            "approveWaitngCount": 1
+                            "reviewAverage": 5,
+                            "approveWaitingCount": 1
                           },
                           {
                             "travelId": "67656affcb7684fe77b0d2a5",
@@ -3469,7 +3469,7 @@
                             "travelActive": true,
                             "updatedAt": "2024-12-20T13:02:55.117Z",
                             "reviewAverage": null,
-                            "approveWaitngCount": 1
+                            "approveWaitingCount": 1
                           }
                         ],
                         "pageInfo": {
