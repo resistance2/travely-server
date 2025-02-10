@@ -4530,6 +4530,9 @@
               "schema": {
                 "type": "object",
                 "properties": {}
+              },
+              "example": {
+                "userId": "675fc04e097ae2625fde9d75"
               }
             }
           }
