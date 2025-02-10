@@ -1077,4 +1077,59 @@ travelRouter.patch('/:travelId', checkRequiredFieldsParams(['travelId']), async 
     res.status(500).json(ResponseDTO.fail((error as Error).message));
   }
 });
+
+// 여행 신청 취소 (대기상태일때만)
+travelRouter.delete(
+  '/:teamId/cancel-application',
+  checkRequiredFieldsParams(['teamId']),
+  checkRequiredFieldsBody(['userId']),
+  async (req, res) => {
+    const { teamId } = req.params;
+    const { userId } = req.body;
+
+    try {
+      if (!isValidObjectId(teamId) || !isValidObjectId(userId)) {
+        res.status(400).json(ResponseDTO.fail('Invalid teamId or userId'));
+        return;
+      }
+
+      const team = await Team.findById(teamId).lean();
+      if (!team) {
+        res.status(404).json(ResponseDTO.fail('Team not found'));
+        return;
+      }
+
+      const user = await User.findById(userId).lean();
+      if (!user) {
+        res.status(404).json(ResponseDTO.fail('User not found'));
+        return;
+      }
+
+      const appliedUserIndex = team.appliedUsers.findIndex(
+        (appliedUser) => appliedUser.userId.equals(user._id) && appliedUser.status === 'waiting',
+      );
+
+      if (appliedUserIndex === -1) {
+        res.status(400).json(ResponseDTO.fail('No waiting application found for this user'));
+        return;
+      }
+
+      team.appliedUsers.splice(appliedUserIndex, 1);
+
+      await Team.findByIdAndUpdate(teamId, { $set: { appliedUsers: team.appliedUsers } });
+
+      res.json(
+        ResponseDTO.success({
+          teamId: team._id,
+          userId: user._id,
+          status: 'cancelled',
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+      res.status(500).json(ResponseDTO.fail((error as Error).message));
+    }
+  },
+);
+
 export { travelRouter };
