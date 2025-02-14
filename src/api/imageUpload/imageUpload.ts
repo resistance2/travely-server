@@ -7,7 +7,11 @@ const s3Client = new S3Client({
 });
 
 export const generateFileName = (originalname: string) => {
-  return `${uuidv4()}.${originalname.split('.').slice(-1)[0]}`;
+  const extension =
+    originalname.lastIndexOf('.') > -1
+      ? originalname.slice(originalname.lastIndexOf('.') + 1).toLowerCase()
+      : '';
+  return extension ? `${uuidv4()}.${extension}` : uuidv4();
 };
 
 export const uploadImage = async (file: Express.Multer.File): Promise<string> => {
