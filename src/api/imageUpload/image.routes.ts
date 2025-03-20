@@ -1,10 +1,13 @@
+import e from 'cors';
 import { Request, Response, Router } from 'express';
 import { Express } from 'express';
+import rateLimit from 'express-rate-limit';
 import multer, { memoryStorage, MulterError } from 'multer';
 import { ResponseDTO } from '../../ResponseDTO';
-import { uploadImage, uploadImages } from './imageUpload';
+import { generatePresignedUrl, uploadImage, uploadImages } from './imageUpload';
 
 const imageRouter = Router();
+
 const upload = multer({
   storage: memoryStorage(),
   limits: {
@@ -13,8 +16,15 @@ const upload = multer({
   },
 });
 
+const apiRateLimit = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 50, // Limit each IP to 50 requests per windowMs
+  message: { message: '이미지 업로드 요청이 너무 많습니다.' },
+});
+
 imageRouter.post(
   '/upload',
+  apiRateLimit,
   upload.fields([
     { name: 'thumbnail', maxCount: 1 },
     { name: 'meetingSpace', maxCount: 5 },
@@ -61,6 +71,7 @@ imageRouter.post(
 imageRouter.post(
   '/upload/single',
   upload.single('file'),
+  apiRateLimit,
   async (req: Request, res: Response): Promise<void> => {
     try {
       const imageUrl = await uploadImage(req.file!);
@@ -72,25 +83,81 @@ imageRouter.post(
   },
 );
 
+imageRouter.post(
+  '/presigned-url',
+  apiRateLimit,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { fileName, fileType, category } = req.body;
+
+      if (!fileName || !fileType) {
+        res.status(400).json(ResponseDTO.fail('fileName, fileType은 필수 파라미터입니다.'));
+        return;
+      }
+      if (typeof fileName !== 'string' || typeof fileType !== 'string') {
+        res.status(400).json(ResponseDTO.fail('fileName, fileType은 문자열이어야 합니다.'));
+        return;
+      }
+      const uploadCategory = category || 'general';
+
+      if (!fileType.startsWith('image/')) {
+        res.status(400).json(ResponseDTO.fail('이미지 파일만 업로드 가능합니다.'));
+        return;
+      }
+
+      const { uploadUrl, fileUrl } = await generatePresignedUrl(fileType, fileName, uploadCategory);
+
+      res.json(
+        ResponseDTO.success({
+          uploadUrl,
+          fileUrl,
+          expiresIn: 3600, // URL expires in 1 hour (seconds)
+        }),
+      );
+    } catch (error) {
+      console.error('Pre-signed URL 생성 오류:', error);
+      res.status(500).json(ResponseDTO.fail('Pre-signed URL 생성 실패'));
+    }
+  },
+);
+
+imageRouter.post(
+  '/presigned-urls/batch',
+  apiRateLimit,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const files = req.body.files as Array<{
+        fileName: string;
+        fileType: string;
+        category: string;
+      }>;
+
+      if (!Array.isArray(files)) {
+        res.status(400).json(ResponseDTO.fail('files must be an array'));
+        return;
+      }
+
+      const results = await Promise.all(
+        files.map(async ({ fileName, fileType, category }) => {
+          if (!fileType.startsWith('image/')) {
+            throw new Error('Only image files are allowed');
+          }
+          const { uploadUrl, fileUrl } = await generatePresignedUrl(fileType, fileName, category);
+          return { fileName, uploadUrl, fileUrl };
+        }),
+      );
+
+      res.json(
+        ResponseDTO.success({
+          files: results,
+          expiresIn: 3600,
+        }),
+      );
+    } catch (error) {
+      console.error('Batch pre-signed URL 생성 오류:', error);
+      res.status(500).json(ResponseDTO.fail('Batch pre-signed URL 생성 실패'));
+    }
+  },
+);
+
 export { imageRouter };
-
-// curl -X POST \
-//   -H "Content-Type: multipart/form-data" \
-//   -F "thumbnail=@image1.jpg" \
-//   -F "meetingSpace=@image2.jpg" \
-//   -F "meetingSpace=@image3.jpg" \
-//   -F "introSrcs=@image4.jpg" \
-//   -F "introSrcs=@image5.jpg" \
-//   http://localhost:3000/api/images/upload
-
-//   {
-//     "thumbnail": ["https://cloudfront.url/image1.jpg"],
-//     "meetingSpace": [
-//       "https://cloudfront.url/image2.jpg",
-//       "https://cloudfront.url/image3.jpg"
-//     ],
-//     "introSrcs": [
-//       "https://cloudfront.url/image4.jpg",
-//       "https://cloudfront.url/image5.jpg"
-//     ]
-//   }

@@ -133,3 +133,6 @@ dist
 # tmp
 .tmp
 tmp
+
+# firebase
+serviceAccountKey.json
