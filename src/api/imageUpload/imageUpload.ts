@@ -11,8 +11,8 @@ const s3Client = new S3Client({
   },
 });
 
-const BUCKET_NAME = process.env.AWS_BUCKET_NAME || '';
-const CLOUDFRONT_URL = process.env.CLOUDFRONT_URL || '';
+// const BUCKET_NAME = process.env.AWS_BUCKET_NAME || '';
+// const CLOUDFRONT_URL = process.env.CLOUDFRONT_URL || '';
 
 export const generateFileName = (originalname: string) => {
   const extension =
@@ -27,18 +27,19 @@ export const uploadImage = async (file: Express.Multer.File): Promise<string> =>
     const fileName = generateFileName(file.originalname);
     const key = `uploads/${fileName}`;
 
+    if (!process.env.AWS_BUCKET_NAME || process.env.AWS_BUCKET_NAME.length === 0) {
+      throw new Error('AWS_BUCKET_NAME 환경 변수가 설정되지 않았습니다.');
+    }
+
     const command = new PutObjectCommand({
-      Bucket: BUCKET_NAME,
+      Bucket: process.env.AWS_BUCKET_NAME as string,
       Key: key,
       Body: file.buffer,
       ContentType: file.mimetype,
     });
 
-    console.log('buketName', BUCKET_NAME);
-
     await s3Client.send(command);
-    console.log('S3 업로드 성공:', key);
-    return `${CLOUDFRONT_URL}/${key}`;
+    return `${process.env.CLOUDFRONT_URL}/${key}`;
   } catch (error) {
     console.error('S3 업로드 오류:', error);
     throw new Error('이미지 업로드 실패');
@@ -63,8 +64,12 @@ export async function generatePresignedUrl(
 ): Promise<{ uploadUrl: string; fileUrl: string }> {
   const key = `uploads/${category}/${Date.now()}-${uuidv4()}-${fileName}`;
 
+  if (!process.env.AWS_BUCKET_NAME || process.env.AWS_BUCKET_NAME.length === 0) {
+    throw new Error('AWS_BUCKET_NAME 환경 변수가 설정되지 않았습니다.');
+  }
+
   const command = new PutObjectCommand({
-    Bucket: BUCKET_NAME,
+    Bucket: process.env.AWS_BUCKET_NAME as string,
     Key: key,
     ContentType: fileType,
   });
@@ -76,7 +81,7 @@ export async function generatePresignedUrl(
       throw new Error('유효하지 않은 업로드 URL입니다.');
     }
 
-    const fileUrl = `${CLOUDFRONT_URL}/${key}`;
+    const fileUrl = `${process.env.CLOUDFRONT_URL}/${key}`;
 
     return { uploadUrl, fileUrl };
   } catch (error) {
