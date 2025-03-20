@@ -64,6 +64,10 @@ export async function generatePresignedUrl(
 ): Promise<{ uploadUrl: string; fileUrl: string }> {
   const key = `uploads/${category}/${Date.now()}-${uuidv4()}-${fileName}`;
 
+  if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY) {
+    throw new Error('AWS 자격 증명이 설정되지 않았습니다.');
+  }
+
   if (!process.env.AWS_BUCKET_NAME || process.env.AWS_BUCKET_NAME.length === 0) {
     throw new Error('AWS_BUCKET_NAME 환경 변수가 설정되지 않았습니다.');
   }
