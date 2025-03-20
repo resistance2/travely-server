@@ -34,6 +34,8 @@ export const uploadImage = async (file: Express.Multer.File): Promise<string> =>
       ContentType: file.mimetype,
     });
 
+    console.log('buketName', BUCKET_NAME);
+
     await s3Client.send(command);
     console.log('S3 업로드 성공:', key);
     return `${CLOUDFRONT_URL}/${key}`;
