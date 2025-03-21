@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFieldsBody, checkRequiredFieldsQuery } from '../../checkRequiredFields';
-import { Travel, User } from '../../db/schema';
+import { Travel, User } from '../../db';
 import { validObjectId } from '../../validChecker';
 import bookmarkService from './bookmark.service';
 

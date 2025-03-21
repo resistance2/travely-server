@@ -2,7 +2,7 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import { ResponseDTO } from '../../../ResponseDTO';
 import { checkRequiredFieldsBody, checkRequiredFieldsParams } from '../../../checkRequiredFields';
-import { TravelGuide, TravelGuideComment, User } from '../../../db/schema';
+import { TravelGuide, TravelGuideComment, User } from '../../../db';
 
 const travelGuideCommentRouter = Router();
 

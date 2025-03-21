@@ -18,7 +18,7 @@ import {
   Travel,
   User,
   UserRating,
-} from '../../db/schema';
+} from '../../db'; // Updated import to use the new index file
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
 import bookmarkService from '../bookmark/bookmark.service';
 import { UserService } from '../user/user.service';

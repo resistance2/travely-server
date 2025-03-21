@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { User, UserRating } from '../../db/schema';
+import { User, UserRating } from '../../db';
 
 export class UserService {
   static async login(

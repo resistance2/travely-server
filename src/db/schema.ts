@@ -299,27 +299,3 @@ export const TravelGuideComment = mongoose.model<IComment>(
   'TravelGuideComment',
   TravelGuideCommentSchema,
 );
-
-const TravelCommentSchema: Schema<IComment> = new Schema(
-  {
-    userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    travelId: { type: Schema.Types.ObjectId, required: true, ref: 'Travel', refPath: 'onModel' },
-    comment: { type: String, required: true },
-    isDeleted: { type: Boolean, default: false },
-  },
-  {
-    timestamps: true,
-    query: {
-      isDeleted: false,
-    },
-  },
-);
-
-TravelCommentSchema.pre(['find', 'findOne'], function (next) {
-  if (!Object.prototype.hasOwnProperty.call(this.getQuery(), 'isDeleted')) {
-    this?.where({ isDeleted: false });
-  }
-  next();
-});
-
-export const TravelComment = mongoose.model<IComment>('TravelComment', TravelCommentSchema);

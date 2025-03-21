@@ -2,7 +2,7 @@ import { Router } from 'express';
 import mongoose from 'mongoose';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFieldsBody, checkRequiredFieldsParams } from '../../checkRequiredFields';
-import { ITeam, Team, TravelGuide, TravelGuideComment, User } from '../../db/schema';
+import { ITeam, Team, TravelGuide, TravelGuideComment, User } from '../../db';
 import { checkIsValidImage, checkPageAndSize, validObjectId } from '../../validChecker';
 import { UserService } from '../user/user.service';
 

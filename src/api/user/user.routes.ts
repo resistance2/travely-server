@@ -2,7 +2,7 @@ import { Router } from 'express';
 import multer, { memoryStorage } from 'multer';
 import { ResponseDTO } from '../../ResponseDTO';
 import { checkRequiredFieldsBody } from '../../checkRequiredFields';
-import { Team, User } from '../../db/schema';
+import { Team, User } from '../../db';
 import { isEmail } from '../../isEmail';
 import { checkIsValidMBTI, checkIsValidPhoneNumber } from '../../validChecker';
 import { uploadImage } from '../imageUpload/imageUpload';

@@ -1,7 +1,6 @@
 import mongoose, { Types } from 'mongoose';
 import { tagPathToTagType } from '../../convert';
-import { Bookmark, ITravel, IUser } from '../../db/schema';
-import { IBookmark } from '../../db/schema';
+import { Bookmark, IBookmark, ITravel, IUser } from '../../db';
 import { getReviewAverage, getReviewCount } from '../travel/travel.route';
 
 export class BookmarkService {
