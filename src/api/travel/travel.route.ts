@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import mongoose, { isValidObjectId } from 'mongoose';
+import mongoose, { isValidObjectId, Types } from 'mongoose';
 import { ResponseDTO } from '../../ResponseDTO';
 import {
   checkRequiredFieldsBody,
@@ -80,7 +80,7 @@ travelRouter.get(
       return;
     }
 
-    let userId_: any;
+    let userId_: (IUser & { _id: Types.ObjectId }) | null = null;
     if (userId === 'null' || userId === undefined || userId === 'undefined') {
       userId_ = null;
     } else {
@@ -88,7 +88,7 @@ travelRouter.get(
         res.status(400).json(ResponseDTO.fail('Invalid userId'));
         return;
       }
-      userId_ = await User.findById(userId).lean();
+      userId_ = (await User.findById(userId)) as IUser & { _id: Types.ObjectId };
 
       if (!userId_) {
         res.status(404).json(ResponseDTO.fail('User not found'));
@@ -131,14 +131,6 @@ travelRouter.get(
           };
         }),
       );
-
-      //TODO: 일단 가이드 별점은 목데이터로 넣자. 나중에 가이드 별점 넣기
-      //전체 별점도 일다 목데이터를 넣음.
-      // 북마크도 일단은 목데이터로 넣음
-
-      // 승인된 유저만 보내기
-      // isBookmark: 북마크 여부
-      // bookmark: 북마크수
 
       const isUserIsTraveler = (userId: mongoose.Types.ObjectId) => {
         return travel.teamId.some((team) => {
@@ -313,7 +305,7 @@ travelRouter.get('/travel-list', async (req, res) => {
   try {
     const travels = await Travel.find(query).sort({ createdAt: -1 }).skip(skip).limit(size_).lean();
 
-    let user: (IUser & { _id: mongoose.Types.ObjectId }) | null = null;
+    let user = null;
     if (userId) {
       if (!isValidObjectId(userId)) {
         res.status(400).json(ResponseDTO.fail('Invalid user id'));

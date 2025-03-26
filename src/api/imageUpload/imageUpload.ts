@@ -7,9 +7,6 @@ const s3Client = new S3Client({
   region: process.env.AWS_REGION,
 });
 
-// const BUCKET_NAME = process.env.AWS_BUCKET_NAME || '';
-// const CLOUDFRONT_URL = process.env.CLOUDFRONT_URL || '';
-
 export const generateFileName = (originalname: string) => {
   const extension =
     originalname.lastIndexOf('.') > -1
@@ -75,7 +72,7 @@ export async function generatePresignedUrl(
   });
 
   try {
-    const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 }); // URL expires in 1 hour
+    const uploadUrl = await getSignedUrl(s3Client, command, { expiresIn: 180 }); // URL expires in 3 minutes
 
     if (!uploadUrl || uploadUrl.length === 0) {
       throw new Error('유효하지 않은 업로드 URL입니다.');
