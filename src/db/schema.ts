@@ -75,8 +75,7 @@ export interface IComment {
   isDeleted: boolean;
 }
 
-//TODO: user schema에서 myBookmark 삭제 필요
-export interface IUser {
+export interface IUser extends Document {
   userProfileImage: string;
   socialName: string;
   userName: string;
@@ -86,7 +85,6 @@ export interface IUser {
   myCreatedTravel: Types.ObjectId[];
   myPassedTravel: Types.ObjectId[];
   myReviews: Types.ObjectId[];
-  myBookmark: Types.ObjectId[];
   isVerifiedUser: boolean;
   userScore: number;
   backAccount: {
